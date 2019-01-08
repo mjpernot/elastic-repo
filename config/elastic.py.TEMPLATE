@@ -1,0 +1,6 @@
+# Configuration file
+# Classification (U)
+# Unclassified until filled.
+
+host = ["HOST_NAME1", "HOST_NAME2"]
+port = 9200

@@ -1,0 +1,10 @@
+# Configuration file
+# Classification (U)
+# Unclassified until filled.
+
+host = ["HOST_NAME1", "HOST_NAME2"]
+port = 9200
+
+# Name of the base test repository directory path
+# Must be a shared mount between all Elasticsearch database servers.
+base_repo_dir = "REPO_DIRECTORY_PATH"
