@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [0.3.3] - 2019-10-30
 ### Changed
+- main:  Refactored "if" statements.
 - Documentation updates.
 
 
