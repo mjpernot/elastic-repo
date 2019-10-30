@@ -62,7 +62,6 @@ import elastic_lib.elastic_class as elastic_class
 import elastic_lib.elastic_libs as elastic_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -74,8 +73,6 @@ def help_message(**kwargs):
         message when -h option is selected.
 
     Arguments:
-        (input) **kwargs:
-            None
 
     """
 
@@ -91,8 +88,6 @@ def list_dumps(ER, **kwargs):
 
     Arguments:
         (input) ER -> ElasticSearch class instance.
-        (input) **kwargs:
-            args_array -> Dict of command line options and values.
 
     """
 
@@ -275,8 +270,6 @@ def disk_usage(ER, **kwargs):
 
     Arguments:
         (input) ER -> ElasticSearch class instance.
-        (input) **kwargs:
-            None
 
     """
 
@@ -305,8 +298,6 @@ def list_repos(ER, **kwargs):
 
     Arguments:
         (input) ER -> ElasticSearch class instance.
-        (input) **kwargs:
-            None
 
     """
 
@@ -323,8 +314,6 @@ def run_program(args_array, func_dict, **kwargs):
     Arguments:
         (input) args_array -> Dict of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
-        (input) **kwargs:
-            None
 
     """
 
