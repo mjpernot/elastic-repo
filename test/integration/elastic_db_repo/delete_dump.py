@@ -9,7 +9,6 @@
         test/integration/elastic_db_repo/delete_dump.py
 
     Arguments:
-        None
 
 """
 
@@ -34,7 +33,6 @@ import lib.gen_libs as gen_libs
 import elastic_lib.elastic_class as elastic_class
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -43,10 +41,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Integration testing initilization.
@@ -63,7 +57,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -99,7 +92,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test delete dump from command line.
 
         Arguments:
-            None
 
         """
 
@@ -115,7 +107,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test delete dump from argument list.
 
         Arguments:
-            None
 
         """
 
@@ -130,7 +121,6 @@ class UnitTest(unittest.TestCase):
         Description:  Clean up of integration testing.
 
         Arguments:
-            None
 
         """
 

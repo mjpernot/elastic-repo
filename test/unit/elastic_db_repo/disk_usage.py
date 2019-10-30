@@ -9,7 +9,6 @@
         test/unit/elastic_db_repo/disk_usage.py
 
     Arguments:
-        None
 
 """
 
@@ -34,7 +33,6 @@ import elastic_db_repo
 import lib.gen_libs as gen_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -43,10 +41,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Unit testing initilization.
@@ -63,7 +57,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -72,10 +65,6 @@ class UnitTest(unittest.TestCase):
             """Class:  ElasticSearchRepo
 
             Description:  Class representation of the ElasticSearchRepo class.
-
-            Super-Class:  object
-
-            Sub-Classes:  None
 
             Methods:
                 __init__ -> Initialize configuration environment.
@@ -89,7 +78,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Initialization instance of the class.
 
                 Arguments:
-                        None
 
                 """
 
@@ -113,7 +101,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo_dict has multiple entries.
 
         Arguments:
-            mock_lib -> Mock Ref:  elastic_db_repo.gen_libs
 
         """
 
@@ -144,7 +131,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo_dict has one entry.
 
         Arguments:
-            mock_lib -> Mock Ref:  elastic_db_repo.gen_libs
 
         """
 
@@ -166,7 +152,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo_dict is empty.
 
         Arguments:
-            None
 
         """
 

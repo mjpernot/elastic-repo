@@ -9,7 +9,6 @@
         test/blackbox/elastic_db_repo/blackbox_test.py
 
     Arguments:
-        None
 
 """
 
@@ -29,7 +28,6 @@ import lib.arg_parser as arg_parser
 import elastic_lib.elastic_class as elastic_class
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -41,8 +39,6 @@ def load_cfg(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Dict of command line options and values.
-                (input) **kwargs:
-            None
         (output) -> Server configuration settings.
 
     """
@@ -59,8 +55,6 @@ def chk_create_repo(ER, repo_name, **kwargs):
     Arguments:
         (input) ES -> Elasticsearch class instance.
         (input) repo_name -> Name of repository.
-        (input) **kwargs:
-            None
         (output) status -> True|False - Status of check.
 
     """
@@ -83,8 +77,6 @@ def create_es_instance(cfg, instance, repo_name=None, **kwargs):
         (input) cfg -> Server configuration settings.
         (input) instance -> ElasticSearch instance name.
         (input) repo_name -> Name of repository.
-        (input) **kwargs:
-            None
         (output) -> ElasticSearch instance.
 
     """
@@ -102,8 +94,6 @@ def remove_repo(ER, repo_name, dump_loc, **kwargs):
         (input) ER -> ElasticSearchRepo class instance.
         (input) repo_name -> Name of repository being removed.
         (input) dump_loc -> Location of repository.
-        (input) **kwargs:
-            None
         (output) status -> True|False - Status of repository removal.
 
     """
@@ -137,7 +127,6 @@ def main():
         config_path -> Directory path to blackbox config directory.
 
     Arguments:
-        None
 
     """
 

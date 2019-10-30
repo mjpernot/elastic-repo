@@ -62,7 +62,6 @@ import elastic_lib.elastic_class as elastic_class
 import elastic_lib.elastic_libs as elastic_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -74,8 +73,6 @@ def help_message(**kwargs):
         message when -h option is selected.
 
     Arguments:
-        (input) **kwargs:
-            None
 
     """
 
@@ -91,8 +88,6 @@ def list_dumps(ER, **kwargs):
 
     Arguments:
         (input) ER -> ElasticSearch class instance.
-        (input) **kwargs:
-            args_array -> Dict of command line options and values.
 
     """
 
@@ -275,8 +270,6 @@ def disk_usage(ER, **kwargs):
 
     Arguments:
         (input) ER -> ElasticSearch class instance.
-        (input) **kwargs:
-            None
 
     """
 
@@ -305,8 +298,6 @@ def list_repos(ER, **kwargs):
 
     Arguments:
         (input) ER -> ElasticSearch class instance.
-        (input) **kwargs:
-            None
 
     """
 
@@ -323,8 +314,6 @@ def run_program(args_array, func_dict, **kwargs):
     Arguments:
         (input) args_array -> Dict of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
-        (input) **kwargs:
-            None
 
     """
 
@@ -386,12 +375,12 @@ def main():
                                        opt_val=opt_val,
                                        multi_val=opt_multi_list)
 
-    if not gen_libs.help_func(args_array, __version__, help_message):
-        if not arg_parser.arg_require(args_array, opt_req_list) \
-           and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
-           and arg_parser.arg_cond_req_or(args_array, opt_con_req_dict) \
-           and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
-            run_program(args_array, func_dict)
+    if not gen_libs.help_func(args_array, __version__, help_message) \
+       and not arg_parser.arg_require(args_array, opt_req_list) \
+       and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
+       and arg_parser.arg_cond_req_or(args_array, opt_con_req_dict) \
+       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
+        run_program(args_array, func_dict)
 
 
 if __name__ == "__main__":

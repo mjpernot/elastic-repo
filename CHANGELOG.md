@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.3.3] - 2019-10-30
+### Changed
+- main:  Refactored "if" statements.
+- Documentation updates.
+
+
 ## [0.3.2] - 2018-11-22
 ### Changed
 - Documentation updates.
