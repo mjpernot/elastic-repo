@@ -9,7 +9,6 @@
         test/unit/elastic_db_repo/run_program.py
 
     Arguments:
-        None
 
 """
 
@@ -33,7 +32,6 @@ import elastic_db_repo
 import lib.gen_libs as gen_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -71,10 +69,6 @@ class UnitTest(unittest.TestCase):
 
     Description:  Class which is a representation of a unit testing.
 
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
-
     Methods:
         setUp -> Unit testing initilization.
         test_func_call_multi -> Test run_program with multiple calls.
@@ -90,7 +84,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -99,10 +92,6 @@ class UnitTest(unittest.TestCase):
             """Class:  CfgTest
 
             Description:  Class which is a representation of a cfg module.
-
-            Super-Class:  object
-
-            Sub-Classes:  None
 
             Methods:
                 __init__ -> Initialize configuration environment.
@@ -116,7 +105,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Initialization instance of the CfgTest class.
 
                 Arguments:
-                        None
 
                 """
 
@@ -139,10 +127,6 @@ class UnitTest(unittest.TestCase):
             function.
 
         Arguments:
-            mock_lock -> Mock Ref:  elastic_db_repo.gen_class
-            mock_class -> Mock Ref:
-                elastic_db_repo.elastic_class.ElasticSearchRepo
-            mock_load -> Mock Ref:  elastic_db_repo.gen_libs.load_module
 
         """
 
@@ -166,10 +150,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test run_program function with one call to function.
 
         Arguments:
-            mock_lock -> Mock Ref:  elastic_db_repo.gen_class
-            mock_class -> Mock Ref:
-                elastic_db_repo.elastic_class.ElasticSearchRepo
-            mock_load -> Mock Ref:  elastic_db_repo.gen_libs.load_module
 
         """
 
@@ -192,10 +172,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test run_program function with zero calls to function.
 
         Arguments:
-            mock_lock -> Mock Ref:  elastic_db_repo.gen_class
-            mock_class -> Mock Ref:
-                elastic_db_repo.elastic_class.ElasticSearchRepo
-            mock_load -> Mock Ref:  elastic_db_repo.gen_libs.load_module
 
         """
 
