@@ -54,6 +54,7 @@
 # Standard
 import sys
 import os
+import socket
 
 # Local
 import lib.arg_parser as arg_parser
@@ -344,9 +345,10 @@ def run_program(args_array, func_dict, **kwargs):
     args_array = dict(args_array)
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    hostname = socket.gethostname().strip().split(".")[0]
 
     try:
-        prog_lock = gen_class.ProgramLock(sys.argv, cfg.host)
+        prog_lock = gen_class.ProgramLock(sys.argv, hostname)
 
         # Find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
@@ -357,7 +359,7 @@ def run_program(args_array, func_dict, **kwargs):
         del prog_lock
 
     except gen_class.SingleInstanceException:
-        print("WARNING:  elastic_db_repo lock in place for: %s" % (cfg.name))
+        print("WARNING:  elastic_db_repo lock in place for: %s" % (hostname))
 
 
 def main():
