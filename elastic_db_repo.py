@@ -232,7 +232,7 @@ def rename_repo(er, name_list=None, **kwargs):
     args_array = dict(kwargs.get("args_array"))
 
     if not name_list:
-        name_list = args_array.get("-M")
+        name_list = list(args_array.get("-M"))
 
     if isinstance(name_list, list) and len(name_list) == 2:
 
