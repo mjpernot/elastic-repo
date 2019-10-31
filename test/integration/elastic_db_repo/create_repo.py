@@ -68,9 +68,9 @@ class UnitTest(unittest.TestCase):
         self.repo_name = "TEST_INTR_REPO"
         self.repo_dir = os.path.join(self.cfg.base_repo_dir, self.repo_name)
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        if self.ER.repo_dict:
+        if self.er.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
@@ -86,7 +86,7 @@ class UnitTest(unittest.TestCase):
 
         args_array = {"-C": self.repo_name, "-l": self.repo_dir}
 
-        self.assertFalse(elastic_db_repo.create_repo(self.ER,
+        self.assertFalse(elastic_db_repo.create_repo(self.er,
                                                      args_array=args_array))
 
     def test_createrepo_arg(self):
@@ -99,7 +99,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(elastic_db_repo.create_repo(self.ER,
+        self.assertFalse(elastic_db_repo.create_repo(self.er,
                                                      repo_name=self.repo_name,
                                                      repo_dir=self.repo_dir))
 
@@ -113,7 +113,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        err_flag, msg = self.ER.delete_repo(self.repo_name)
+        err_flag, msg = self.er.delete_repo(self.repo_name)
 
         if err_flag:
             print("Error: Failed to remove repository '%s'"
