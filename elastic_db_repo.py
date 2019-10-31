@@ -140,14 +140,14 @@ def create_repo(er, repo_name=None, repo_dir=None, **kwargs):
             print("Reason: '%s'" % (msg))
 
 
-def delete_repo(ER, repo_name=None, **kwargs):
+def delete_repo(er, repo_name=None, **kwargs):
 
     """Function:  delete_repo
 
     Description:  Delete an Elasticsearch repository.
 
     Arguments:
-        (input) ER -> ElasticSearch class instance.
+        (input) er -> ElasticSearch class instance.
         (input) repo_name -> Name of repository.
         (input) **kwargs:
             args_array -> Dict of command line options and values.
@@ -159,9 +159,9 @@ def delete_repo(ER, repo_name=None, **kwargs):
     if not repo_name:
         repo_name = args_array.get("-D")
 
-    if repo_name in ER.repo_dict:
+    if repo_name in er.repo_dict:
 
-        err_flag, msg = ER.delete_repo(repo_name)
+        err_flag, msg = er.delete_repo(repo_name)
 
         if err_flag:
             print("Error: Failed to remove repository '%s'" % (repo_name))
