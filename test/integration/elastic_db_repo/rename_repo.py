@@ -9,7 +9,6 @@
         test/integration/elastic_db_repo/rename_repo.py
 
     Arguments:
-        None
 
 """
 
@@ -34,7 +33,6 @@ import lib.gen_libs as gen_libs
 import elastic_lib.elastic_class as elastic_class
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -43,10 +41,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Integration testing initilization.
@@ -63,7 +57,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -76,14 +69,14 @@ class UnitTest(unittest.TestCase):
         self.repo_name2 = "TEST_INTR_REPO2"
         self.repo_dir = os.path.join(self.cfg.base_repo_dir, self.repo_name)
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        if self.ER.repo_dict:
+        if self.er.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.ER.create_repo(repo_name=self.repo_name,
+            _, _ = self.er.create_repo(repo_name=self.repo_name,
                                        repo_dir=self.repo_dir)
 
     def test_renamerepo_cmdline(self):
@@ -93,13 +86,12 @@ class UnitTest(unittest.TestCase):
         Description:  Test rename repository from command line.
 
         Arguments:
-            None
 
         """
 
         args_array = {"-M": [self.repo_name, self.repo_name2]}
 
-        self.assertFalse(elastic_db_repo.rename_repo(self.ER,
+        self.assertFalse(elastic_db_repo.rename_repo(self.er,
                                                      args_array=args_array))
 
     def test_renamerepo_arg(self):
@@ -109,12 +101,11 @@ class UnitTest(unittest.TestCase):
         Description:  Test rename repository from argument list.
 
         Arguments:
-            None
 
         """
 
         self.assertFalse(elastic_db_repo.rename_repo(
-            self.ER, name_list=[self.repo_name, self.repo_name2]))
+            self.er, name_list=[self.repo_name, self.repo_name2]))
 
     def tearDown(self):
 
@@ -123,11 +114,10 @@ class UnitTest(unittest.TestCase):
         Description:  Clean up of integration testing.
 
         Arguments:
-            None
 
         """
 
-        err_flag, msg = self.ER.delete_repo(self.repo_name2)
+        err_flag, msg = self.er.delete_repo(self.repo_name2)
 
         if err_flag:
             print("Error: Failed to remove repository '%s'"

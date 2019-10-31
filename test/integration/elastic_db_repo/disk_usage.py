@@ -9,7 +9,6 @@
         test/integration/elastic_db_repo/disk_usage.py
 
     Arguments:
-        None
 
 """
 
@@ -35,7 +34,6 @@ import lib.gen_libs as gen_libs
 import elastic_lib.elastic_class as elastic_class
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -44,10 +42,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Integration testing initilization.
@@ -63,7 +57,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -75,14 +68,14 @@ class UnitTest(unittest.TestCase):
         self.repo_name = "TEST_INTR_REPO"
         self.repo_dir = os.path.join(self.cfg.base_repo_dir, self.repo_name)
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        if self.ER.repo_dict:
+        if self.er.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.ER.create_repo(repo_name=self.repo_name,
+            _, _ = self.er.create_repo(repo_name=self.repo_name,
                                        repo_dir=self.repo_dir)
 
     def test_disk_usage(self):
@@ -92,7 +85,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test displaying disk usage.
 
         Arguments:
-            None
 
         """
 
@@ -105,7 +97,7 @@ class UnitTest(unittest.TestCase):
                 break
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.disk_usage(self.ER))
+            self.assertFalse(elastic_db_repo.disk_usage(self.er))
 
     def tearDown(self):
 
@@ -114,11 +106,10 @@ class UnitTest(unittest.TestCase):
         Description:  Clean up of integration testing.
 
         Arguments:
-            None
 
         """
 
-        err_flag, msg = self.ER.delete_repo(self.repo_name)
+        err_flag, msg = self.er.delete_repo(self.repo_name)
 
         if err_flag:
             print("Error: Failed to remove repository '%s'"

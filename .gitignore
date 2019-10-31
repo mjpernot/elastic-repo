@@ -1,0 +1,7 @@
+*.pyc
+.coverage
+*.swp
+*.HOLD
+coverage.xml
+lib
+elastic_lib
