@@ -13,6 +13,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - create_repo:  Fixed mutable list/dictionary argument issue.
 
 ### Changed
+- create_repo:  Changed variables to standard naming convention.
 - list_dumps:  Changed variables to standard naming convention.
 - main:  Refactored "if" statements.
 - Documentation updates.
