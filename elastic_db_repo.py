@@ -154,8 +154,10 @@ def delete_repo(ER, repo_name=None, **kwargs):
 
     """
 
+    args_array = dict(kwargs.get("args_array"))
+
     if not repo_name:
-        repo_name = kwargs.get("args_array").get("-D")
+        repo_name = args_array.get("-D")
 
     if repo_name in ER.repo_dict:
 
