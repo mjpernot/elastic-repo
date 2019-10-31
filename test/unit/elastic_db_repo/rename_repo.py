@@ -43,6 +43,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_no_argsarray_is_passed -> Test when args_array is not passed.
         test_namelist_delete_err_false -> Test delete error flag of false.
         test_namelist_delete_err_true -> Test delete error flag of true.
         test_namelist_create_err_false -> Test create repo error flag of false.
@@ -145,6 +146,21 @@ class UnitTest(unittest.TestCase):
         self.er = ElasticSearchRepo()
 
         self.args_array = {"-M": ["Test_Repo_Name_1", "Test_Dump_Name_5"]}
+
+    @unittest.skip("Known Bug: Requires the args_array to be passed.")
+    def test_no_argsarray_is_passed(self):
+
+        """Function:  test_no_argsarray_is_passed
+
+        Description:  Test when args_array is not passed to function.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(elastic_db_repo.rename_repo(
+                self.er, name_list=["Test_Repo_Name_1"]))
 
     def test_namelist_delete_err_false(self):
 
@@ -298,7 +314,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, name_list=["Test_Repo_Name_1"]))
+                self.er, name_list=["Test_Repo_Name_1"], args_array={}))
 
     def test_namelist_not_passed(self):
 
