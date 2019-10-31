@@ -270,24 +270,24 @@ def rename_repo(er, name_list=None, **kwargs):
               % (str(name_list)))
 
 
-def disk_usage(ER, **kwargs):
+def disk_usage(er, **kwargs):
 
     """Function:  disk_usage
 
     Description:  Display disk usage of dump partitions.
 
     Arguments:
-        (input) ER -> ElasticSearch class instance.
+        (input) er -> ElasticSearch class instance.
 
     """
 
-    if ER.repo_dict:
+    if er.repo_dict:
         print("{0:30} {1:65} {2:10} {3:10} {4:15} {5:10}"
               .format("Repository", "Partition", "Total", "Used", "Free",
                       "Percent"))
 
-        for repo in ER.repo_dict:
-            partition = ER.repo_dict[repo]["settings"]["location"]
+        for repo in er.repo_dict:
+            partition = er.repo_dict[repo]["settings"]["location"]
             usage = gen_libs.disk_usage(partition)
 
             print("{0:30} {1:65} {2:10} {3:10} {4:10} {5:10.2f}%"
