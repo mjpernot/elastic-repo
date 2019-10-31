@@ -12,6 +12,7 @@ test/unit/elastic_db_repo/create_repo.py
 test/unit/elastic_db_repo/delete_repo.py
 test/unit/elastic_db_repo/delete_dump.py
 test/unit/elastic_db_repo/rename_repo.py
+test/unit/elastic_db_repo/rename.py
 test/unit/elastic_db_repo/disk_usage.py
 test/unit/elastic_db_repo/list_repos.py
 test/unit/elastic_db_repo/run_program.py

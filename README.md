@@ -142,55 +142,16 @@ pip install -r requirements-requests-lib.txt --target elastic_lib/requests_lib -
 
 ```
 cd {Python_Project}/elastic-repo
-```
-
-### Unit:  help_message
-```
 test/unit/elastic_db_repo/help_message.py
-```
-
-### Unit:  list_dumps
-```
 test/unit/elastic_db_repo/list_dumps.py
-```
-
-### Unit:  create_repo
-```
 test/unit/elastic_db_repo/create_repo.py
-```
-
-### Unit:  delete_repo
-```
 test/unit/elastic_db_repo/delete_repo.py
-```
-
-### Unit:  delete_dump
-```
 test/unit/elastic_db_repo/delete_dump.py
-```
-
-### Unit:  rename_repo
-```
 test/unit/elastic_db_repo/rename_repo.py
-```
-
-### Unit:  disk_usage
-```
+test/unit/elastic_db_repo/rename.py
 test/unit/elastic_db_repo/disk_usage.py
-```
-
-### Unit:  list_repos
-```
 test/unit/elastic_db_repo/list_repos.py
-```
-
-### Unit:  run_program
-```
 test/unit/elastic_db_repo/run_program.py
-```
-
-### Unit:  main
-```
 test/unit/elastic_db_repo/main.py
 ```
 
@@ -264,50 +225,14 @@ sudo chown elasticsearch:elasticsearch elastic.py
 sudo bash
 su - elasticsearch
 cd {Python_Project}/elastic-repo
-```
-
-### Integration:  list_dumps
-```
 test/integration/elastic_db_repo/list_dumps.py
-```
-
-### Integration:  create_repo
-```
 test/integration/elastic_db_repo/create_repo.py
-```
-
-### Integration:  delete_repo
-```
 test/integration/elastic_db_repo/delete_repo.py
-```
-
-### Integration:  delete_dump
-```
 test/integration/elastic_db_repo/delete_dump.py
-```
-
-### Integration:  rename_repo
-```
 test/integration/elastic_db_repo/rename_repo.py
-```
-
-### Integration:  disk_usage
-```
 test/integration/elastic_db_repo/disk_usage.py
-```
-
-### Integration:  list_repos
-```
 test/integration/elastic_db_repo/list_repos.py
-```
-
-### Integration:  run_program
-```
 test/integration/elastic_db_repo/run_program.py
-```
-
-### Integration:  main
-```
 test/integration/elastic_db_repo/main.py
 ```
 

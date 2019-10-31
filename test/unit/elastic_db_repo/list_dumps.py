@@ -85,7 +85,7 @@ class UnitTest(unittest.TestCase):
                 self.dump_list = []
                 self.repo_dict = ["TEST_REPO"]
 
-        self.ER = ElasticSearchRepo()
+        self.er = ElasticSearchRepo()
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -99,14 +99,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.ER.repo = None
-        self.ER.repo_dict = []
+        self.er.repo = None
+        self.er.repo_dict = []
 
         mock_libs.get_dump_list.return_value = True
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.ER))
+            self.assertFalse(elastic_db_repo.list_dumps(self.er))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -120,13 +120,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.ER.repo = None
+        self.er.repo = None
 
         mock_libs.get_dump_list.return_value = True
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.ER))
+            self.assertFalse(elastic_db_repo.list_dumps(self.er))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -144,7 +144,7 @@ class UnitTest(unittest.TestCase):
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.ER))
+            self.assertFalse(elastic_db_repo.list_dumps(self.er))
 
 
 if __name__ == "__main__":

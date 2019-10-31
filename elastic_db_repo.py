@@ -53,6 +53,8 @@
 
 # Standard
 import sys
+import os
+import socket
 
 # Local
 import lib.arg_parser as arg_parser
@@ -79,7 +81,7 @@ def help_message(**kwargs):
     print(__doc__)
 
 
-def list_dumps(ER, **kwargs):
+def list_dumps(er, **kwargs):
 
     """Function:  list_dumps
 
@@ -87,31 +89,31 @@ def list_dumps(ER, **kwargs):
         repositories.
 
     Arguments:
-        (input) ER -> ElasticSearch class instance.
+        (input) er -> ElasticSearch class instance.
 
     """
 
     repo_list = []
 
-    if ER.repo:
-        repo_list.append(ER.repo)
+    if er.repo:
+        repo_list.append(er.repo)
 
     else:
-        repo_list = ER.repo_dict
+        repo_list = er.repo_dict
 
     for repo in repo_list:
         print("\nList of Dumps for Reposistory: %s" % (str(repo)))
-        elastic_libs.list_dumps(elastic_class.get_dump_list(ER.es, repo))
+        elastic_libs.list_dumps(elastic_class.get_dump_list(er.es, repo))
 
 
-def create_repo(ER, repo_name=None, repo_dir=None, **kwargs):
+def create_repo(er, repo_name=None, repo_dir=None, **kwargs):
 
     """Function:  create_repo
 
     Description:  Create an ElasticSearch repository.
 
     Arguments:
-        (input) ER -> ElasticSearch class instance.
+        (input) er -> ElasticSearch class instance.
         (input) repo_name -> Name of repository.
         (input) repo_dir -> Repository directory path.
         (input) **kwargs:
@@ -119,18 +121,21 @@ def create_repo(ER, repo_name=None, repo_dir=None, **kwargs):
 
     """
 
+    args_array = dict(kwargs.get("args_array"))
+
     if not repo_name:
-        repo_name = kwargs.get("args_array").get("-C")
+        repo_name = args_array.get("-C")
 
     if not repo_dir:
-        repo_dir = kwargs.get("args_array").get("-l")
+        repo_dir = args_array.get("-l")
 
-    if repo_name in ER.repo_dict:
+    if repo_name in er.repo_dict:
         print("Error:  '%s' repository already exists at: '%s'"
               % (repo_name, repo_dir))
 
     else:
-        err_flag, msg = ER.create_repo(repo_name, repo_dir)
+        err_flag, msg = er.create_repo(repo_name,
+                                       os.path.join(repo_dir, repo_name))
 
         if err_flag:
             print("Error detected for Repository: '%s' at '%s'"
@@ -138,26 +143,28 @@ def create_repo(ER, repo_name=None, repo_dir=None, **kwargs):
             print("Reason: '%s'" % (msg))
 
 
-def delete_repo(ER, repo_name=None, **kwargs):
+def delete_repo(er, repo_name=None, **kwargs):
 
     """Function:  delete_repo
 
     Description:  Delete an Elasticsearch repository.
 
     Arguments:
-        (input) ER -> ElasticSearch class instance.
+        (input) er -> ElasticSearch class instance.
         (input) repo_name -> Name of repository.
         (input) **kwargs:
             args_array -> Dict of command line options and values.
 
     """
 
+    args_array = dict(kwargs.get("args_array"))
+
     if not repo_name:
-        repo_name = kwargs.get("args_array").get("-D")
+        repo_name = args_array.get("-D")
 
-    if repo_name in ER.repo_dict:
+    if repo_name in er.repo_dict:
 
-        err_flag, msg = ER.delete_repo(repo_name)
+        err_flag, msg = er.delete_repo(repo_name)
 
         if err_flag:
             print("Error: Failed to remove repository '%s'" % (repo_name))
@@ -167,14 +174,14 @@ def delete_repo(ER, repo_name=None, **kwargs):
         print("Warning:  Repository '%s' does not exist." % (repo_name))
 
 
-def delete_dump(ER, repo_name=None, dump_name=None, **kwargs):
+def delete_dump(er, repo_name=None, dump_name=None, **kwargs):
 
     """Function:  delete_dump
 
     Description:  Delete a dump in an Elasticsearch repository.
 
     Arguments:
-        (input) ER -> ElasticSearch class instance.
+        (input) er -> ElasticSearch class instance.
         (input) repo_name -> Name of repository.
         (input) dump_name -> Name of dump to delete.
         (input) **kwargs:
@@ -182,19 +189,21 @@ def delete_dump(ER, repo_name=None, dump_name=None, **kwargs):
 
     """
 
+    args_array = dict(kwargs.get("args_array"))
+
     if not repo_name:
-        repo_name = kwargs.get("args_array").get("-r")
+        repo_name = args_array.get("-r")
 
     if not dump_name:
-        dump_name = kwargs.get("args_array").get("-S")
+        dump_name = args_array.get("-S")
 
-    if repo_name in ER.repo_dict:
+    if repo_name in er.repo_dict:
 
         # See if the dump exist
         if any(dump_name == x[0]
-               for x in elastic_class.get_dump_list(ER.es, repo_name)):
+               for x in elastic_class.get_dump_list(er.es, repo_name)):
 
-            err_flag, msg = ER.delete_dump(repo_name, dump_name)
+            err_flag, msg = er.delete_dump(repo_name, dump_name)
 
             if err_flag:
                 print("Error detected for Repository: '%s' Dump: '%s'"
@@ -209,77 +218,93 @@ def delete_dump(ER, repo_name=None, dump_name=None, **kwargs):
         print("Warning:  Repository '%s' does not exist." % (repo_name))
 
 
-def rename_repo(ER, name_list=None, **kwargs):
+def rename_repo(er, name_list=None, **kwargs):
 
     """Function:  rename_repo
 
     Description:  Rename an Elasticseatch repository.
 
     Arguments:
-        (input) ER -> ElasticSearch class instance.
+        (input) er -> ElasticSearch class instance.
         (input) name_list -> List of two repository names for renaming process.
         (input) **kwargs:
             args_array -> Dict of command line options and values.
 
     """
 
+    args_array = dict(kwargs.get("args_array"))
+
     if not name_list:
-        name_list = kwargs.get("args_array").get("-M")
+        name_list = list(args_array.get("-M"))
 
     if isinstance(name_list, list) and len(name_list) == 2:
 
         if name_list[0] == name_list[1]:
             print("Error:  Cannot rename to same name: %s" % (name_list))
 
-        elif name_list[0] not in ER.repo_dict:
+        elif name_list[0] not in er.repo_dict:
             print("Error:  Source respository '%s' does not exist"
                   % (name_list[0]))
 
-        elif name_list[1] in ER.repo_dict:
+        elif name_list[1] in er.repo_dict:
             print("Error:  Cannot rename to existing repository '%s'"
                   % (name_list[1]))
         else:
-            err_flag, msg = \
-                ER.create_repo(
-                    name_list[1],
-                    ER.repo_dict[name_list[0]]["settings"]["location"])
-
-            if err_flag:
-                print("Error: Unable to rename repository from '%s' to '%s'"
-                      % (name_list[0], name_list[1]))
-                print("Reason: '%s'" % (msg))
-
-            else:
-                err_flag, msg = ER.delete_repo(name_list[0])
-
-                if err_flag:
-                    print("Error: Failed to remove repository '%s'"
-                          % (name_list[0]))
-                    print("Reason: '%s'" % (msg))
+            _rename(er, name_list)
 
     else:
         print("Error: Incorrect number of args or is not a list: %s "
               % (str(name_list)))
 
 
-def disk_usage(ER, **kwargs):
+def _rename(er, name_list, **kwargs):
+
+    """Function:  _rename
+
+    Description:  Private function for rename_repo function.
+
+    Arguments:
+        (input) er -> ElasticSearch class instance.
+        (input) name_list -> List of two repository names for renaming process.
+
+    """
+
+    name_list = list(name_list)
+    err_flag, msg = er.create_repo(
+        name_list[1], er.repo_dict[name_list[0]]["settings"]["location"])
+
+    if err_flag:
+        print("Error: Unable to rename repository from '%s' to '%s'"
+              % (name_list[0], name_list[1]))
+        print("Reason: '%s'" % (msg))
+
+    else:
+        err_flag, msg = er.delete_repo(name_list[0])
+
+        if err_flag:
+            print("Error: Failed to remove repository '%s'"
+                  % (name_list[0]))
+            print("Reason: '%s'" % (msg))
+
+
+def disk_usage(er, **kwargs):
 
     """Function:  disk_usage
 
     Description:  Display disk usage of dump partitions.
 
     Arguments:
-        (input) ER -> ElasticSearch class instance.
+        (input) er -> ElasticSearch class instance.
 
     """
 
-    if ER.repo_dict:
+    if er.repo_dict:
         print("{0:30} {1:65} {2:10} {3:10} {4:15} {5:10}"
               .format("Repository", "Partition", "Total", "Used", "Free",
                       "Percent"))
 
-        for repo in ER.repo_dict:
-            partition = ER.repo_dict[repo]["settings"]["location"]
+        for repo in er.repo_dict:
+            partition = er.repo_dict[repo]["settings"]["location"]
             usage = gen_libs.disk_usage(partition)
 
             print("{0:30} {1:65} {2:10} {3:10} {4:10} {5:10.2f}%"
@@ -290,18 +315,18 @@ def disk_usage(ER, **kwargs):
                           (float(usage.used) / usage.total) * 100))
 
 
-def list_repos(ER, **kwargs):
+def list_repos(er, **kwargs):
 
     """Function:  list_repos
 
     Description:  Lists the repositories present.
 
     Arguments:
-        (input) ER -> ElasticSearch class instance.
+        (input) er -> ElasticSearch class instance.
 
     """
 
-    elastic_libs.list_repos2(ER.repo_dict)
+    elastic_libs.list_repos2(er.repo_dict)
 
 
 def run_program(args_array, func_dict, **kwargs):
@@ -317,21 +342,24 @@ def run_program(args_array, func_dict, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    hostname = socket.gethostname().strip().split(".")[0]
 
     try:
-        PROG_LOCK = gen_class.ProgramLock(sys.argv, cfg.host)
+        prog_lock = gen_class.ProgramLock(sys.argv, hostname)
 
         # Find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
-            ER = elastic_class.ElasticSearchRepo(cfg.host, cfg.port,
+            er = elastic_class.ElasticSearchRepo(cfg.host, cfg.port,
                                                  repo=args_array.get("-L"))
-            func_dict[opt](ER, args_array=args_array, **kwargs)
+            func_dict[opt](er, args_array=args_array, **kwargs)
 
-        del PROG_LOCK
+        del prog_lock
 
     except gen_class.SingleInstanceException:
-        print("WARNING:  elastic_db_repo lock in place for: %s" % (cfg.name))
+        print("WARNING:  elastic_db_repo lock in place for: %s" % (hostname))
 
 
 def main():

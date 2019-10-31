@@ -43,6 +43,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_no_argsarray_is_passed -> Test when args_array is not passed.
         test_err_flag_true -> Test err_flag is set to True.
         test_err_flag_false -> Test err_flag is set to False.
         test_repo_name_in_list -> Test repo name is in list.
@@ -109,9 +110,24 @@ class UnitTest(unittest.TestCase):
 
                 return err_flag, err_msg
 
-        self.ER = ElasticSearchRepo()
+        self.er = ElasticSearchRepo()
 
         self.args_array = {"-D": "Test_Repo_Name_1"}
+
+    @unittest.skip("Known Bug: Requires the args_array to be passed.")
+    def test_no_argsarray_is_passed(self):
+
+        """Function:  test_no_argsarray_is_passed
+
+        Description:  Test when args_array is not passed to function.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(elastic_db_repo.delete_repo(
+                self.er, repo_name="Test_Repo_Name_3"))
 
     def test_err_flag_true(self):
 
@@ -127,7 +143,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_repo(
-                self.ER, args_array=self.args_array))
+                self.er, args_array=self.args_array))
 
     def test_err_flag_false(self):
 
@@ -140,7 +156,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(elastic_db_repo.delete_repo(
-            self.ER, args_array=self.args_array))
+            self.er, args_array=self.args_array))
 
     def test_repo_name_in_list(self):
 
@@ -153,7 +169,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(elastic_db_repo.delete_repo(
-            self.ER, args_array=self.args_array))
+            self.er, args_array=self.args_array))
 
     def test_repo_name_not_in_list(self):
 
@@ -167,7 +183,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_repo(
-                self.ER, repo_name="Test_Repo_Name_3",
+                self.er, repo_name="Test_Repo_Name_3",
                 args_array=self.args_array))
 
     def test_repo_name_is_passed(self):
@@ -182,7 +198,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_repo(
-                self.ER, repo_name="Test_Repo_Name_3"))
+                self.er, repo_name="Test_Repo_Name_3", args_array={}))
 
     def test_repo_name_not_passed(self):
 
@@ -196,7 +212,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_repo(
-                self.ER, args_array={"-D": "Test_Repo_Name_3"}))
+                self.er, args_array={"-D": "Test_Repo_Name_3"}))
 
 
 if __name__ == "__main__":

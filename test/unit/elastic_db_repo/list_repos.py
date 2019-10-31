@@ -82,7 +82,7 @@ class UnitTest(unittest.TestCase):
                     "type": "fs", "settings": {"compress": "true",
                                                "location": "/tmp/TEST_REPO1"}}}
 
-        self.ER = ElasticSearchRepo()
+        self.er = ElasticSearchRepo()
 
     @mock.patch("elastic_db_repo.elastic_libs.list_repos2")
     def test_list_repos(self, mock_list):
@@ -97,7 +97,7 @@ class UnitTest(unittest.TestCase):
 
         mock_list.return_value = True
 
-        self.assertFalse(elastic_db_repo.list_repos(self.ER))
+        self.assertFalse(elastic_db_repo.list_repos(self.er))
 
 
 if __name__ == "__main__":
