@@ -85,11 +85,11 @@ class UnitTest(unittest.TestCase):
         self.dump_name = "test_dump"
         self.repo_dir = os.path.join(self.cfg.base_repo_dir, self.repo_name)
 
-        self.ER = None
+        self.er = None
 
-        ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        if ER.repo_dict:
+        if er.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
@@ -103,19 +103,19 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        status, msg = self.ER.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
             print("ERROR: Test repo failed to be created.")
             print("Reason:  %s" % (msg))
             self.skipTest("Pre-conditions not met.")
 
-        ES = elastic_class.ElasticSearchDump(self.cfg.host,
+        es = elastic_class.ElasticSearchDump(self.cfg.host,
                                              repo=self.repo_name)
-        ES.dump_name = self.dump_name
-        status, msg = ES.dump_db()
+        es.dump_name = self.dump_name
+        status, msg = es.dump_db()
 
         if status:
             print("Error detected for dump in repository: %s"
@@ -131,10 +131,10 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.main()
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
                                                   repo=self.repo_name)
 
-        if self.dump_name not in elastic_class.get_dump_list(self.ER.es,
+        if self.dump_name not in elastic_class.get_dump_list(self.er.es,
                                                              self.repo_name):
             status = True
 
@@ -158,9 +158,9 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append(self.repo_name)
         sys.argv = self.argv_list
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        status, msg = self.ER.create_repo(self.repo_name2, self.repo_dir)
+        status, msg = self.er.create_repo(self.repo_name2, self.repo_dir)
 
         if status:
             print("ERROR: Test repo failed to be created.")
@@ -169,10 +169,10 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.main()
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
                                                   repo=self.repo_name)
 
-        if self.repo_name in self.ER.repo_dict:
+        if self.repo_name in self.er.repo_dict:
             status = True
 
         else:
@@ -194,9 +194,9 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append(self.repo_name)
         sys.argv = self.argv_list
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        status, msg = self.ER.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
             print("ERROR: Test repo failed to be created.")
@@ -205,10 +205,10 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.main()
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
                                                   repo=self.repo_name)
 
-        if self.repo_name not in self.ER.repo_dict:
+        if self.repo_name not in self.er.repo_dict:
             status = True
 
         else:
@@ -229,9 +229,9 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append("-U")
         sys.argv = self.argv_list
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        status, msg = self.ER.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
             print("ERROR: Test repo failed to be created.")
@@ -262,9 +262,9 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append("-R")
         sys.argv = self.argv_list
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        status, msg = self.ER.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
             print("ERROR: Test repo failed to be created.")
@@ -288,9 +288,9 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append(self.repo_name)
         sys.argv = self.argv_list
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        status, msg = self.ER.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
             print("ERROR: Test repo failed to be created.")
@@ -318,10 +318,10 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.main()
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
                                                   repo=self.repo_name)
 
-        if self.repo_name in self.ER.repo_dict:
+        if self.repo_name in self.er.repo_dict:
             status = True
 
         else:
@@ -423,11 +423,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        if self.ER and ("-C" in self.argv_list or "-L" in self.argv_list or
+        if self.er and ("-C" in self.argv_list or "-L" in self.argv_list or
                         "-R" in self.argv_list or "-U" in self.argv_list or
                         "-M" in self.argv_list):
 
-            status, msg = self.ER.delete_repo(self.repo_name)
+            status, msg = self.er.delete_repo(self.repo_name)
 
             if status:
                 print("Error: Failed to remove repository '%s'"
@@ -437,9 +437,9 @@ class UnitTest(unittest.TestCase):
             if os.path.isdir(self.repo_dir):
                 os.rmdir(self.repo_dir)
 
-        elif self.ER and "-S" in self.argv_list:
+        elif self.er and "-S" in self.argv_list:
 
-            status, msg = self.ER.delete_repo(self.repo_name)
+            status, msg = self.er.delete_repo(self.repo_name)
 
             if status:
                 print("Error: Failed to remove repository '%s'"
