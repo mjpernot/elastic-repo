@@ -330,15 +330,15 @@ def run_program(args_array, func_dict, **kwargs):
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
 
     try:
-        PROG_LOCK = gen_class.ProgramLock(sys.argv, cfg.host)
+        prog_lock = gen_class.ProgramLock(sys.argv, cfg.host)
 
         # Find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
-            ER = elastic_class.ElasticSearchRepo(cfg.host, cfg.port,
+            er = elastic_class.ElasticSearchRepo(cfg.host, cfg.port,
                                                  repo=args_array.get("-L"))
-            func_dict[opt](ER, args_array=args_array, **kwargs)
+            func_dict[opt](er, args_array=args_array, **kwargs)
 
-        del PROG_LOCK
+        del prog_lock
 
     except gen_class.SingleInstanceException:
         print("WARNING:  elastic_db_repo lock in place for: %s" % (cfg.name))
