@@ -14,6 +14,7 @@ coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/create_repo.p
 coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/delete_repo.py
 coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/delete_dump.py
 coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/rename_repo.py
+coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/rename.py
 coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/disk_usage.py
 coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/list_repos.py
 coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/run_program.py
