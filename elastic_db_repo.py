@@ -119,11 +119,13 @@ def create_repo(ER, repo_name=None, repo_dir=None, **kwargs):
 
     """
 
+    args_array = dict(kwargs.get("args_array"))
+
     if not repo_name:
-        repo_name = kwargs.get("args_array").get("-C")
+        repo_name = args_array.get("-C")
 
     if not repo_dir:
-        repo_dir = kwargs.get("args_array").get("-l")
+        repo_dir = args_array.get("-l")
 
     if repo_name in ER.repo_dict:
         print("Error:  '%s' repository already exists at: '%s'"
