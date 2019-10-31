@@ -12,7 +12,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - delete_repo:  Fixed mutable list/dictionary argument issue.
 - create_repo:  Fixed mutable list/dictionary argument issue.
 
+### Added
+- \_rename:  Private function for rename_repo().
+
 ### Changed
+- rename_repo:  Replaced part of code with call to \_rename().
 - run_program:  Changed variables to standard naming convention.
 - list_repos:  Changed variables to standard naming convention.
 - disk_usage:  Changed variables to standard naming convention.
