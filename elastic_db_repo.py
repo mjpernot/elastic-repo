@@ -247,27 +247,41 @@ def rename_repo(er, name_list=None, **kwargs):
             print("Error:  Cannot rename to existing repository '%s'"
                   % (name_list[1]))
         else:
-            err_flag, msg = \
-                er.create_repo(
-                    name_list[1],
-                    er.repo_dict[name_list[0]]["settings"]["location"])
-
-            if err_flag:
-                print("Error: Unable to rename repository from '%s' to '%s'"
-                      % (name_list[0], name_list[1]))
-                print("Reason: '%s'" % (msg))
-
-            else:
-                err_flag, msg = er.delete_repo(name_list[0])
-
-                if err_flag:
-                    print("Error: Failed to remove repository '%s'"
-                          % (name_list[0]))
-                    print("Reason: '%s'" % (msg))
+            _rename(er, name_list)
 
     else:
         print("Error: Incorrect number of args or is not a list: %s "
               % (str(name_list)))
+
+
+def _rename(er, name_list, **kwargs):
+
+    """Function:  _rename
+
+    Description:  Private function for rename_repo function.
+
+    Arguments:
+        (input) er -> ElasticSearch class instance.
+        (input) name_list -> List of two repository names for renaming process.
+
+    """
+
+    name_list = list(name_list)
+    err_flag, msg = er.create_repo(
+        name_list[1], er.repo_dict[name_list[0]]["settings"]["location"])
+
+    if err_flag:
+        print("Error: Unable to rename repository from '%s' to '%s'"
+              % (name_list[0], name_list[1]))
+        print("Reason: '%s'" % (msg))
+
+    else:
+        err_flag, msg = er.delete_repo(name_list[0])
+
+        if err_flag:
+            print("Error: Failed to remove repository '%s'"
+                  % (name_list[0]))
+            print("Reason: '%s'" % (msg))
 
 
 def disk_usage(er, **kwargs):
