@@ -68,14 +68,14 @@ class UnitTest(unittest.TestCase):
         self.repo_name = "TEST_INTR_REPO"
         self.repo_dir = os.path.join(self.cfg.base_repo_dir, self.repo_name)
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        if self.ER.repo_dict:
+        if self.er.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.ER.create_repo(repo_name=self.repo_name,
+            _, _ = self.er.create_repo(repo_name=self.repo_name,
                                        repo_dir=self.repo_dir)
 
     def test_deleterepo_cmdline(self):
@@ -90,7 +90,7 @@ class UnitTest(unittest.TestCase):
 
         args_array = {"-D": "TEST_INTR_REPO"}
 
-        self.assertFalse(elastic_db_repo.delete_repo(self.ER,
+        self.assertFalse(elastic_db_repo.delete_repo(self.er,
                                                      args_array=args_array))
 
     def test_deleterepo_arg(self):
@@ -103,7 +103,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(elastic_db_repo.delete_repo(self.ER,
+        self.assertFalse(elastic_db_repo.delete_repo(self.er,
                                                      repo_name=self.repo_name))
 
     def tearDown(self):
