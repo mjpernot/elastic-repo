@@ -186,11 +186,13 @@ def delete_dump(ER, repo_name=None, dump_name=None, **kwargs):
 
     """
 
+    args_array = dict(kwargs.get("args_array"))
+
     if not repo_name:
-        repo_name = kwargs.get("args_array").get("-r")
+        repo_name = args_array.get("-r")
 
     if not dump_name:
-        dump_name = kwargs.get("args_array").get("-S")
+        dump_name = args_array.get("-S")
 
     if repo_name in ER.repo_dict:
 
