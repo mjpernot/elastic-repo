@@ -35,28 +35,28 @@ import version
 __version__ = version.__version__
 
 
-def disk_usage(ER, **kwargs):
+def disk_usage(er, **kwargs):
 
     """Function:  disk_usage
 
     Description:  This is a function stub for elastic_db_repo.disk_usage.
 
     Arguments:
-        ER -> Stub argument holder.
+        er -> Stub argument holder.
 
     """
 
     pass
 
 
-def list_repos(ER, **kwargs):
+def list_repos(er, **kwargs):
 
     """Function:  list_repos
 
     Description:  This is a function stub for elastic_db_repo.list_repos.
 
     Arguments:
-        ER -> Stub argument holder.
+        er -> Stub argument holder.
 
     """
 
@@ -111,7 +111,7 @@ class UnitTest(unittest.TestCase):
                 self.host = ["SERVER_NAME"]
                 self.port = 9200
 
-        self.CT = CfgTest()
+        self.ct = CfgTest()
 
         self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
         self.func_dict = {"-U": disk_usage, "-R": list_repos}
@@ -135,7 +135,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lock.ProgramLock = elastic_db_repo.gen_class.ProgramLock
         mock_class.return_value = "Elastic_Class"
-        mock_load = self.CT
+        mock_load = self.ct
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
@@ -157,7 +157,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lock.ProgramLock = elastic_db_repo.gen_class.ProgramLock
         mock_class.return_value = "Elastic_Class"
-        mock_load = self.CT
+        mock_load = self.ct
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
@@ -177,7 +177,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lock.ProgramLock = elastic_db_repo.gen_class.ProgramLock
         mock_class.return_value = "Elastic_Class"
-        mock_load = self.CT
+        mock_load = self.ct
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
