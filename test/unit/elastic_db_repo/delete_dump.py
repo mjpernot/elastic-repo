@@ -9,7 +9,6 @@
         test/unit/elastic_db_repo/delete_dump.py
 
     Arguments:
-        None
 
 """
 
@@ -33,7 +32,6 @@ import elastic_db_repo
 import lib.gen_libs as gen_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -42,10 +40,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Unit testing initilization.
@@ -69,7 +63,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -78,10 +71,6 @@ class UnitTest(unittest.TestCase):
             """Class:  ElasticSearchRepo
 
             Description:  Class representation of the ElasticSearchRepo class.
-
-            Super-Class:  object
-
-            Sub-Classes:  None
 
             Methods:
                 __init__ -> Initialize configuration environment.
@@ -96,7 +85,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Initialization instance of the class.
 
                 Arguments:
-                        None
 
                 """
 
@@ -126,7 +114,7 @@ class UnitTest(unittest.TestCase):
 
                 return err_flag, err_msg
 
-        self.ER = ElasticSearchRepo()
+        self.er = ElasticSearchRepo()
 
         self.args_array = {"-r": "Test_Repo_Name_1", "-S": "Test_Dump_Name_1"}
 
@@ -138,7 +126,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test err_flag is set to True.
 
         Arguments:
-            mock_class -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
@@ -150,7 +137,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.ER, args_array=self.args_array))
+                self.er, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_err_flag_false(self, mock_class):
@@ -160,7 +147,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test err_flag is set to False.
 
         Arguments:
-            mock_class -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
@@ -168,7 +154,7 @@ class UnitTest(unittest.TestCase):
                                                  ["Test_Dump_Name_2"]]
 
         self.assertFalse(elastic_db_repo.delete_dump(
-            self.ER, args_array=self.args_array))
+            self.er, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_dump_name_in_list(self, mock_class):
@@ -178,7 +164,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test dump name is in list.
 
         Arguments:
-            mock_class -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
@@ -186,7 +171,7 @@ class UnitTest(unittest.TestCase):
                                                  ["Test_Dump_Name_2"]]
 
         self.assertFalse(elastic_db_repo.delete_dump(
-            self.ER, args_array=self.args_array))
+            self.er, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_dump_name_not_in_list(self, mock_class):
@@ -196,7 +181,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test dump name is not in list.
 
         Arguments:
-            mock_class -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
@@ -207,7 +191,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.ER, args_array=self.args_array))
+                self.er, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_repo_name_in_list(self, mock_class):
@@ -217,7 +201,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo name is in list.
 
         Arguments:
-            mock_class -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
@@ -228,7 +211,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.ER, args_array=self.args_array))
+                self.er, args_array=self.args_array))
 
     def test_repo_name_not_in_list(self):
 
@@ -237,7 +220,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo name is not in list.
 
         Arguments:
-            None
 
         """
 
@@ -245,7 +227,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.ER, args_array=self.args_array))
+                self.er, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_dump_name_is_passed(self, mock_class):
@@ -255,7 +237,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test dump name is passed as an argument.
 
         Arguments:
-            mock_class -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
@@ -266,7 +247,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.ER, dump_name="Test_Dump_Name_3",
+                self.er, dump_name="Test_Dump_Name_3",
                 args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
@@ -277,7 +258,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test dump name is not passed as an argument.
 
         Arguments:
-            mock_class -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
@@ -288,7 +268,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.ER, args_array=self.args_array))
+                self.er, args_array=self.args_array))
 
     def test_repo_name_is_passed(self):
 
@@ -297,7 +277,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo name is passed as an argument.
 
         Arguments:
-            None
 
         """
 
@@ -305,7 +284,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.ER, repo_name="Test_Repo_Name_3",
+                self.er, repo_name="Test_Repo_Name_3",
                 args_array=self.args_array))
 
     def test_repo_name_not_passed(self):
@@ -315,7 +294,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo name is not passed as an argument.
 
         Arguments:
-            None
 
         """
 
@@ -323,7 +301,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.ER, args_array=self.args_array))
+                self.er, args_array=self.args_array))
 
 
 if __name__ == "__main__":

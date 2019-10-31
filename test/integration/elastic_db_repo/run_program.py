@@ -9,7 +9,6 @@
         test/integration/elastic_db_repo/run_program.py
 
     Arguments:
-        None
 
 """
 
@@ -36,7 +35,6 @@ import lib.gen_libs as gen_libs
 import elastic_lib.elastic_class as elastic_class
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -45,10 +43,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Unit testing initilization.
@@ -70,7 +64,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -93,10 +86,10 @@ class UnitTest(unittest.TestCase):
                           "-U": elastic_db_repo.disk_usage}
         self.args = {"-c": "elastic", "-d": self.config_path}
 
-        self.ER = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-        self.ER2 = None
+        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.er2 = None
 
-        if self.ER.repo_dict:
+        if self.er.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
@@ -107,11 +100,10 @@ class UnitTest(unittest.TestCase):
         Description:  Test delete dump call.
 
         Arguments:
-            None
 
         """
 
-        err_flag, status_msg = self.ER.create_repo(self.repo_name,
+        err_flag, status_msg = self.er.create_repo(self.repo_name,
                                                    self.repo_dir)
 
         if err_flag:
@@ -119,10 +111,10 @@ class UnitTest(unittest.TestCase):
             print("Reason:  %s" % (status_msg))
             self.skipTest("Pre-conditions not met.")
 
-        ES = elastic_class.ElasticSearchDump(self.cfg.host,
+        es = elastic_class.ElasticSearchDump(self.cfg.host,
                                              repo=self.repo_name)
-        ES.dump_name = self.dump_name
-        err_flag, msg = ES.dump_db()
+        es.dump_name = self.dump_name
+        err_flag, msg = es.dump_db()
 
         if err_flag:
             print("Error detected for dump in repository: %s"
@@ -143,11 +135,10 @@ class UnitTest(unittest.TestCase):
         Description:  Test list dumps call.
 
         Arguments:
-            None
 
         """
 
-        err_flag, status_msg = self.ER.create_repo(self.repo_name,
+        err_flag, status_msg = self.er.create_repo(self.repo_name,
                                                    self.repo_dir)
 
         if err_flag:
@@ -155,9 +146,9 @@ class UnitTest(unittest.TestCase):
             print("Reason:  %s" % (status_msg))
             self.skipTest("Pre-conditions not met.")
 
-        ES = elastic_class.ElasticSearchDump(self.cfg.host,
+        es = elastic_class.ElasticSearchDump(self.cfg.host,
                                              repo=self.repo_name)
-        err_flag, msg = ES.dump_db()
+        err_flag, msg = es.dump_db()
 
         if err_flag:
             print("Error detected for dump in repository: %s"
@@ -178,11 +169,10 @@ class UnitTest(unittest.TestCase):
         Description:  Test disk usage call.
 
         Arguments:
-            None
 
         """
 
-        err_flag, status_msg = self.ER.create_repo(self.repo_name,
+        err_flag, status_msg = self.er.create_repo(self.repo_name,
                                                    self.repo_dir)
 
         if err_flag:
@@ -211,11 +201,10 @@ class UnitTest(unittest.TestCase):
         Description:  Test rename repo call.
 
         Arguments:
-            None
 
         """
 
-        err_flag, status_msg = self.ER.create_repo(self.repo_name,
+        err_flag, status_msg = self.er.create_repo(self.repo_name,
                                                    self.repo_dir)
 
         if err_flag:
@@ -227,11 +216,11 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.run_program(self.args, self.func_dict)
 
-        self.ER2 = elastic_class.ElasticSearchRepo(self.cfg.host,
+        self.er2 = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port,
                                                    repo=self.repo_name2)
 
-        if self.repo_name2 in self.ER2.repo_dict:
+        if self.repo_name2 in self.er2.repo_dict:
             status = True
 
         else:
@@ -246,11 +235,10 @@ class UnitTest(unittest.TestCase):
         Description:  Test list repos call.
 
         Arguments:
-            None
 
         """
 
-        err_flag, status_msg = self.ER.create_repo(self.repo_name,
+        err_flag, status_msg = self.er.create_repo(self.repo_name,
                                                    self.repo_dir)
 
         if err_flag:
@@ -271,11 +259,10 @@ class UnitTest(unittest.TestCase):
         Description:  Test delete repo call.
 
         Arguments:
-            None
 
         """
 
-        err_flag, status_msg = self.ER.create_repo(self.repo_name,
+        err_flag, status_msg = self.er.create_repo(self.repo_name,
                                                    self.repo_dir)
 
         if err_flag:
@@ -287,11 +274,11 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.run_program(self.args, self.func_dict)
 
-        self.ER2 = elastic_class.ElasticSearchRepo(self.cfg.host,
+        self.er2 = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port,
                                                    repo=self.repo_name)
 
-        if self.repo_name not in self.ER2.repo_dict:
+        if self.repo_name not in self.er2.repo_dict:
             status = True
 
         else:
@@ -306,7 +293,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test create repo call.
 
         Arguments:
-            None
 
         """
 
@@ -315,11 +301,11 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.run_program(self.args, self.func_dict)
 
-        self.ER2 = elastic_class.ElasticSearchRepo(self.cfg.host,
+        self.er2 = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port,
                                                    repo=self.repo_name)
 
-        if self.repo_name in self.ER2.repo_dict:
+        if self.repo_name in self.er2.repo_dict:
             status = True
 
         else:
@@ -334,16 +320,15 @@ class UnitTest(unittest.TestCase):
         Description:  Clean up of integration testing.
 
         Arguments:
-            None
 
         """
 
         if "-C" in self.args or "-R" in self.args or "-U" in self.args \
            or "-L" in self.args or "-S" in self.args:
-            ER = elastic_class.ElasticSearchRepo(self.cfg.host,
+            er = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                  self.cfg.port)
 
-            err_flag, status_msg = ER.delete_repo(self.repo_name)
+            err_flag, status_msg = er.delete_repo(self.repo_name)
 
             if err_flag:
                 print("Error: Failed to remove repository '%s'"
@@ -351,10 +336,10 @@ class UnitTest(unittest.TestCase):
                 print("Reason: '%s'" % (status_msg))
 
         elif "-M" in self.args:
-            ER = elastic_class.ElasticSearchRepo(self.cfg.host,
+            er = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                  self.cfg.port)
 
-            err_flag, status_msg = ER.delete_repo(self.repo_name2)
+            err_flag, status_msg = er.delete_repo(self.repo_name2)
 
             if err_flag:
                 print("Error: Failed to remove repository '%s'"

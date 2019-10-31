@@ -9,7 +9,6 @@
         test/unit/elastic_db_repo/help_message.py
 
     Arguments:
-        None
 
 """
 
@@ -32,7 +31,6 @@ import elastic_db_repo
 import lib.gen_libs as gen_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -41,10 +39,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         test_help_message -> Test with no arguments.
@@ -58,7 +52,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test help_message function.
 
         Arguments:
-            None
 
         """
 

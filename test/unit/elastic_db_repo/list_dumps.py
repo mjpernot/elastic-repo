@@ -9,7 +9,6 @@
         test/unit/elastic_db_repo/list_dumps.py
 
     Arguments:
-        None
 
 """
 
@@ -33,7 +32,6 @@ import elastic_db_repo
 import lib.gen_libs as gen_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -42,10 +40,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Unit testing initilization.
@@ -62,7 +56,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -71,10 +64,6 @@ class UnitTest(unittest.TestCase):
             """Class:  ElasticSearchRepo
 
             Description:  Class representation of the ElasticSearchRepo class.
-
-            Super-Class:  object
-
-            Sub-Classes:  None
 
             Methods:
                 __init__ -> Initialize configuration environment.
@@ -88,7 +77,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Initialization instance of the class.
 
                 Arguments:
-                        None
 
                 """
 
@@ -97,7 +85,7 @@ class UnitTest(unittest.TestCase):
                 self.dump_list = []
                 self.repo_dict = ["TEST_REPO"]
 
-        self.ER = ElasticSearchRepo()
+        self.er = ElasticSearchRepo()
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -108,19 +96,17 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo dict is an empty list.
 
         Arguments:
-            mock_libs -> Mock Ref:  elastic_db_repo.elastic_libs
-            mock_cls -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
-        self.ER.repo = None
-        self.ER.repo_dict = []
+        self.er.repo = None
+        self.er.repo_dict = []
 
         mock_libs.get_dump_list.return_value = True
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.ER))
+            self.assertFalse(elastic_db_repo.list_dumps(self.er))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -131,18 +117,16 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo name set to None.
 
         Arguments:
-            mock_libs -> Mock Ref:  elastic_db_repo.elastic_libs
-            mock_cls -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
-        self.ER.repo = None
+        self.er.repo = None
 
         mock_libs.get_dump_list.return_value = True
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.ER))
+            self.assertFalse(elastic_db_repo.list_dumps(self.er))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -153,8 +137,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test repo name set to a name.
 
         Arguments:
-            mock_libs -> Mock Ref:  elastic_db_repo.elastic_libs
-            mock_cls -> Mock Ref:  elastic_db_repo.elastic_class
 
         """
 
@@ -162,7 +144,7 @@ class UnitTest(unittest.TestCase):
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.ER))
+            self.assertFalse(elastic_db_repo.list_dumps(self.er))
 
 
 if __name__ == "__main__":

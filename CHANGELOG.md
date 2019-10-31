@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.3.3] - 2019-10-31
+### Fixed
+- run_program:  Fixed error in setting up program lock using incorrect configuration references.
+- run_program:  Fixed mutable list/dictionary argument issue.
+- rename_repo:  Fixed mutable list/dictionary argument issue.
+- delete_dump:  Fixed mutable list/dictionary argument issue.
+- delete_repo:  Fixed mutable list/dictionary argument issue.
+- create_repo:  Fixed mutable list/dictionary argument issue.
+
+### Added
+- \_rename:  Private function for rename_repo().
+
+### Changed
+- create_repo:  Repo_name will be joined to repo_dir to create new repository.
+- rename_repo:  Replaced part of code with call to \_rename().
+- run_program:  Changed variables to standard naming convention.
+- list_repos:  Changed variables to standard naming convention.
+- disk_usage:  Changed variables to standard naming convention.
+- rename_repo:  Changed variables to standard naming convention.
+- delete_dump:  Changed variables to standard naming convention.
+- delete_repo:  Changed variables to standard naming convention.
+- create_repo:  Changed variables to standard naming convention.
+- list_dumps:  Changed variables to standard naming convention.
+- main:  Refactored "if" statements.
+- Documentation updates.
+
+
 ## [0.3.2] - 2018-11-22
 ### Changed
 - Documentation updates.

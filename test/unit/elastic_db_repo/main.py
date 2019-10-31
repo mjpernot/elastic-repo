@@ -9,7 +9,6 @@
         test/unit/elastic_db_repo/main.py
 
     Arguments:
-        None
 
 """
 
@@ -33,7 +32,6 @@ import elastic_db_repo
 import lib.gen_libs as gen_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -42,10 +40,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Unit testing initilization.
@@ -69,7 +63,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -84,8 +77,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with help_func returns True.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser.arg_parse2
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
 
         """
 
@@ -103,8 +94,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with help_func returns False.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
 
         """
 
@@ -123,8 +112,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with arg_require returns True.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
 
         """
 
@@ -143,8 +130,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with arg_require returns False.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
 
         """
 
@@ -164,8 +149,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with arg_xor_dict returns False.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
 
         """
 
@@ -185,8 +168,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with arg_xor_dict returns True.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
 
         """
 
@@ -207,8 +188,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with arg_cond_req_or returns False.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
 
         """
 
@@ -229,8 +208,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with arg_cond_req_or returns True.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
 
         """
 
@@ -252,8 +229,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with arg_dir_chk_crt returns True.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
 
         """
 
@@ -276,9 +251,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test with arg_dir_chk_crt returns False.
 
         Arguments:
-            mock_arg -> Mock Ref:  elastic_db_repo.arg_parser
-            mock_help -> Mock Ref:  elastic_db_repo.gen_libs.help_func
-            mock_run -> Mock Ref:  elastic_db_repo.run_program
 
         """
 
