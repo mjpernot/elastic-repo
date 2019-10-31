@@ -16,6 +16,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - \_rename:  Private function for rename_repo().
 
 ### Changed
+- create_repo:  Repo_name will be joined to repo_dir to create new repository.
 - rename_repo:  Replaced part of code with call to \_rename().
 - run_program:  Changed variables to standard naming convention.
 - list_repos:  Changed variables to standard naming convention.
