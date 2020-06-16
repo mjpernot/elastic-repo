@@ -5,3 +5,5 @@
 coverage.xml
 lib
 elastic_lib
+config/*.py
+config/*.pyc
