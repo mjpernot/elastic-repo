@@ -17,14 +17,13 @@ pipeline {
                 dir ('elastic_lib/lib') {
                     git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
-                dir ('elastic_lib/requests_lib') {
-                    git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/requests-lib.git"
-                }
                 sh """
                 virtualenv test_env
                 source test_env/bin/activate
                 pip2 install mock==2.0.0 --user
-                pip2 install elasticsearch==7.0.2 --user
+                pip2 install elasticsearch>=7.0.0,<8.0.0 --user
+                pip2 install requests==2.19.1 --user
+                pip2 install urllib3==1.24.3 --user
                 ./test/unit/elastic_db_repo/help_message.py
                 ./test/unit/elastic_db_repo/rename_repo.py
                 ./test/unit/elastic_db_repo/rename.py
@@ -66,25 +65,25 @@ pipeline {
                                 "pattern": "./*.py",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/elastic-repo/"
+                                "target": "pypi-proj-local/highpoint/elastic-repo/"
                             },
                             {
                                 "pattern": "./*.txt",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/elastic-repo/"
+                                "target": "pypi-proj-local/highpoint/elastic-repo/"
                             },
                             {
                                 "pattern": "./*.md",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/elastic-repo/"
+                                "target": "pypi-proj-local/highpoint/elastic-repo/"
                             },
                             {
                                 "pattern": "*.TEMPLATE",
                                 "recursive": true,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/elastic-repo/config/"
+                                "target": "pypi-proj-local/highpoint/elastic-repo/config/"
                             }
                         ]
                     }"""
