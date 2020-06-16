@@ -2,7 +2,7 @@
 # Classification (U)
 
 # Description:
-  This program is used to adminstrate an Elasticsearch repository.  This includes creating, deleting, renaming and listing dumps in a repository.
+  Used to adminstrate an Elasticsearch repository.  This includes creating, deleting, renaming and listing dumps in a repository.
 
 
 ###  This README file is broken down into the following sections:
@@ -27,8 +27,6 @@
 
 # Prerequisites:
   * List of Linux packages that need to be installed on the server.
-    - python-libs
-    - python-devel
     - git
     - python-pip
 
@@ -67,7 +65,6 @@ Install supporting classes and libraries.
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-requests-lib.txt --target elastic_lib/requests_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 # Configuration:
@@ -80,12 +77,11 @@ cp elastic.py.TEMPLATE elastic.py
 ```
 
 Make the appropriate changes to the Elasticsearch environment.
-  * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.  Add or delete HOST_NAMEs as necessary.
+  * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.
     - host = ["HOST_NAME1", "HOST_NAME2"]
 
 ```
 vim elastic.py
-chmod 600 elastic.py
 sudo chown elasticsearch:elasticsearch elastic.py
 ```
 
@@ -104,8 +100,6 @@ sudo chown elasticsearch:elasticsearch elastic.py
 
 # Unit Testing:
 
-### Description: Testing consists of unit testing for the functions in the elastic_db_repo.py program.
-
 ### Installation:
 
 Install the project using git.
@@ -134,42 +128,25 @@ Install supporting classes and libraries.
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-requests-lib.txt --target elastic_lib/requests_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
-# Unit test runs for elastic_db_repo.py:
+### Testing:
   * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 cd {Python_Project}/elastic-repo
-test/unit/elastic_db_repo/help_message.py
-test/unit/elastic_db_repo/list_dumps.py
-test/unit/elastic_db_repo/create_repo.py
-test/unit/elastic_db_repo/delete_repo.py
-test/unit/elastic_db_repo/delete_dump.py
-test/unit/elastic_db_repo/rename_repo.py
-test/unit/elastic_db_repo/rename.py
-test/unit/elastic_db_repo/disk_usage.py
-test/unit/elastic_db_repo/list_repos.py
-test/unit/elastic_db_repo/run_program.py
-test/unit/elastic_db_repo/main.py
-```
-
-### All unit testing
-```
 test/unit/elastic_db_repo/unit_test_run.sh
 ```
 
-### Code coverage program
+### Code coverage:
 ```
+cd {Python_Project}/elastic-repo
 test/unit/elastic_db_repo/code_coverage.sh
 ```
 
 
 # Integration Testing:
 
-### Description: Testing consists of integration testing of functions in the elastic_db_repo.py program.
-
 ### Installation:
 
 Install the project using git.
@@ -198,13 +175,12 @@ Install supporting classes and libraries.
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-requests-lib.txt --target elastic_lib/requests_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 ### Configuration:
 
 Create Elasticsearch configuration file.  Make the appropriate changes to the Elasticsearch environment.
-  * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.  Add or delete HOST_NAMEs as necessary.
+  * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.
     - host = ["HOST_NAME1", "HOST_NAME2"]
     - base_repo_dir = "REPO_DIRECTORY_PATH"
   * NOTE:  **REPO_DIRECTORY_PATH** is a directory path to a shared file system by all Elasticsearch databases in the cluster.
@@ -213,43 +189,26 @@ Create Elasticsearch configuration file.  Make the appropriate changes to the El
 cd test/integration/elastic_db_repo/config
 cp elastic.py.TEMPLATE elastic.py
 vim elastic.py
-chmod 600 elastic.py
 sudo chown elasticsearch:elasticsearch elastic.py
 ```
 
-# Integration test runs for elastic_db_repo.py:
+### Testing:
   * These tests must be run as the elasticsearch account:
   * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
-sudo bash
-su - elasticsearch
 cd {Python_Project}/elastic-repo
-test/integration/elastic_db_repo/list_dumps.py
-test/integration/elastic_db_repo/create_repo.py
-test/integration/elastic_db_repo/delete_repo.py
-test/integration/elastic_db_repo/delete_dump.py
-test/integration/elastic_db_repo/rename_repo.py
-test/integration/elastic_db_repo/disk_usage.py
-test/integration/elastic_db_repo/list_repos.py
-test/integration/elastic_db_repo/run_program.py
-test/integration/elastic_db_repo/main.py
-```
-
-### All integration testing
-```
 test/integration/elastic_db_repo/integration_test_run.sh
 ```
 
-### Code coverage program
+### Code coverage:
 ```
+cd {Python_Project}/elastic-repo
 test/integration/elastic_db_repo/code_coverage.sh
 ```
 
 
 # Blackbox Testing:
-
-### Description: Testing consists of blackbox testing of the elastic_db_repo.py program.
 
 ### Installation:
 
@@ -279,7 +238,6 @@ Install supporting classes and libraries.
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-requests-lib.txt --target elastic_lib/requests_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 ### Configuration:
@@ -292,12 +250,11 @@ cp ../../../../config/elastic.py.TEMPLATE elastic.py
 ```
 
 Make the appropriate changes to the Elasticsearch environment.
-  * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.  Add or delete HOST_NAMEs as necessary.
+  * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.
     - host = ["HOST_NAME1", "HOST_NAME2"]
 
 ```
 vim elastic.py
-chmod 600 elastic.py
 sudo chown elasticsearch:elasticsearch elastic.py
 ```
 
@@ -312,13 +269,11 @@ cp blackbox_test.sh.TEMPLATE blackbox_test.sh
 vim blackbox_test.sh
 ```
 
-# Blackbox test run for elastic_db_repo.py:
+### Testing:
   * These tests must be run as the elasticsearch account.
   * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
-sudo bash
-su - elasticsearch
 cd {Python_Project}/elastic-repo
 test/blackbox/elastic_db_repo/blackbox_test.sh
 ```
