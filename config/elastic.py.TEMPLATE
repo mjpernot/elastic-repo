@@ -3,4 +3,5 @@
 # Unclassified until filled.
 
 host = ["HOST_NAME1", "HOST_NAME2"]
+# Default of ElasticSearch is port 9200
 port = 9200
