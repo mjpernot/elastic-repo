@@ -41,7 +41,7 @@
 
             # Elasticsearch configuration file.
             name = ["HOST_NAME1", "HOST_NAME2"]
-            port = PORT_NUMBER (default of Elasticsearch is 9200)
+            port = 9200
 
     Example:
         elastic_db_repo.py -c elastic -d config -L Backup_Repo

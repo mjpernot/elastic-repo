@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.3.4] - 2020-06-16
+### Changed
+- Documentation updates.
+
+
 ## [0.3.3] - 2019-10-31
 ### Fixed
 - run_program:  Fixed error in setting up program lock using incorrect configuration references.
