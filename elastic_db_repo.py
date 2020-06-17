@@ -66,6 +66,9 @@ import version
 
 __version__ = version.__version__
 
+# Global variables
+WARN_TEMPLATE = "Warning:  Repository '%s' does not exist."
+PRT_TEMPLATE = "Reason: '%s'"
 
 def help_message(**kwargs):
 

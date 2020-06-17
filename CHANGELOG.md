@@ -10,6 +10,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - main:  Fixed handling command line arguments from SonarQube scan finding.
 - list_dumps:  Checked for present of repo name in ElasticSearch repository.
 
+### Added
+- Add two global print template variables.
+
 ### Changed
 - Documentation updates.
 
