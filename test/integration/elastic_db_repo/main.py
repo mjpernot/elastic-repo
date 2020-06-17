@@ -452,19 +452,7 @@ class UnitTest(unittest.TestCase):
 
         if self.er and ("-C" in self.argv_list or "-L" in self.argv_list or
                         "-R" in self.argv_list or "-U" in self.argv_list or
-                        "-M" in self.argv_list):
-
-            status, msg = self.er.delete_repo(self.repo_name)
-
-            if status:
-                print("Error: Failed to remove repository '%s'"
-                      % self.repo_name)
-                print(PRT_TEMPLATE % (msg))
-
-            if os.path.isdir(self.phy_repo_dir):
-                shutil.rmtree(self.phy_repo_dir)
-
-        elif self.er and "-S" in self.argv_list:
+                        "-M" in self.argv_list or "-S" in self.argv_list):
 
             status, msg = self.er.delete_repo(self.repo_name)
 
