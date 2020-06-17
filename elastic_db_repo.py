@@ -267,7 +267,7 @@ def rename_repo(els, name_list=None, **kwargs):
             print("Error:  Cannot rename to existing repository '%s'"
                   % (name_list[1]))
         else:
-            _rename(er, name_list)
+            _rename(els, name_list)
 
     else:
         print("Error: Incorrect number of args or is not a list: %s "
@@ -372,9 +372,9 @@ def run_program(args_array, func_dict, **kwargs):
 
         # Find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
-            er = elastic_class.ElasticSearchRepo(cfg.host, cfg.port,
-                                                 repo=args_array.get("-L"))
-            func_dict[opt](er, args_array=args_array, **kwargs)
+            els = elastic_class.ElasticSearchRepo(cfg.host, cfg.port,
+                                                  repo=args_array.get("-L"))
+            func_dict[opt](els, args_array=args_array, **kwargs)
 
         del prog_lock
 
