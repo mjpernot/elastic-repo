@@ -115,14 +115,14 @@ def list_dumps(els, **kwargs):
         elastic_libs.list_dumps(elastic_class.get_dump_list(els.es, repo))
 
 
-def create_repo(er, repo_name=None, repo_dir=None, **kwargs):
+def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
 
     """Function:  create_repo
 
     Description:  Create an ElasticSearch repository.
 
     Arguments:
-        (input) er -> ElasticSearch class instance.
+        (input) els -> ElasticSearch class instance.
         (input) repo_name -> Name of repository.
         (input) repo_dir -> Repository directory path.
         (input) **kwargs:
@@ -140,13 +140,13 @@ def create_repo(er, repo_name=None, repo_dir=None, **kwargs):
     if not repo_dir:
         repo_dir = args_array.get("-l")
 
-    if repo_name in er.repo_dict:
+    if repo_name in els.repo_dict:
         print("Error:  '%s' repository already exists at: '%s'"
               % (repo_name, repo_dir))
 
     else:
-        err_flag, msg = er.create_repo(repo_name,
-                                       os.path.join(repo_dir, repo_name))
+        err_flag, msg = els.create_repo(repo_name,
+                                        os.path.join(repo_dir, repo_name))
 
         if err_flag:
             print("Error detected for Repository: '%s' at '%s'"

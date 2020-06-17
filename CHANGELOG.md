@@ -15,7 +15,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - \_rename:  Added global variables.
-- create_repo:  Added global variables.
+- create_repo:  Added global variables and changed variable name to standard naming convention.
 - delete_repo:  Added global variables.
 - delete_dump:  Added global variables.
 - list_dumps:  Added global variables and changed variable name to standard naming convention.
