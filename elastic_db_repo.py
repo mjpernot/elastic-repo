@@ -387,6 +387,7 @@ def main():
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d"]
     func_dict = {"-L": list_dumps, "-R": list_repos, "-C": create_repo,
                  "-D": delete_repo, "-S": delete_dump, "-M": rename_repo,
@@ -402,7 +403,7 @@ def main():
                     "-M": ["-L", "-R", "-S", "-C", "-D", "-U"]}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list,
+    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
                                        opt_val=opt_val,
                                        multi_val=opt_multi_list)
 
