@@ -274,14 +274,14 @@ def rename_repo(els, name_list=None, **kwargs):
               % (str(name_list)))
 
 
-def _rename(er, name_list, **kwargs):
+def _rename(els, name_list, **kwargs):
 
     """Function:  _rename
 
     Description:  Private function for rename_repo function.
 
     Arguments:
-        (input) er -> ElasticSearch class instance.
+        (input) els -> ElasticSearch class instance.
         (input) name_list -> List of two repository names for renaming process.
 
     """
@@ -289,8 +289,8 @@ def _rename(er, name_list, **kwargs):
     global PRT_TEMPLATE
 
     name_list = list(name_list)
-    err_flag, msg = er.create_repo(
-        name_list[1], er.repo_dict[name_list[0]]["settings"]["location"])
+    err_flag, msg = els.create_repo(
+        name_list[1], els.repo_dict[name_list[0]]["settings"]["location"])
 
     if err_flag:
         print("Error: Unable to rename repository from '%s' to '%s'"
@@ -298,7 +298,7 @@ def _rename(er, name_list, **kwargs):
         print(PRT_TEMPLATE % (msg))
 
     else:
-        err_flag, msg = er.delete_repo(name_list[0])
+        err_flag, msg = els.delete_repo(name_list[0])
 
         if err_flag:
             print("Error: Failed to remove repository '%s'"
