@@ -188,14 +188,14 @@ def delete_repo(els, repo_name=None, **kwargs):
         print(WARN_TEMPLATE % (repo_name))
 
 
-def delete_dump(er, repo_name=None, dump_name=None, **kwargs):
+def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
 
     """Function:  delete_dump
 
     Description:  Delete a dump in an Elasticsearch repository.
 
     Arguments:
-        (input) er -> ElasticSearch class instance.
+        (input) els -> ElasticSearch class instance.
         (input) repo_name -> Name of repository.
         (input) dump_name -> Name of dump to delete.
         (input) **kwargs:
@@ -218,9 +218,9 @@ def delete_dump(er, repo_name=None, dump_name=None, **kwargs):
 
         # See if the dump exist
         if any(dump_name == x[0]
-               for x in elastic_class.get_dump_list(er.es, repo_name)):
+               for x in elastic_class.get_dump_list(els.es, repo_name)):
 
-            err_flag, msg = er.delete_dump(repo_name, dump_name)
+            err_flag, msg = els.delete_dump(repo_name, dump_name)
 
             if err_flag:
                 print("Error detected for Repository: '%s' Dump: '%s'"
