@@ -182,8 +182,11 @@ pip install -r requirements-python-lib.txt --target elastic_lib/lib --trusted-ho
 Create Elasticsearch configuration file.  Make the appropriate changes to the Elasticsearch environment.
   * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.
     - host = ["HOST_NAME1", "HOST_NAME2"]
-    - base_repo_dir = "REPO_DIRECTORY_PATH"
-  * NOTE:  **REPO_DIRECTORY_PATH** is a directory path to a shared file system by all Elasticsearch databases in the cluster.
+    - log_repo_dir = "LOGICAL_DIR_PATH"
+    - phy_repo_dir = "PHYSICAL_DIR_PATH"
+  * **LOGICAL_DIR_PATH** is the logical directory path to the share file system.
+  * **phy_repo_dir** is the physical directory path to the share file system.
+    -  NOTE:  If running ElasticSearch as Docker setup, then these paths will be different.  If running as a standard setup, they will be the same.
 
 ```
 cd test/integration/elastic_db_repo/config
