@@ -345,13 +345,14 @@ def run_program(args_array, func_dict, **kwargs):
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     args_array = dict(args_array)
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
     hostname = socket.gethostname().strip().split(".")[0]
 
     try:
-        prog_lock = gen_class.ProgramLock(sys.argv, hostname)
+        prog_lock = gen_class.ProgramLock(cmdline.argv, hostname)
 
         # Find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):

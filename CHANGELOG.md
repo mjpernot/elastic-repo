@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [0.3.4] - 2020-06-16
 ### Fixed
+- run_program:  Fixed handling command line arguments from SonarQube scan finding.
 - main:  Fixed handling command line arguments from SonarQube scan finding.
 - list_dumps:  Checked for present of repo name in ElasticSearch repository.
 
