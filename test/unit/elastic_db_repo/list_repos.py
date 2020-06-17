@@ -80,7 +80,7 @@ class UnitTest(unittest.TestCase):
 
                 self.repo_dict = {"Test_Repo_Name_1": {
                     "type": "fs", "settings": {"compress": "true",
-                                               "location": "/tmp/TEST_REPO1"}}}
+                                               "location": "/dir/TEST_REPO1"}}}
 
         self.er = ElasticSearchRepo()
 
