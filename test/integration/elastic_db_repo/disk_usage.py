@@ -67,15 +67,16 @@ class UnitTest(unittest.TestCase):
         self.repo_name = "TEST_INTR_REPO"
         self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
+                                                   self.cfg.port)
 
-        if self.er.repo_dict:
+        if self.els.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.er.create_repo(repo_name=self.repo_name,
-                                       repo_dir=self.repo_dir)
+            _, _ = self.els.create_repo(repo_name=self.repo_name,
+                                        repo_dir=self.repo_dir)
 
     @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):
@@ -97,7 +98,7 @@ class UnitTest(unittest.TestCase):
                 break
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.disk_usage(self.er))
+            self.assertFalse(elastic_db_repo.disk_usage(self.els))
 
     def tearDown(self):
 
@@ -109,7 +110,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        err_flag, msg = self.er.delete_repo(self.repo_name)
+        err_flag, msg = self.els.delete_repo(self.repo_name)
 
         if err_flag:
             print("Error: Failed to remove repository '%s'"
