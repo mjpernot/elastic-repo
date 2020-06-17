@@ -334,18 +334,18 @@ def disk_usage(els, **kwargs):
                           (float(usage.used) / usage.total) * 100))
 
 
-def list_repos(er, **kwargs):
+def list_repos(els, **kwargs):
 
     """Function:  list_repos
 
     Description:  Lists the repositories present.
 
     Arguments:
-        (input) er -> ElasticSearch class instance.
+        (input) els -> ElasticSearch class instance.
 
     """
 
-    elastic_libs.list_repos2(er.repo_dict)
+    elastic_libs.list_repos2(els.repo_dict)
 
 
 def run_program(args_array, func_dict, **kwargs):

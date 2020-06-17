@@ -14,6 +14,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Add two global print template variables.
 
 ### Changed
+- list_repos:  Changed variable name to standard naming convention.
 - disk_usage:  Changed variable name to standard naming convention.
 - rename_repo:  Changed variable name to standard naming convention.
 - \_rename:  Added global variables and changed variable name to standard naming convention.
