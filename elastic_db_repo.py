@@ -96,13 +96,15 @@ def list_dumps(er, **kwargs):
 
     """
 
+    global WARN_TEMPLATE
+
     repo_list = []
 
     if er.repo and er.repo in er.repo_dict:
         repo_list.append(er.repo)
 
     elif er.repo and er.repo not in er.repo_dict:
-        print("Warning:  Repository '%s' does not exist." % (er.repo))
+        print(WARN_TEMPLATE % (er.repo))
 
     else:
         repo_list = er.repo_dict
@@ -127,6 +129,8 @@ def create_repo(er, repo_name=None, repo_dir=None, **kwargs):
 
     """
 
+    global PRT_TEMPLATE
+
     args_array = dict(kwargs.get("args_array"))
 
     if not repo_name:
@@ -146,7 +150,7 @@ def create_repo(er, repo_name=None, repo_dir=None, **kwargs):
         if err_flag:
             print("Error detected for Repository: '%s' at '%s'"
                   % (repo_name, repo_dir))
-            print("Reason: '%s'" % (msg))
+            print(PRT_TEMPLATE % (msg))
 
 
 def delete_repo(er, repo_name=None, **kwargs):
@@ -163,6 +167,9 @@ def delete_repo(er, repo_name=None, **kwargs):
 
     """
 
+    global WARN_TEMPLATE
+    global PRT_TEMPLATE
+
     args_array = dict(kwargs.get("args_array"))
 
     if not repo_name:
@@ -174,10 +181,10 @@ def delete_repo(er, repo_name=None, **kwargs):
 
         if err_flag:
             print("Error: Failed to remove repository '%s'" % (repo_name))
-            print("Reason: '%s'" % (msg))
+            print(PRT_TEMPLATE % (msg))
 
     else:
-        print("Warning:  Repository '%s' does not exist." % (repo_name))
+        print(WARN_TEMPLATE % (repo_name))
 
 
 def delete_dump(er, repo_name=None, dump_name=None, **kwargs):
@@ -194,6 +201,9 @@ def delete_dump(er, repo_name=None, dump_name=None, **kwargs):
             args_array -> Dict of command line options and values.
 
     """
+
+    global WARN_TEMPLATE
+    global PRT_TEMPLATE
 
     args_array = dict(kwargs.get("args_array"))
 
@@ -214,14 +224,14 @@ def delete_dump(er, repo_name=None, dump_name=None, **kwargs):
             if err_flag:
                 print("Error detected for Repository: '%s' Dump: '%s'"
                       % (repo_name, dump_name))
-                print("Reason: '%s'" % (msg))
+                print(PRT_TEMPLATE % (msg))
 
         else:
             print("Warning:  Dump '%s' does not exist in Repository '%s'"
                   % (dump_name, repo_name))
 
     else:
-        print("Warning:  Repository '%s' does not exist." % (repo_name))
+        print(WARN_TEMPLATE % (repo_name))
 
 
 def rename_repo(er, name_list=None, **kwargs):
@@ -275,6 +285,8 @@ def _rename(er, name_list, **kwargs):
 
     """
 
+    global PRT_TEMPLATE
+
     name_list = list(name_list)
     err_flag, msg = er.create_repo(
         name_list[1], er.repo_dict[name_list[0]]["settings"]["location"])
@@ -282,7 +294,7 @@ def _rename(er, name_list, **kwargs):
     if err_flag:
         print("Error: Unable to rename repository from '%s' to '%s'"
               % (name_list[0], name_list[1]))
-        print("Reason: '%s'" % (msg))
+        print(PRT_TEMPLATE % (msg))
 
     else:
         err_flag, msg = er.delete_repo(name_list[0])
@@ -290,7 +302,7 @@ def _rename(er, name_list, **kwargs):
         if err_flag:
             print("Error: Failed to remove repository '%s'"
                   % (name_list[0]))
-            print("Reason: '%s'" % (msg))
+            print(PRT_TEMPLATE % (msg))
 
 
 def disk_usage(er, **kwargs):

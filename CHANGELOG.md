@@ -14,6 +14,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Add two global print template variables.
 
 ### Changed
+- \_rename:  Added global variables.
+- create_repo:  Added global variables.
+- delete_repo:  Added global variables.
+- delete_dump:  Added global variables.
+- list_dumps:  Added global variables.
 - Documentation updates.
 
 
