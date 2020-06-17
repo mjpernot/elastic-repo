@@ -102,7 +102,7 @@ def list_dumps(els, **kwargs):
     repo_list = []
 
     if els.repo and els.repo in els.repo_dict:
-        repo_list.append(er.repo)
+        repo_list.append(els.repo)
 
     elif els.repo and els.repo not in els.repo_dict:
         print(WARN_TEMPLATE % (els.repo))
@@ -214,7 +214,7 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
     if not dump_name:
         dump_name = args_array.get("-S")
 
-    if repo_name in er.repo_dict:
+    if repo_name in els.repo_dict:
 
         # See if the dump exist
         if any(dump_name == x[0]
