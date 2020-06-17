@@ -64,10 +64,9 @@ class UnitTest(unittest.TestCase):
         self.test_path = os.path.join(os.getcwd(), self.base_dir)
         self.config_path = os.path.join(self.test_path, "config")
         self.cfg = gen_libs.load_module("elastic", self.config_path)
-
         self.repo_name = "TEST_INTR_REPO"
-        self.repo_dir = os.path.join(self.cfg.base_repo_dir, self.repo_name)
-
+        self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
+        self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
         if self.er.repo_dict:
@@ -104,7 +103,8 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(elastic_db_repo.delete_repo(self.er,
-                                                     repo_name=self.repo_name))
+                                                     repo_name=self.repo_name,
+                                                     args_array={}))
 
     def tearDown(self):
 
@@ -116,8 +116,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        if os.path.isdir(self.repo_dir):
-            shutil.rmtree(self.repo_dir)
+        if os.path.isdir(self.phy_repo_dir):
+            shutil.rmtree(self.phy_repo_dir)
 
 
 if __name__ == "__main__":
