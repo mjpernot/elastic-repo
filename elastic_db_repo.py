@@ -95,8 +95,11 @@ def list_dumps(er, **kwargs):
 
     repo_list = []
 
-    if er.repo:
+    if er.repo and er.repo in er.repo_dict:
         repo_list.append(er.repo)
+
+    elif er.repo and er.repo not in er.repo_dict:
+        print("Warning:  Repository '%s' does not exist." % (er.repo))
 
     else:
         repo_list = er.repo_dict

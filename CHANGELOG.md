@@ -5,6 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.3.4] - 2020-06-16
+### Fixed
+- list_dumps:  Checked for present of repo name in ElasticSearch repository.
+
 ### Changed
 - Documentation updates.
 
