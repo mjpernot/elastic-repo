@@ -235,14 +235,14 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
         print(WARN_TEMPLATE % (repo_name))
 
 
-def rename_repo(er, name_list=None, **kwargs):
+def rename_repo(els, name_list=None, **kwargs):
 
     """Function:  rename_repo
 
     Description:  Rename an Elasticseatch repository.
 
     Arguments:
-        (input) er -> ElasticSearch class instance.
+        (input) els -> ElasticSearch class instance.
         (input) name_list -> List of two repository names for renaming process.
         (input) **kwargs:
             args_array -> Dict of command line options and values.
@@ -259,11 +259,11 @@ def rename_repo(er, name_list=None, **kwargs):
         if name_list[0] == name_list[1]:
             print("Error:  Cannot rename to same name: %s" % (name_list))
 
-        elif name_list[0] not in er.repo_dict:
+        elif name_list[0] not in els.repo_dict:
             print("Error:  Source respository '%s' does not exist"
                   % (name_list[0]))
 
-        elif name_list[1] in er.repo_dict:
+        elif name_list[1] in els.repo_dict:
             print("Error:  Cannot rename to existing repository '%s'"
                   % (name_list[1]))
         else:
