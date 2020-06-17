@@ -6,4 +6,4 @@ coverage.xml
 lib
 elastic_lib
 config/*.py
-config/*.pyc
+test/integration/elastic_db_repo/config/*.py
