@@ -130,6 +130,8 @@ def main():
 
     """
 
+    prt_success = "\n\tTest Successful"
+    prt_failure = "\n\tTest Failure"
     cmdline = gen_libs.get_inst(sys)
     opt_val_list = ["-c", "-d", "-n", "-C", "-R", "-S", "-T"]
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
@@ -142,10 +144,10 @@ def main():
                                 args_array["-C"])
 
         if chk_create_repo(er, args_array["-C"]):
-            print("\n\tTest Successful")
+            print(prt_success)
 
         else:
-            print("\n\tTest Failure")
+            print(prt_failure)
 
         _ = remove_repo(er, args_array["-C"], es.dump_loc)
 
@@ -167,20 +169,20 @@ def main():
                                 args_array["-r"])
 
         if args_array["-S"] in es.dump_list:
-            print("\n\tTest Failure")
+            print(prt_failure)
 
         else:
-            print("\n\tTest Successful")
+            print(prt_success)
 
     elif "-D" in args_array:
         er = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
                                 args_array["-D"])
 
         if args_array["-D"] in er.repo_dict:
-            print("\n\tTest Failure")
+            print(prt_failure)
 
         else:
-            print("\n\tTest Successful")
+            print(prt_success)
 
 
 if __name__ == "__main__":
