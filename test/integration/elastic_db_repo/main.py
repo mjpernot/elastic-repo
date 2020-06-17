@@ -76,17 +76,14 @@ class UnitTest(unittest.TestCase):
         self.test_path = os.path.join(os.getcwd(), self.base_dir)
         self.config_path = os.path.join(self.test_path, "config")
         self.cfg = gen_libs.load_module("elastic", self.config_path)
-
         self.argv_list = [os.path.join(self.base_dir, "main.py"),
                           "-c", "elastic", "-d", self.config_path]
-
         self.repo_name = "TEST_INTR_REPO"
         self.repo_name2 = "TEST_INTR_REPO2"
         self.dump_name = "test_dump"
-        self.repo_dir = os.path.join(self.cfg.base_repo_dir, self.repo_name)
-
+        self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
+        self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
         self.er = None
-
         er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
         if er.repo_dict:
@@ -103,8 +100,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
@@ -127,10 +124,8 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append(self.dump_name)
         self.argv_list.append("-r")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
-
+        cmdline.argv = self.argv_list
         elastic_db_repo.main()
-
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
                                                   repo=self.repo_name)
 
@@ -153,13 +148,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-M")
         self.argv_list.append(self.repo_name2)
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
-
+        cmdline.argv = self.argv_list
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
         status, msg = self.er.create_repo(self.repo_name2, self.repo_dir)
 
         if status:
@@ -168,7 +162,6 @@ class UnitTest(unittest.TestCase):
             self.skipTest("Pre-conditions not met.")
 
         elastic_db_repo.main()
-
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
                                                   repo=self.repo_name)
 
@@ -190,12 +183,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-D")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
-
+        cmdline.argv = self.argv_list
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
@@ -204,7 +196,6 @@ class UnitTest(unittest.TestCase):
             self.skipTest("Pre-conditions not met.")
 
         elastic_db_repo.main()
-
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
                                                   repo=self.repo_name)
 
@@ -216,6 +207,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(status)
 
+    @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):
 
         """Function:  test_disk_usage
@@ -226,11 +218,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-U")
-        sys.argv = self.argv_list
-
+        cmdline.argv = self.argv_list
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
@@ -240,7 +231,7 @@ class UnitTest(unittest.TestCase):
 
         # Wait until the repo dir has been created.
         while True:
-            if not os.path.isdir(self.repo_dir):
+            if not os.path.isdir(self.phy_repo_dir):
                 time.sleep(1)
 
             else:
@@ -259,11 +250,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-R")
-        sys.argv = self.argv_list
-
+        cmdline.argv = self.argv_list
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
@@ -284,12 +274,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-L")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
-
+        cmdline.argv = self.argv_list
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
@@ -310,14 +299,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-C")
         self.argv_list.append(self.repo_name)
         self.argv_list.append("-l")
         self.argv_list.append(self.repo_dir)
-        sys.argv = self.argv_list
-
+        cmdline.argv = self.argv_list
         elastic_db_repo.main()
-
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
                                                   repo=self.repo_name)
 
@@ -338,9 +326,11 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
+
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.remove(self.config_path)
         self.argv_list.append("TEST_DIR")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -355,9 +345,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-C")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -372,10 +363,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-U")
         self.argv_list.append("-D")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -390,9 +382,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.remove("-c")
         self.argv_list.remove("elastic")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -407,8 +400,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-v")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -434,8 +428,8 @@ class UnitTest(unittest.TestCase):
                       % self.repo_name)
                 print("Reason: '%s'" % (msg))
 
-            if os.path.isdir(self.repo_dir):
-                os.rmdir(self.repo_dir)
+            if os.path.isdir(self.phy_repo_dir):
+                shutil.rmtree(self.phy_repo_dir)
 
         elif self.er and "-S" in self.argv_list:
 
@@ -446,8 +440,8 @@ class UnitTest(unittest.TestCase):
                       % self.repo_name)
                 print("Reason: '%s'" % (msg))
 
-            if os.path.isdir(self.repo_dir):
-                shutil.rmtree(self.repo_dir)
+            if os.path.isdir(self.phy_repo_dir):
+                shutil.rmtree(self.phy_repo_dir)
 
 
 if __name__ == "__main__":
