@@ -70,6 +70,7 @@ __version__ = version.__version__
 WARN_TEMPLATE = "Warning:  Repository '%s' does not exist."
 PRT_TEMPLATE = "Reason: '%s'"
 
+
 def help_message(**kwargs):
 
     """Function:  help_message
