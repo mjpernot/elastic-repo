@@ -85,7 +85,7 @@ def help_message(**kwargs):
     print(__doc__)
 
 
-def list_dumps(er, **kwargs):
+def list_dumps(els, **kwargs):
 
     """Function:  list_dumps
 
@@ -93,7 +93,7 @@ def list_dumps(er, **kwargs):
         repositories.
 
     Arguments:
-        (input) er -> ElasticSearch class instance.
+        (input) els -> ElasticSearch class instance.
 
     """
 
@@ -101,18 +101,18 @@ def list_dumps(er, **kwargs):
 
     repo_list = []
 
-    if er.repo and er.repo in er.repo_dict:
+    if els.repo and els.repo in els.repo_dict:
         repo_list.append(er.repo)
 
-    elif er.repo and er.repo not in er.repo_dict:
-        print(WARN_TEMPLATE % (er.repo))
+    elif els.repo and els.repo not in els.repo_dict:
+        print(WARN_TEMPLATE % (els.repo))
 
     else:
-        repo_list = er.repo_dict
+        repo_list = els.repo_dict
 
     for repo in repo_list:
         print("\nList of Dumps for Reposistory: %s" % (str(repo)))
-        elastic_libs.list_dumps(elastic_class.get_dump_list(er.es, repo))
+        elastic_libs.list_dumps(elastic_class.get_dump_list(els.es, repo))
 
 
 def create_repo(er, repo_name=None, repo_dir=None, **kwargs):
