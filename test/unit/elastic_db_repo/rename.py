@@ -165,7 +165,8 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo._rename(self.els, self.name_list2))
+            self.assertFalse(elastic_db_repo._rename(self.els,
+                                                     self.name_list2))
 
     def test_create_err_false(self):
 
