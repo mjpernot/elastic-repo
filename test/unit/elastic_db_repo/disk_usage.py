@@ -91,7 +91,7 @@ class UnitTest(unittest.TestCase):
                     "type": "fs", "settings": {"compress": "true",
                                                "location": "/dir/TEST_REPO2"}}}
 
-        self.er = ElasticSearchRepo()
+        self.els = ElasticSearchRepo()
 
     @mock.patch("elastic_db_repo.gen_libs")
     def test_repodict_multiple_entries(self, mock_lib):
@@ -104,7 +104,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.er.repo_dict = self.er.repo_dict2
+        self.els.repo_dict = self.els.repo_dict2
         _ntuple_diskusage = collections.namedtuple("usage", "total used free")
 
         mock_lib.disk_usage.side_effect = [_ntuple_diskusage(total=1023303680,
@@ -121,7 +121,7 @@ class UnitTest(unittest.TestCase):
                                                  "254.16MB"]
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.disk_usage(self.er))
+            self.assertFalse(elastic_db_repo.disk_usage(self.els))
 
     @mock.patch("elastic_db_repo.gen_libs")
     def test_repodict_one_entry(self, mock_lib):
@@ -143,7 +143,7 @@ class UnitTest(unittest.TestCase):
                                                  "254.15MB"]
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.disk_usage(self.er))
+            self.assertFalse(elastic_db_repo.disk_usage(self.els))
 
     def test_repodict_empty(self):
 
@@ -155,9 +155,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.er.repo_dict = {}
+        self.els.repo_dict = {}
 
-        self.assertFalse(elastic_db_repo.disk_usage(self.er))
+        self.assertFalse(elastic_db_repo.disk_usage(self.els))
 
 
 if __name__ == "__main__":

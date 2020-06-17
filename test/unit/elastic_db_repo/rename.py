@@ -135,7 +135,7 @@ class UnitTest(unittest.TestCase):
 
                 return err_flag, err_msg
 
-        self.er = ElasticSearchRepo()
+        self.els = ElasticSearchRepo()
 
         self.name_list = ["Test_Repo_Name_1", "Test_Dump_Name_5"]
         self.name_list2 = ["Test_Repo_Name_2", "Test_Repo_Name_5"]
@@ -152,7 +152,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(elastic_db_repo._rename(self.er, self.name_list))
+        self.assertFalse(elastic_db_repo._rename(self.els, self.name_list))
 
     def test_delete_err_true(self):
 
@@ -165,7 +165,7 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo._rename(self.er, self.name_list2))
+            self.assertFalse(elastic_db_repo._rename(self.els, self.name_list2))
 
     def test_create_err_false(self):
 
@@ -177,7 +177,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(elastic_db_repo._rename(self.er, self.name_list3))
+        self.assertFalse(elastic_db_repo._rename(self.els, self.name_list3))
 
     def test_create_err_true(self):
 
@@ -190,7 +190,8 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo._rename(self.er, self.name_list4))
+            self.assertFalse(elastic_db_repo._rename(self.els,
+                                                     self.name_list4))
 
 
 if __name__ == "__main__":

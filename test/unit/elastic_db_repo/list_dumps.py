@@ -86,7 +86,7 @@ class UnitTest(unittest.TestCase):
                 self.dump_list = []
                 self.repo_dict = ["TEST_REPO", "TEST_REPO2"]
 
-        self.er = ElasticSearchRepo()
+        self.els = ElasticSearchRepo()
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -100,13 +100,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.er.repo = "TEST_REPO2"
+        self.els.repo = "TEST_REPO2"
 
         mock_libs.get_dump_list.return_value = True
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.er))
+            self.assertFalse(elastic_db_repo.list_dumps(self.els))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -120,13 +120,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.er.repo = None
-        self.er.repo_dict = []
+        self.els.repo = None
+        self.els.repo_dict = []
 
         mock_libs.get_dump_list.return_value = True
         mock_cls.list_dumps.return_value = []
 
-        self.assertFalse(elastic_db_repo.list_dumps(self.er))
+        self.assertFalse(elastic_db_repo.list_dumps(self.els))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -140,13 +140,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.er.repo = None
+        self.els.repo = None
 
         mock_libs.get_dump_list.return_value = True
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.er))
+            self.assertFalse(elastic_db_repo.list_dumps(self.els))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -164,7 +164,7 @@ class UnitTest(unittest.TestCase):
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.er))
+            self.assertFalse(elastic_db_repo.list_dumps(self.els))
 
 
 if __name__ == "__main__":
