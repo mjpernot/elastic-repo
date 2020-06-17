@@ -37,6 +37,11 @@ import version
 
 __version__ = version.__version__
 
+# Global
+SKIP_PRINT = "Pre-conditions not met."
+ERROR_PRINT = "ERROR: Test repo failed to be created."
+PRT_TEMPLATE = "Reason:  %s"
+
 
 class UnitTest(unittest.TestCase):
 
@@ -72,6 +77,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+
         self.base_dir = "test/integration/elastic_db_repo"
         self.test_path = os.path.join(os.getcwd(), self.base_dir)
         self.config_path = os.path.join(self.test_path, "config")
@@ -88,7 +95,7 @@ class UnitTest(unittest.TestCase):
 
         if er.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
-            self.skipTest("Pre-conditions not met.")
+            self.skipTest(SKIP_PRINT)
 
     def test_delete_dump(self):
 
@@ -100,14 +107,18 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
         cmdline = gen_libs.get_inst(sys)
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         es = elastic_class.ElasticSearchDump(self.cfg.host,
                                              repo=self.repo_name)
@@ -117,7 +128,7 @@ class UnitTest(unittest.TestCase):
         if status:
             print("Error detected for dump in repository: %s"
                   % (self.repo_name))
-            print("Reason: %s" % (msg))
+            print(PRT_TEMPLATE % (msg))
             self.skipTest("Dump failed")
 
         self.argv_list.append("-S")
@@ -148,6 +159,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
         cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-M")
         self.argv_list.append(self.repo_name2)
@@ -157,9 +172,9 @@ class UnitTest(unittest.TestCase):
         status, msg = self.er.create_repo(self.repo_name2, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         elastic_db_repo.main()
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
@@ -183,6 +198,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
         cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-D")
         self.argv_list.append(self.repo_name)
@@ -191,9 +210,9 @@ class UnitTest(unittest.TestCase):
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         elastic_db_repo.main()
         self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
@@ -218,6 +237,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
         cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-U")
         cmdline.argv = self.argv_list
@@ -225,9 +248,9 @@ class UnitTest(unittest.TestCase):
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         # Wait until the repo dir has been created.
         while True:
@@ -250,6 +273,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
         cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-R")
         cmdline.argv = self.argv_list
@@ -257,9 +284,9 @@ class UnitTest(unittest.TestCase):
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -274,6 +301,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
         cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-L")
         self.argv_list.append(self.repo_name)
@@ -282,9 +313,9 @@ class UnitTest(unittest.TestCase):
         status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -417,6 +448,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global PRT_TEMPLATE
+
         if self.er and ("-C" in self.argv_list or "-L" in self.argv_list or
                         "-R" in self.argv_list or "-U" in self.argv_list or
                         "-M" in self.argv_list):
@@ -426,7 +459,7 @@ class UnitTest(unittest.TestCase):
             if status:
                 print("Error: Failed to remove repository '%s'"
                       % self.repo_name)
-                print("Reason: '%s'" % (msg))
+                print(PRT_TEMPLATE % (msg))
 
             if os.path.isdir(self.phy_repo_dir):
                 shutil.rmtree(self.phy_repo_dir)
@@ -438,7 +471,7 @@ class UnitTest(unittest.TestCase):
             if status:
                 print("Error: Failed to remove repository '%s'"
                       % self.repo_name)
-                print("Reason: '%s'" % (msg))
+                print(PRT_TEMPLATE % (msg))
 
             if os.path.isdir(self.phy_repo_dir):
                 shutil.rmtree(self.phy_repo_dir)
