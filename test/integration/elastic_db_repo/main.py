@@ -39,8 +39,8 @@ __version__ = version.__version__
 
 # Global
 SKIP_PRINT = "Pre-conditions not met."
-ERROR_PRINT = "ERROR: Test repo failed to be created."
 PRT_TEMPLATE = "Reason:  %s"
+ERROR_PRINT = "ERROR: Test repo failed to be created."
 
 
 class UnitTest(unittest.TestCase):
