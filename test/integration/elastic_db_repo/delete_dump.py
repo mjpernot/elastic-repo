@@ -77,7 +77,7 @@ class UnitTest(unittest.TestCase):
 
         else:
             _, _ = self.els.create_repo(repo_name=self.repo_name,
-                                       repo_dir=self.repo_dir)
+                                        repo_dir=self.repo_dir)
 
             self.es = elastic_class.ElasticSearchDump(
                 self.cfg.host, self.cfg.port, repo=self.repo_name)
