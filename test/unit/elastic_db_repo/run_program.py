@@ -46,7 +46,7 @@ def disk_usage(els, **kwargs):
 
     """
 
-    if els:
+    if els and dict(kwargs.get("args_array")):
         pass
 
 
@@ -61,7 +61,7 @@ def list_repos(els, **kwargs):
 
     """
 
-    if els:
+    if els and dict(kwargs.get("args_array")):
         pass
 
 
