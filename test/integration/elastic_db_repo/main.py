@@ -141,7 +141,7 @@ class UnitTest(unittest.TestCase):
         self.els = elastic_class.ElasticSearchRepo(
             self.cfg.host, self.cfg.port, repo=self.repo_name)
 
-        if self.dump_name not in elastic_class.get_dump_list(self.els.es,
+        if self.dump_name not in elastic_class.get_dump_list(self.els.els,
                                                              self.repo_name):
             status = True
 
