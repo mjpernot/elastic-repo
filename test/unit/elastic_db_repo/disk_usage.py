@@ -24,8 +24,8 @@ else:
     import unittest
 
 # Third-party
-import mock
 import collections
+import mock
 
 # Local
 sys.path.append(os.getcwd())
@@ -81,15 +81,20 @@ class UnitTest(unittest.TestCase):
 
                 """
 
-                self.repo_dict = {"Test_Repo_Name_1": {
-                    "type": "fs", "settings": {"compress": "true",
-                                               "location": "/dir/TEST_REPO1"}}}
-                self.repo_dict2 = {"Test_Repo_Name_1": {
-                    "type": "fs", "settings": {"compress": "true",
-                                               "location": "/dir/TEST_REPO1"}},
-                                   "Test_Repo_Name_2": {
-                    "type": "fs", "settings": {"compress": "true",
-                                               "location": "/dir/TEST_REPO2"}}}
+                self.repo_dict = {
+                    "Test_Repo_Name_1": {
+                        "type": "fs", "settings": {
+                            "compress": "true",
+                            "location": "/dir/TEST_REPO1"}}}
+                self.repo_dict2 = {
+                    "Test_Repo_Name_1": {
+                        "type": "fs", "settings": {
+                            "compress": "true",
+                            "location": "/dir/TEST_REPO1"}},
+                    "Test_Repo_Name_2": {
+                        "type": "fs", "settings": {
+                            "compress": "true",
+                            "location": "/dir/TEST_REPO2"}}}
 
         self.els = ElasticSearchRepo()
 

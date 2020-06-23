@@ -24,7 +24,6 @@ else:
     import unittest
 
 # Third-party
-import mock
 
 # Local
 sys.path.append(os.getcwd())
@@ -91,12 +90,16 @@ class UnitTest(unittest.TestCase):
 
                 """
 
-                self.repo_dict = {"Test_Repo_Name_1": {
-                    "type": "fs", "settings": {"compress": "true",
-                                               "location": "/dir/TEST_REPO1"}},
-                                  "Test_Repo_Name_2": {
-                    "type": "fs", "settings": {"compress": "true",
-                                               "location": "/dir/TEST_REPO2"}}}
+                self.repo_dict = {
+                    "Test_Repo_Name_1": {
+                        "type": "fs", "settings": {
+                            "compress": "true",
+                            "location": "/dir/TEST_REPO1"}},
+                    "Test_Repo_Name_2": {
+                        "type": "fs", "settings": {
+                            "compress": "true",
+                            "location": "/dir/TEST_REPO2"}}}
+                self.repo_dir = None
 
             def create_repo(self, repo_name, repo_dir):
 
@@ -112,6 +115,7 @@ class UnitTest(unittest.TestCase):
 
                 """
 
+                self.repo_dir = repo_dir
                 err_flag = False
                 err_msg = None
 

@@ -81,7 +81,7 @@ class UnitTest(unittest.TestCase):
 
                 """
 
-                self.es = "Elastic_Search_Class"
+                self.els = "Elastic_Search_Class"
                 self.repo = "Test_Repo_Name"
                 self.dump_list = []
                 self.repo_dict = ["TEST_REPO", "TEST_REPO2"]

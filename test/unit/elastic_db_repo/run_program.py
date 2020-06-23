@@ -35,32 +35,34 @@ import version
 __version__ = version.__version__
 
 
-def disk_usage(er, **kwargs):
+def disk_usage(els, **kwargs):
 
     """Function:  disk_usage
 
     Description:  This is a function stub for elastic_db_repo.disk_usage.
 
     Arguments:
-        er -> Stub argument holder.
+        els -> Stub argument holder.
 
     """
 
-    pass
+    if els:
+        pass
 
 
-def list_repos(er, **kwargs):
+def list_repos(els, **kwargs):
 
     """Function:  list_repos
 
     Description:  This is a function stub for elastic_db_repo.list_repos.
 
     Arguments:
-        er -> Stub argument holder.
+        els -> Stub argument holder.
 
     """
 
-    pass
+    if els:
+        pass
 
 
 class ProgramLock(object):
@@ -140,7 +142,7 @@ class UnitTest(unittest.TestCase):
                 self.host = ["SERVER_NAME"]
                 self.port = 9200
 
-        self.ct = CfgTest()
+        self.cfg = CfgTest()
 
         self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
         self.func_dict = {"-U": disk_usage, "-R": list_repos}
@@ -163,7 +165,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lock.return_value = self.proglock
         mock_class.return_value = "Elastic_Class"
-        mock_load.return_value = self.ct
+        mock_load.return_value = self.cfg
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
@@ -186,7 +188,7 @@ class UnitTest(unittest.TestCase):
         mock_lock.side_effect = \
             elastic_db_repo.gen_class.SingleInstanceException
         mock_class.return_value = "Elastic_Class"
-        mock_load.return_value = self.ct
+        mock_load.return_value = self.cfg
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.run_program(self.args,
@@ -211,7 +213,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lock.return_value = self.proglock
         mock_class.return_value = "Elastic_Class"
-        mock_load.return_value = self.ct
+        mock_load.return_value = self.cfg
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
@@ -233,7 +235,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lock.return_value = self.proglock
         mock_class.return_value = "Elastic_Class"
-        mock_load.return_value = self.ct
+        mock_load.return_value = self.cfg
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
@@ -253,7 +255,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lock.return_value = self.proglock
         mock_class.return_value = "Elastic_Class"
-        mock_load.return_value = self.ct
+        mock_load.return_value = self.cfg
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
