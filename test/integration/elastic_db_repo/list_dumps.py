@@ -101,9 +101,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        es = elastic_class.ElasticSearchDump(self.cfg.host,
-                                             repo=self.repo_name)
-        err_flag, msg = es.dump_db()
+        els = elastic_class.ElasticSearchDump(self.cfg.host,
+                                              repo=self.repo_name)
+        err_flag, msg = els.dump_db()
 
         if err_flag:
             print("Error detected for dump in repository: %s"
@@ -125,9 +125,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        es = elastic_class.ElasticSearchDump(self.cfg.host,
-                                             repo=self.repo_name)
-        err_flag, msg = es.dump_db()
+        els = elastic_class.ElasticSearchDump(self.cfg.host,
+                                              repo=self.repo_name)
+        err_flag, msg = els.dump_db()
 
         if err_flag:
             print("Error detected for dump in repository: %s"

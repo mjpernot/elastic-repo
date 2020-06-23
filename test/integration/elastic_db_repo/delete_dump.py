@@ -68,21 +68,21 @@ class UnitTest(unittest.TestCase):
         self.repo_name = "TEST_INTR_REPO"
         self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
+        self.elr = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port)
 
-        if self.els.repo_dict:
+        if self.elr.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.els.create_repo(repo_name=self.repo_name,
+            _, _ = self.elr.create_repo(repo_name=self.repo_name,
                                         repo_dir=self.repo_dir)
 
-            self.es = elastic_class.ElasticSearchDump(
+            self.els = elastic_class.ElasticSearchDump(
                 self.cfg.host, self.cfg.port, repo=self.repo_name)
-            self.es.dump_name = self.dump_name
-            self.es.dump_db()
+            self.els.dump_name = self.dump_name
+            self.els.dump_db()
 
     def test_deletedmp_cmdline(self):
 

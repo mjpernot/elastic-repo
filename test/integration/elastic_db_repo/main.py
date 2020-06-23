@@ -26,7 +26,6 @@ else:
     import unittest
 
 # Third-party
-import mock
 
 # Local
 sys.path.append(os.getcwd())
@@ -91,9 +90,9 @@ class UnitTest(unittest.TestCase):
         self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
         self.els = None
-        er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        els = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        if er.repo_dict:
+        if els.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest(SKIP_PRINT)
 
@@ -121,10 +120,10 @@ class UnitTest(unittest.TestCase):
             print(PRT_TEMPLATE % (msg))
             self.skipTest(SKIP_PRINT)
 
-        es = elastic_class.ElasticSearchDump(self.cfg.host,
-                                             repo=self.repo_name)
-        es.dump_name = self.dump_name
-        status, msg = es.dump_db()
+        els = elastic_class.ElasticSearchDump(self.cfg.host,
+                                              repo=self.repo_name)
+        els.dump_name = self.dump_name
+        status, msg = els.dump_db()
 
         if status:
             print("Error detected for dump in repository: %s"
