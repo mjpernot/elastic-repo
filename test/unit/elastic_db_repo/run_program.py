@@ -46,8 +46,12 @@ def disk_usage(els, **kwargs):
 
     """
 
+    status = True
+
     if els and dict(kwargs.get("args_array")):
-        pass
+        status = True
+
+    return status
 
 
 def list_repos(els, **kwargs):
@@ -61,8 +65,12 @@ def list_repos(els, **kwargs):
 
     """
 
+    status = True
+
     if els and dict(kwargs.get("args_array")):
-        pass
+        status = True
+
+    return status
 
 
 class ProgramLock(object):
