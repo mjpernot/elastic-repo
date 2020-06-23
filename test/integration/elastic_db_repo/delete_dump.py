@@ -96,7 +96,7 @@ class UnitTest(unittest.TestCase):
 
         args_array = {"-r": self.repo_name, "-S": self.dump_name}
 
-        self.assertFalse(elastic_db_repo.delete_dump(self.els,
+        self.assertFalse(elastic_db_repo.delete_dump(self.elr,
                                                      args_array=args_array))
 
     def test_deletedmp_arg(self):
@@ -110,7 +110,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(elastic_db_repo.delete_dump(
-            self.els, repo_name=self.repo_name, dump_name=self.dump_name,
+            self.elr, repo_name=self.repo_name, dump_name=self.dump_name,
             args_array={}))
 
     def tearDown(self):
@@ -123,7 +123,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        err_flag, msg = self.els.delete_repo(self.repo_name)
+        err_flag, msg = self.elr.delete_repo(self.repo_name)
 
         if err_flag:
             print("Error: Failed to remove repository '%s'"
