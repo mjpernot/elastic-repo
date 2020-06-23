@@ -31,7 +31,7 @@ import version
 __version__ = version.__version__
 
 
-def load_cfg(args_array, **kwargs):
+def load_cfg(args_array):
 
     """Function:  load_cfg
 
@@ -46,7 +46,7 @@ def load_cfg(args_array, **kwargs):
     return gen_libs.load_module(args_array["-c"], args_array["-d"])
 
 
-def chk_create_repo(els, repo_name, **kwargs):
+def chk_create_repo(els, repo_name):
 
     """Function:  chk_create_repo
 
@@ -67,7 +67,7 @@ def chk_create_repo(els, repo_name, **kwargs):
     return status
 
 
-def create_es_instance(cfg, instance, repo_name=None, **kwargs):
+def create_es_instance(cfg, instance, repo_name=None):
 
     """Function:  create_es_instance
 
@@ -84,7 +84,7 @@ def create_es_instance(cfg, instance, repo_name=None, **kwargs):
     return instance(cfg.host, cfg.port, repo=repo_name)
 
 
-def remove_repo(els, repo_name, dump_loc, **kwargs):
+def remove_repo(els, repo_name, dump_loc):
 
     """Function:  remove_repo
 
