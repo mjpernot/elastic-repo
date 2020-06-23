@@ -35,8 +35,8 @@
             the Elasticsearch database server.
 
     Notes:
-        Elasticsearch configuration file format (elastic.py).  The
-        configuration file format for the Elasticsearch connection to a
+        Elasticsearch configuration file format (config/elastic.py.TEMPLATE).
+        The configuration file format for the Elasticsearch connection to a
         database.
 
             # Elasticsearch configuration file.
