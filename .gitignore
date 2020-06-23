@@ -7,3 +7,5 @@ lib
 elastic_lib
 config/*.py
 test/integration/elastic_db_repo/config/*.py
+test/blackbox/elastic_db_repo/blackbox_test.sh
+test/blackbox/elastic_db_repo/config/*.py
