@@ -24,7 +24,6 @@ else:
     import unittest
 
 # Third-party
-import mock
 
 # Local
 sys.path.append(os.getcwd())
@@ -85,6 +84,7 @@ class UnitTest(unittest.TestCase):
                 """
 
                 self.repo_dict = ["Test_Repo_Name_1", "Test_Rep_Name_2"]
+                self.repo_dir = None
 
             def create_repo(self, repo_name, repo_dir):
 
@@ -100,6 +100,7 @@ class UnitTest(unittest.TestCase):
 
                 """
 
+                self.repo_dir = repo_dir
                 err_flag = False
                 err_msg = None
 
@@ -110,8 +111,8 @@ class UnitTest(unittest.TestCase):
                 return err_flag, err_msg
 
         self.els = ElasticSearchRepo()
-
         self.args_array = {"-C": "Test_Repo_Name_3", "-l": "Repo_Directory"}
+        self.args_array2 = {"-l": "Repo_Directory"}
 
     def test_err_flag_true(self):
 
@@ -180,8 +181,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        self.args_array2 = {"-l": "Repo_Directory"}
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.create_repo(
