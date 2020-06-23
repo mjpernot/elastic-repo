@@ -112,7 +112,7 @@ def list_dumps(els, **kwargs):
 
     for repo in repo_list:
         print("\nList of Dumps for Reposistory: %s" % (str(repo)))
-        elastic_libs.list_dumps(elastic_class.get_dump_list(els.es, repo))
+        elastic_libs.list_dumps(elastic_class.get_dump_list(els.els, repo))
 
 
 def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
@@ -218,7 +218,7 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
 
         # See if the dump exist
         if any(dump_name == x[0]
-               for x in elastic_class.get_dump_list(els.es, repo_name)):
+               for x in elastic_class.get_dump_list(els.els, repo_name)):
 
             err_flag, msg = els.delete_dump(repo_name, dump_name)
 
