@@ -88,8 +88,9 @@ class UnitTest(unittest.TestCase):
 
                 """
 
-                self.es = "Elastic_Search_Class"
+                self.els = "Elastic_Search_Class"
                 self.repo_dict = ["Test_Repo_Name_1", "Test_Rep_Name_2"]
+                self.repo_name = None
 
             def delete_dump(self, repo_name, dump_name):
 
@@ -105,6 +106,7 @@ class UnitTest(unittest.TestCase):
 
                 """
 
+                self.repo_name = repo_name
                 err_flag = False
                 err_msg = None
 
