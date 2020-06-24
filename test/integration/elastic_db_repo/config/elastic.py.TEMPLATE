@@ -5,6 +5,10 @@
 host = ["HOST_NAME1", "HOST_NAME2"]
 port = 9200
 
-# Name of the base test repository directory path
+# Directory path to the shared repository.
 # Must be a shared mount between all Elasticsearch database servers.
-base_repo_dir = "REPO_DIRECTORY_PATH"
+# NOTE:  If running ElasticSearch as Docker setup, then these paths will be different.  If running as a standard setup, they will be the same.
+# Logical base repository directory.
+log_repo_dir = "LOGICAL_DIR_PATH"
+# Physical base repository directory.
+phy_repo_dir = "PHYSICAL_DIR_PATH"

@@ -43,9 +43,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_repo_name -> Test with repo name present.
         test_repo_empty_list -> Test repo dict is an empty list.
         test_repo_name_false -> Test repo name set to None.
-        test_repo_name_true -> Test repo name set to a name.
+        test_repo_name_miss -> Test with repo name not present.
 
     """
 
@@ -80,12 +81,32 @@ class UnitTest(unittest.TestCase):
 
                 """
 
-                self.es = "Elastic_Search_Class"
+                self.els = "Elastic_Search_Class"
                 self.repo = "Test_Repo_Name"
                 self.dump_list = []
-                self.repo_dict = ["TEST_REPO"]
+                self.repo_dict = ["TEST_REPO", "TEST_REPO2"]
 
-        self.er = ElasticSearchRepo()
+        self.els = ElasticSearchRepo()
+
+    @mock.patch("elastic_db_repo.elastic_class")
+    @mock.patch("elastic_db_repo.elastic_libs")
+    def test_repo_name(self, mock_libs, mock_cls):
+
+        """Function:  test_repo_name
+
+        Description:  Test with repo name present.
+
+        Arguments:
+
+        """
+
+        self.els.repo = "TEST_REPO2"
+
+        mock_libs.get_dump_list.return_value = True
+        mock_cls.list_dumps.return_value = []
+
+        with gen_libs.no_std_out():
+            self.assertFalse(elastic_db_repo.list_dumps(self.els))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -99,14 +120,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.er.repo = None
-        self.er.repo_dict = []
+        self.els.repo = None
+        self.els.repo_dict = []
 
         mock_libs.get_dump_list.return_value = True
         mock_cls.list_dumps.return_value = []
 
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.er))
+        self.assertFalse(elastic_db_repo.list_dumps(self.els))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -120,21 +140,21 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.er.repo = None
+        self.els.repo = None
 
         mock_libs.get_dump_list.return_value = True
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.er))
+            self.assertFalse(elastic_db_repo.list_dumps(self.els))
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
-    def test_repo_name_true(self, mock_libs, mock_cls):
+    def test_repo_name_miss(self, mock_libs, mock_cls):
 
-        """Function:  test_repo_name_true
+        """Function:  test_repo_name_miss
 
-        Description:  Test repo name set to a name.
+        Description:  Test with repo name not present.
 
         Arguments:
 
@@ -144,7 +164,7 @@ class UnitTest(unittest.TestCase):
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.er))
+            self.assertFalse(elastic_db_repo.list_dumps(self.els))
 
 
 if __name__ == "__main__":

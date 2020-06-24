@@ -24,7 +24,6 @@ else:
     import unittest
 
 # Third-party
-import mock
 
 # Local
 sys.path.append(os.getcwd())
@@ -110,7 +109,7 @@ class UnitTest(unittest.TestCase):
 
                 return err_flag, err_msg
 
-        self.er = ElasticSearchRepo()
+        self.els = ElasticSearchRepo()
 
         self.args_array = {"-D": "Test_Repo_Name_1"}
 
@@ -127,7 +126,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_repo(
-                self.er, repo_name="Test_Repo_Name_3"))
+                self.els, repo_name="Test_Repo_Name_3"))
 
     def test_err_flag_true(self):
 
@@ -143,7 +142,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_repo(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_err_flag_false(self):
 
@@ -156,7 +155,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(elastic_db_repo.delete_repo(
-            self.er, args_array=self.args_array))
+            self.els, args_array=self.args_array))
 
     def test_repo_name_in_list(self):
 
@@ -169,7 +168,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(elastic_db_repo.delete_repo(
-            self.er, args_array=self.args_array))
+            self.els, args_array=self.args_array))
 
     def test_repo_name_not_in_list(self):
 
@@ -183,7 +182,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_repo(
-                self.er, repo_name="Test_Repo_Name_3",
+                self.els, repo_name="Test_Repo_Name_3",
                 args_array=self.args_array))
 
     def test_repo_name_is_passed(self):
@@ -198,7 +197,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_repo(
-                self.er, repo_name="Test_Repo_Name_3", args_array={}))
+                self.els, repo_name="Test_Repo_Name_3", args_array={}))
 
     def test_repo_name_not_passed(self):
 
@@ -212,7 +211,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_repo(
-                self.er, args_array={"-D": "Test_Repo_Name_3"}))
+                self.els, args_array={"-D": "Test_Repo_Name_3"}))
 
 
 if __name__ == "__main__":

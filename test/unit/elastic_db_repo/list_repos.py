@@ -29,7 +29,6 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import elastic_db_repo
-import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -80,9 +79,9 @@ class UnitTest(unittest.TestCase):
 
                 self.repo_dict = {"Test_Repo_Name_1": {
                     "type": "fs", "settings": {"compress": "true",
-                                               "location": "/tmp/TEST_REPO1"}}}
+                                               "location": "/dir/TEST_REPO1"}}}
 
-        self.er = ElasticSearchRepo()
+        self.els = ElasticSearchRepo()
 
     @mock.patch("elastic_db_repo.elastic_libs.list_repos2")
     def test_list_repos(self, mock_list):
@@ -97,7 +96,7 @@ class UnitTest(unittest.TestCase):
 
         mock_list.return_value = True
 
-        self.assertFalse(elastic_db_repo.list_repos(self.er))
+        self.assertFalse(elastic_db_repo.list_repos(self.els))
 
 
 if __name__ == "__main__":

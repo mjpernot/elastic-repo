@@ -35,71 +35,69 @@ import version
 __version__ = version.__version__
 
 
-def disk_usage(er, **kwargs):
+def disk_usage(els, **kwargs):
 
     """Function:  disk_usage
 
     Description:  This is a function stub for elastic_db_repo.disk_usage.
 
     Arguments:
-        er -> Stub argument holder.
+        els -> Stub argument holder.
 
     """
 
-    pass
+    status = True
+
+    if els and dict(kwargs.get("args_array")):
+        status = True
+
+    return status
 
 
-def list_repos(er, **kwargs):
+def list_repos(els, **kwargs):
 
     """Function:  list_repos
 
     Description:  This is a function stub for elastic_db_repo.list_repos.
 
     Arguments:
-        er -> Stub argument holder.
+        els -> Stub argument holder.
 
     """
 
-    pass
+    status = True
+
+    if els and dict(kwargs.get("args_array")):
+        status = True
+
+    return status
 
 
 class ProgramLock(object):
 
     """Class:  ProgramLock
 
-    Description:  Mock of the gen_class.ProgramLock class.
+    Description:  Class stub holder for gen_class.ProgramLock class.
 
     Methods:
-        __init__ -> Class instance initilization.
-        __del__ -> Deletion of the ProgramLock instance.
+        __init__ -> Class initialization.
 
     """
 
-    def __init__(self, argv, flavor_id=""):
+    def __init__(self, cmdline, flavor):
 
         """Method:  __init__
 
-        Description:  Initialization of an instance of the ProgramLock class.
+        Description:  Class initialization.
 
         Arguments:
-            (input) argv -> Arguments from the command line.
-            (input) flavor_id -> Unique identifier for an instance.
+            (input) cmdline -> Argv command line.
+            (input) flavor -> Lock flavor ID.
 
         """
 
-        self.lock_created = True
-
-    def __del__(self):
-
-        """Method:  __del__
-
-        Description:  Deletion of the ProgramLock instance.
-
-        Arguments:
-
-        """
-
-        return True
+        self.cmdline = cmdline
+        self.flavor = flavor
 
 
 class UnitTest(unittest.TestCase):
@@ -110,6 +108,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_programlock_id -> Test ProgramLock with flavor ID.
         test_exception_handler -> Test with exception handler.
         test_func_call_multi -> Test run_program with multiple calls.
         test_func_call_one -> Test run_program with one call to function.
@@ -151,10 +150,33 @@ class UnitTest(unittest.TestCase):
                 self.host = ["SERVER_NAME"]
                 self.port = 9200
 
-        self.ct = CfgTest()
+        self.cfg = CfgTest()
 
         self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
         self.func_dict = {"-U": disk_usage, "-R": list_repos}
+        self.proglock = ProgramLock(["cmdline"], "FlavorID")
+
+    @mock.patch("elastic_db_repo.gen_libs.load_module")
+    @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
+    @mock.patch("elastic_db_repo.gen_class.ProgramLock")
+    def test_programlock_id(self, mock_lock, mock_class, mock_load):
+
+        """Function:  test_programlock_id
+
+        Description:  Test ProgramLock with flavor ID.
+
+        Arguments:
+
+        """
+
+        self.args["-U"] = True
+
+        mock_lock.return_value = self.proglock
+        mock_class.return_value = "Elastic_Class"
+        mock_load.return_value = self.cfg
+
+        self.assertFalse(elastic_db_repo.run_program(self.args,
+                                                     self.func_dict))
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
@@ -174,7 +196,7 @@ class UnitTest(unittest.TestCase):
         mock_lock.side_effect = \
             elastic_db_repo.gen_class.SingleInstanceException
         mock_class.return_value = "Elastic_Class"
-        mock_load.return_value = self.ct
+        mock_load.return_value = self.cfg
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.run_program(self.args,
@@ -182,7 +204,7 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
-    @mock.patch("elastic_db_repo.gen_class")
+    @mock.patch("elastic_db_repo.gen_class.ProgramLock")
     def test_func_call_multi(self, mock_lock, mock_class, mock_load):
 
         """Function:  test_func_call_multi
@@ -197,16 +219,16 @@ class UnitTest(unittest.TestCase):
         self.args["-U"] = True
         self.args["-R"] = True
 
-        mock_lock.ProgramLock.return_value = ProgramLock([], "FlavorID")
+        mock_lock.return_value = self.proglock
         mock_class.return_value = "Elastic_Class"
-        mock_load.return_value = self.ct
+        mock_load.return_value = self.cfg
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
-    @mock.patch("elastic_db_repo.gen_class")
+    @mock.patch("elastic_db_repo.gen_class.ProgramLock")
     def test_func_call_one(self, mock_lock, mock_class, mock_load):
 
         """Function:  test_func_call_one
@@ -219,16 +241,16 @@ class UnitTest(unittest.TestCase):
 
         self.args["-U"] = True
 
-        mock_lock.ProgramLock.return_value = ProgramLock([], "FlavorID")
+        mock_lock.return_value = self.proglock
         mock_class.return_value = "Elastic_Class"
-        mock_load.return_value = self.ct
+        mock_load.return_value = self.cfg
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
-    @mock.patch("elastic_db_repo.gen_class")
+    @mock.patch("elastic_db_repo.gen_class.ProgramLock")
     def test_func_call_zero(self, mock_lock, mock_class, mock_load):
 
         """Function:  test_func_call_zero
@@ -239,9 +261,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_lock.ProgramLock.return_value = ProgramLock([], "FlavorID")
+        mock_lock.return_value = self.proglock
         mock_class.return_value = "Elastic_Class"
-        mock_load.return_value = self.ct
+        mock_load.return_value = self.cfg
 
         self.assertFalse(elastic_db_repo.run_program(self.args,
                                                      self.func_dict))
