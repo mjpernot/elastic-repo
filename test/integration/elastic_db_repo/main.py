@@ -87,7 +87,6 @@ class UnitTest(unittest.TestCase):
         self.repo_name = "TEST_INTR_REPO"
         self.repo_name2 = "TEST_INTR_REPO2"
         self.dump_name = "test_dump"
-        self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
         self.els = None
         els = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
@@ -113,7 +112,8 @@ class UnitTest(unittest.TestCase):
         cmdline = gen_libs.get_inst(sys)
         self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port)
-        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.els.create_repo(self.repo_name,
+                                           self.cfg.log_repo_dir)
 
         if status:
             print(ERROR_PRINT)
@@ -170,7 +170,8 @@ class UnitTest(unittest.TestCase):
         cmdline.argv = self.argv_list
         self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port)
-        status, msg = self.els.create_repo(self.repo_name2, self.repo_dir)
+        status, msg = self.els.create_repo(self.repo_name2,
+                                           self.cfg.log_repo_dir)
 
         if status:
             print(ERROR_PRINT)
@@ -209,7 +210,8 @@ class UnitTest(unittest.TestCase):
         cmdline.argv = self.argv_list
         self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port)
-        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.els.create_repo(self.repo_name,
+                                           self.cfg.log_repo_dir)
 
         if status:
             print(ERROR_PRINT)
@@ -248,7 +250,8 @@ class UnitTest(unittest.TestCase):
         cmdline.argv = self.argv_list
         self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port)
-        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.els.create_repo(self.repo_name,
+                                           self.cfg.log_repo_dir)
 
         if status:
             print(ERROR_PRINT)
@@ -285,7 +288,8 @@ class UnitTest(unittest.TestCase):
         cmdline.argv = self.argv_list
         self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port)
-        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.els.create_repo(self.repo_name,
+                                           self.cfg.log_repo_dir)
 
         if status:
             print(ERROR_PRINT)
@@ -315,7 +319,8 @@ class UnitTest(unittest.TestCase):
         cmdline.argv = self.argv_list
         self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port)
-        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
+        status, msg = self.els.create_repo(self.repo_name,
+                                           self.cfg.log_repo_dir)
 
         if status:
             print(ERROR_PRINT)
@@ -339,7 +344,7 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append("-C")
         self.argv_list.append(self.repo_name)
         self.argv_list.append("-l")
-        self.argv_list.append(self.repo_dir)
+        self.argv_list.append(self.cfg.log_repo_dir)
         cmdline.argv = self.argv_list
         elastic_db_repo.main()
         self.els = elastic_class.ElasticSearchRepo(

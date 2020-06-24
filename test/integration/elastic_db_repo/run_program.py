@@ -80,7 +80,6 @@ class UnitTest(unittest.TestCase):
         self.repo_name = "TEST_INTR_REPO"
         self.repo_name2 = "TEST_INTR_REPO2"
         self.dump_name = "test_dump"
-        self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
         self.func_dict = {"-L": elastic_db_repo.list_dumps,
                           "-R": elastic_db_repo.list_repos,
@@ -113,7 +112,7 @@ class UnitTest(unittest.TestCase):
         global ERROR_PRINT
 
         err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.repo_dir)
+                                                    self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
@@ -152,7 +151,7 @@ class UnitTest(unittest.TestCase):
         global ERROR_PRINT
 
         err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.repo_dir)
+                                                    self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
@@ -191,7 +190,7 @@ class UnitTest(unittest.TestCase):
         global ERROR_PRINT
 
         err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.repo_dir)
+                                                    self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
@@ -227,7 +226,7 @@ class UnitTest(unittest.TestCase):
         global ERROR_PRINT
 
         err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.repo_dir)
+                                                    self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
@@ -264,7 +263,7 @@ class UnitTest(unittest.TestCase):
         global ERROR_PRINT
 
         err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.repo_dir)
+                                                    self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
@@ -292,7 +291,7 @@ class UnitTest(unittest.TestCase):
         global ERROR_PRINT
 
         err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.repo_dir)
+                                                    self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
@@ -325,7 +324,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args["-C"] = self.repo_name
-        self.args["-l"] = self.repo_dir
+        self.args["-l"] = self.cfg.log_repo_dir
 
         elastic_db_repo.run_program(self.args, self.func_dict)
 

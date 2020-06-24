@@ -66,7 +66,6 @@ class UnitTest(unittest.TestCase):
         self.cfg = gen_libs.load_module("elastic", self.config_path)
         self.repo_name = "TEST_INTR_REPO"
         self.repo_name2 = "TEST_INTR_REPO2"
-        self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
         self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port)
@@ -77,7 +76,7 @@ class UnitTest(unittest.TestCase):
 
         else:
             _, _ = self.els.create_repo(repo_name=self.repo_name,
-                                        repo_dir=self.repo_dir)
+                                        repo_dir=self.cfg.log_repo_dir)
 
     def test_renamerepo_cmdline(self):
 

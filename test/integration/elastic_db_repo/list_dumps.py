@@ -66,7 +66,6 @@ class UnitTest(unittest.TestCase):
         self.config_path = os.path.join(self.test_path, "config")
         self.cfg = gen_libs.load_module("elastic", self.config_path)
         self.repo_name = "TEST_INTR_REPO"
-        self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
         self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
                                                    self.cfg.port)
@@ -76,7 +75,7 @@ class UnitTest(unittest.TestCase):
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.els.create_repo(self.repo_name, self.repo_dir)
+            _, _ = self.els.create_repo(self.repo_name, self.cfg.log_repo_dir)
 
     def test_listdumps_none(self):
 
