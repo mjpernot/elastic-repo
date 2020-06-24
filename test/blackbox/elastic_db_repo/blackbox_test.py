@@ -31,7 +31,7 @@ import version
 __version__ = version.__version__
 
 
-def load_cfg(args_array, **kwargs):
+def load_cfg(args_array):
 
     """Function:  load_cfg
 
@@ -46,14 +46,14 @@ def load_cfg(args_array, **kwargs):
     return gen_libs.load_module(args_array["-c"], args_array["-d"])
 
 
-def chk_create_repo(er, repo_name, **kwargs):
+def chk_create_repo(els, repo_name):
 
     """Function:  chk_create_repo
 
     Description:  Check for the existence of a repository.
 
     Arguments:
-        (input) ES -> Elasticsearch class instance.
+        (input) els -> Elasticsearch class instance.
         (input) repo_name -> Name of repository.
         (output) status -> True|False - Status of check.
 
@@ -61,13 +61,13 @@ def chk_create_repo(er, repo_name, **kwargs):
 
     status = True
 
-    if repo_name not in er.repo_dict:
+    if repo_name not in els.repo_dict:
         status = False
 
     return status
 
 
-def create_es_instance(cfg, instance, repo_name=None, **kwargs):
+def create_es_instance(cfg, instance, repo_name=None):
 
     """Function:  create_es_instance
 
@@ -84,14 +84,14 @@ def create_es_instance(cfg, instance, repo_name=None, **kwargs):
     return instance(cfg.host, cfg.port, repo=repo_name)
 
 
-def remove_repo(er, repo_name, dump_loc, **kwargs):
+def remove_repo(els, repo_name, dump_loc):
 
     """Function:  remove_repo
 
     Description:  Remove repository and cleanup directory.
 
     Arguments:
-        (input) er -> ElasticSearchRepo class instance.
+        (input) els -> ElasticSearchRepo class instance.
         (input) repo_name -> Name of repository being removed.
         (input) dump_loc -> Location of repository.
         (output) status -> True|False - Status of repository removal.
@@ -100,7 +100,7 @@ def remove_repo(er, repo_name, dump_loc, **kwargs):
 
     status = True
 
-    err_flag, msg = er.delete_repo(repo_name=repo_name)
+    err_flag, msg = els.delete_repo(repo_name=repo_name)
 
     if err_flag:
         status = False
@@ -130,56 +130,59 @@ def main():
 
     """
 
+    prt_success = "\n\tTest Successful"
+    prt_failure = "\n\tTest Failure"
+    cmdline = gen_libs.get_inst(sys)
     opt_val_list = ["-c", "-d", "-n", "-C", "-R", "-S", "-T"]
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list)
+    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
     cfg = load_cfg(args_array)
 
     if "-C" in args_array:
-        es = create_es_instance(cfg, elastic_class.ElasticSearchDump,
-                                args_array["-C"])
-        er = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
-                                args_array["-C"])
+        els = create_es_instance(cfg, elastic_class.ElasticSearchDump,
+                                 args_array["-C"])
+        elr = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
+                                 args_array["-C"])
 
-        if chk_create_repo(er, args_array["-C"]):
-            print("\n\tTest Successful")
+        if chk_create_repo(elr, args_array["-C"]):
+            print(prt_success)
 
         else:
-            print("\n\tTest Failure")
+            print(prt_failure)
 
-        _ = remove_repo(er, args_array["-C"], es.dump_loc)
+        _ = remove_repo(elr, args_array["-C"], els.dump_loc)
 
     elif "-R" in args_array:
-        es = create_es_instance(cfg, elastic_class.ElasticSearchDump,
-                                args_array["-R"])
-        er = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
-                                args_array["-R"])
-        _ = remove_repo(er, args_array["-R"], es.dump_loc)
+        els = create_es_instance(cfg, elastic_class.ElasticSearchDump,
+                                 args_array["-R"])
+        elr = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
+                                 args_array["-R"])
+        _ = remove_repo(elr, args_array["-R"], els.dump_loc)
 
     elif "-T" in args_array:
-        es = create_es_instance(cfg, elastic_class.ElasticSearchDump,
-                                args_array["-T"])
-        es.dump_name = args_array["-n"]
-        es.dump_db()
+        els = create_es_instance(cfg, elastic_class.ElasticSearchDump,
+                                 args_array["-T"])
+        els.dump_name = args_array["-n"]
+        els.dump_db()
 
     elif "-S" in args_array:
-        es = create_es_instance(cfg, elastic_class.ElasticSearchDump,
-                                args_array["-r"])
+        els = create_es_instance(cfg, elastic_class.ElasticSearchDump,
+                                 args_array["-r"])
 
-        if args_array["-S"] in es.dump_list:
-            print("\n\tTest Failure")
+        if args_array["-S"] in els.dump_list:
+            print(prt_failure)
 
         else:
-            print("\n\tTest Successful")
+            print(prt_success)
 
     elif "-D" in args_array:
-        er = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
-                                args_array["-D"])
+        elr = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
+                                 args_array["-D"])
 
-        if args_array["-D"] in er.repo_dict:
-            print("\n\tTest Failure")
+        if args_array["-D"] in elr.repo_dict:
+            print(prt_failure)
 
         else:
-            print("\n\tTest Successful")
+            print(prt_success)
 
 
 if __name__ == "__main__":

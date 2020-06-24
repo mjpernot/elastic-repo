@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.3.4] - 2020-06-16
+### Fixed
+- list_dumps:  Changed class attribute name to correct name.
+- delete_dump:  Changed class attribute name to correct name.
+- run_program:  Fixed handling command line arguments from SonarQube scan finding.
+- main:  Fixed handling command line arguments from SonarQube scan finding.
+- list_dumps:  Checked for present of repo name in ElasticSearch repository.
+
+### Added
+- Add two global print template variables.
+
+### Changed
+- run_program:  Changed variable name to standard naming convention.
+- list_repos:  Changed variable name to standard naming convention.
+- disk_usage:  Changed variable name to standard naming convention.
+- rename_repo:  Changed variable name to standard naming convention.
+- \_rename:  Added global variables and changed variable name to standard naming convention.
+- create_repo:  Added global variables and changed variable name to standard naming convention.
+- delete_repo:  Added global variables and changed variable name to standard naming convention.
+- delete_dump:  Added global variables and changed variable name to standard naming convention.
+- list_dumps:  Added global variables and changed variable name to standard naming convention.
+- Documentation updates.
+
+
 ## [0.3.3] - 2019-10-31
 ### Fixed
 - run_program:  Fixed error in setting up program lock using incorrect configuration references.

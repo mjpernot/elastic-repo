@@ -26,7 +26,6 @@ else:
     import unittest
 
 # Third-party
-import mock
 
 # Local
 sys.path.append(os.getcwd())
@@ -36,6 +35,11 @@ import elastic_lib.elastic_class as elastic_class
 import version
 
 __version__ = version.__version__
+
+# Global
+SKIP_PRINT = "Pre-conditions not met."
+PRT_TEMPLATE = "Reason:  %s"
+ERROR_PRINT = "ERROR: Test repo failed to be created."
 
 
 class UnitTest(unittest.TestCase):
@@ -72,26 +76,25 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+
         self.base_dir = "test/integration/elastic_db_repo"
         self.test_path = os.path.join(os.getcwd(), self.base_dir)
         self.config_path = os.path.join(self.test_path, "config")
         self.cfg = gen_libs.load_module("elastic", self.config_path)
-
         self.argv_list = [os.path.join(self.base_dir, "main.py"),
                           "-c", "elastic", "-d", self.config_path]
-
         self.repo_name = "TEST_INTR_REPO"
         self.repo_name2 = "TEST_INTR_REPO2"
         self.dump_name = "test_dump"
-        self.repo_dir = os.path.join(self.cfg.base_repo_dir, self.repo_name)
+        self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
+        self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
+        self.els = None
+        els = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
 
-        self.er = None
-
-        er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
-        if er.repo_dict:
+        if els.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
-            self.skipTest("Pre-conditions not met.")
+            self.skipTest(SKIP_PRINT)
 
     def test_delete_dump(self):
 
@@ -103,38 +106,41 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
 
-        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
+        cmdline = gen_libs.get_inst(sys)
+        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
+                                                   self.cfg.port)
+        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
-        es = elastic_class.ElasticSearchDump(self.cfg.host,
-                                             repo=self.repo_name)
-        es.dump_name = self.dump_name
-        status, msg = es.dump_db()
+        els = elastic_class.ElasticSearchDump(self.cfg.host,
+                                              repo=self.repo_name)
+        els.dump_name = self.dump_name
+        status, msg = els.dump_db()
 
         if status:
             print("Error detected for dump in repository: %s"
                   % (self.repo_name))
-            print("Reason: %s" % (msg))
+            print(PRT_TEMPLATE % (msg))
             self.skipTest("Dump failed")
 
         self.argv_list.append("-S")
         self.argv_list.append(self.dump_name)
         self.argv_list.append("-r")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
-
+        cmdline.argv = self.argv_list
         elastic_db_repo.main()
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, self.cfg.port, repo=self.repo_name)
 
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
-                                                  repo=self.repo_name)
-
-        if self.dump_name not in elastic_class.get_dump_list(self.er.es,
+        if self.dump_name not in elastic_class.get_dump_list(self.els.els,
                                                              self.repo_name):
             status = True
 
@@ -153,26 +159,29 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-M")
         self.argv_list.append(self.repo_name2)
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
-
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
-        status, msg = self.er.create_repo(self.repo_name2, self.repo_dir)
+        cmdline.argv = self.argv_list
+        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
+                                                   self.cfg.port)
+        status, msg = self.els.create_repo(self.repo_name2, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         elastic_db_repo.main()
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, self.cfg.port, repo=self.repo_name)
 
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
-                                                  repo=self.repo_name)
-
-        if self.repo_name in self.er.repo_dict:
+        if self.repo_name in self.els.repo_dict:
             status = True
 
         else:
@@ -190,25 +199,28 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-D")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
-
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
-        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
+        cmdline.argv = self.argv_list
+        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
+                                                   self.cfg.port)
+        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         elastic_db_repo.main()
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, self.cfg.port, repo=self.repo_name)
 
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
-                                                  repo=self.repo_name)
-
-        if self.repo_name not in self.er.repo_dict:
+        if self.repo_name not in self.els.repo_dict:
             status = True
 
         else:
@@ -216,6 +228,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(status)
 
+    @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):
 
         """Function:  test_disk_usage
@@ -226,21 +239,25 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-U")
-        sys.argv = self.argv_list
-
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
-        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
+        cmdline.argv = self.argv_list
+        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
+                                                   self.cfg.port)
+        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         # Wait until the repo dir has been created.
         while True:
-            if not os.path.isdir(self.repo_dir):
+            if not os.path.isdir(self.phy_repo_dir):
                 time.sleep(1)
 
             else:
@@ -259,17 +276,21 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-R")
-        sys.argv = self.argv_list
-
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
-        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
+        cmdline.argv = self.argv_list
+        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
+                                                   self.cfg.port)
+        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -284,18 +305,22 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        global SKIP_PRINT
+        global PRT_TEMPLATE
+        global ERROR_PRINT
+
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-L")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
-
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
-
-        status, msg = self.er.create_repo(self.repo_name, self.repo_dir)
+        cmdline.argv = self.argv_list
+        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
+                                                   self.cfg.port)
+        status, msg = self.els.create_repo(self.repo_name, self.repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
-            print("Reason:  %s" % (msg))
-            self.skipTest("Pre-conditions not met.")
+            print(ERROR_PRINT)
+            print(PRT_TEMPLATE % (msg))
+            self.skipTest(SKIP_PRINT)
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -310,18 +335,17 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-C")
         self.argv_list.append(self.repo_name)
         self.argv_list.append("-l")
         self.argv_list.append(self.repo_dir)
-        sys.argv = self.argv_list
-
+        cmdline.argv = self.argv_list
         elastic_db_repo.main()
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, self.cfg.port, repo=self.repo_name)
 
-        self.er = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port,
-                                                  repo=self.repo_name)
-
-        if self.repo_name in self.er.repo_dict:
+        if self.repo_name in self.els.repo_dict:
             status = True
 
         else:
@@ -338,9 +362,11 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
+
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.remove(self.config_path)
         self.argv_list.append("TEST_DIR")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -355,9 +381,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-C")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -372,10 +399,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-U")
         self.argv_list.append("-D")
         self.argv_list.append(self.repo_name)
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -390,9 +418,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.remove("-c")
         self.argv_list.remove("elastic")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -407,8 +436,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-v")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -423,31 +453,21 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        if self.er and ("-C" in self.argv_list or "-L" in self.argv_list or
-                        "-R" in self.argv_list or "-U" in self.argv_list or
-                        "-M" in self.argv_list):
+        global PRT_TEMPLATE
 
-            status, msg = self.er.delete_repo(self.repo_name)
+        if self.els and ("-C" in self.argv_list or "-L" in self.argv_list or
+                         "-R" in self.argv_list or "-U" in self.argv_list or
+                         "-M" in self.argv_list or "-S" in self.argv_list):
 
-            if status:
-                print("Error: Failed to remove repository '%s'"
-                      % self.repo_name)
-                print("Reason: '%s'" % (msg))
-
-            if os.path.isdir(self.repo_dir):
-                os.rmdir(self.repo_dir)
-
-        elif self.er and "-S" in self.argv_list:
-
-            status, msg = self.er.delete_repo(self.repo_name)
+            status, msg = self.els.delete_repo(self.repo_name)
 
             if status:
                 print("Error: Failed to remove repository '%s'"
                       % self.repo_name)
-                print("Reason: '%s'" % (msg))
+                print(PRT_TEMPLATE % (msg))
 
-            if os.path.isdir(self.repo_dir):
-                shutil.rmtree(self.repo_dir)
+            if os.path.isdir(self.phy_repo_dir):
+                shutil.rmtree(self.phy_repo_dir)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 # Blackbox testing program for the elastic_db_repo.py program.
 
 # Modify these variables for testing.
-REPOSITORY_DIR="{DIRECTORY_PATH}/TEST_REPO_BLACKBOX_DIR"
+REPOSITORY_DIR="DIRECTORY_PATH/TEST_REPO_BLACKBOX_DIR"
 
 # Setup the test files for all blackbox tests.
 BASE_PATH=$PWD

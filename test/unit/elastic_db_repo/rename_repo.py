@@ -24,7 +24,6 @@ else:
     import unittest
 
 # Third-party
-import mock
 
 # Local
 sys.path.append(os.getcwd())
@@ -91,12 +90,16 @@ class UnitTest(unittest.TestCase):
 
                 """
 
-                self.repo_dict = {"Test_Repo_Name_1": {
-                    "type": "fs", "settings": {"compress": "true",
-                                               "location": "/tmp/TEST_REPO1"}},
-                                  "Test_Repo_Name_2": {
-                    "type": "fs", "settings": {"compress": "true",
-                                               "location": "/tmp/TEST_REPO2"}}}
+                self.repo_dict = {
+                    "Test_Repo_Name_1": {
+                        "type": "fs", "settings": {
+                            "compress": "true",
+                            "location": "/dir/TEST_REPO1"}},
+                    "Test_Repo_Name_2": {
+                        "type": "fs", "settings": {
+                            "compress": "true",
+                            "location": "/dir/TEST_REPO2"}}}
+                self.repo_dir = None
 
             def create_repo(self, repo_name, repo_dir):
 
@@ -112,6 +115,7 @@ class UnitTest(unittest.TestCase):
 
                 """
 
+                self.repo_dir = repo_dir
                 err_flag = False
                 err_msg = None
 
@@ -143,7 +147,7 @@ class UnitTest(unittest.TestCase):
 
                 return err_flag, err_msg
 
-        self.er = ElasticSearchRepo()
+        self.els = ElasticSearchRepo()
 
         self.args_array = {"-M": ["Test_Repo_Name_1", "Test_Dump_Name_5"]}
 
@@ -160,7 +164,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, name_list=["Test_Repo_Name_1"]))
+                self.els, name_list=["Test_Repo_Name_1"]))
 
     def test_namelist_delete_err_false(self):
 
@@ -173,7 +177,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertFalse(elastic_db_repo.rename_repo(
-            self.er, args_array=self.args_array))
+            self.els, args_array=self.args_array))
 
     def test_namelist_delete_err_true(self):
 
@@ -189,7 +193,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_namelist_create_err_false(self):
 
@@ -204,7 +208,7 @@ class UnitTest(unittest.TestCase):
         self.args_array = {"-M": ["Test_Repo_Name_1", "Test_Repo_Name_5"]}
 
         self.assertFalse(elastic_db_repo.rename_repo(
-            self.er, args_array=self.args_array))
+            self.els, args_array=self.args_array))
 
     def test_namelist_create_err_true(self):
 
@@ -220,7 +224,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_namelist_arg2_does_exist(self):
 
@@ -236,7 +240,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_namelist_arg1_not_exist(self):
 
@@ -252,7 +256,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_namelist_is_equal(self):
 
@@ -268,7 +272,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_namelist_is_not_list(self):
 
@@ -284,7 +288,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_namelist_is_not_len_two(self):
 
@@ -300,7 +304,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_namelist_is_passed(self):
 
@@ -314,7 +318,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, name_list=["Test_Repo_Name_1"], args_array={}))
+                self.els, name_list=["Test_Repo_Name_1"], args_array={}))
 
     def test_namelist_not_passed(self):
 
@@ -330,7 +334,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.rename_repo(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
 
 if __name__ == "__main__":

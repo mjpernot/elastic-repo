@@ -88,8 +88,9 @@ class UnitTest(unittest.TestCase):
 
                 """
 
-                self.es = "Elastic_Search_Class"
+                self.els = "Elastic_Search_Class"
                 self.repo_dict = ["Test_Repo_Name_1", "Test_Rep_Name_2"]
+                self.repo_name = None
 
             def delete_dump(self, repo_name, dump_name):
 
@@ -105,6 +106,7 @@ class UnitTest(unittest.TestCase):
 
                 """
 
+                self.repo_name = repo_name
                 err_flag = False
                 err_msg = None
 
@@ -114,7 +116,7 @@ class UnitTest(unittest.TestCase):
 
                 return err_flag, err_msg
 
-        self.er = ElasticSearchRepo()
+        self.els = ElasticSearchRepo()
 
         self.args_array = {"-r": "Test_Repo_Name_1", "-S": "Test_Dump_Name_1"}
 
@@ -137,7 +139,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_err_flag_false(self, mock_class):
@@ -154,7 +156,7 @@ class UnitTest(unittest.TestCase):
                                                  ["Test_Dump_Name_2"]]
 
         self.assertFalse(elastic_db_repo.delete_dump(
-            self.er, args_array=self.args_array))
+            self.els, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_dump_name_in_list(self, mock_class):
@@ -171,7 +173,7 @@ class UnitTest(unittest.TestCase):
                                                  ["Test_Dump_Name_2"]]
 
         self.assertFalse(elastic_db_repo.delete_dump(
-            self.er, args_array=self.args_array))
+            self.els, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_dump_name_not_in_list(self, mock_class):
@@ -191,7 +193,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_repo_name_in_list(self, mock_class):
@@ -211,7 +213,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_repo_name_not_in_list(self):
 
@@ -227,7 +229,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_dump_name_is_passed(self, mock_class):
@@ -247,7 +249,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.er, dump_name="Test_Dump_Name_3",
+                self.els, dump_name="Test_Dump_Name_3",
                 args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
@@ -268,7 +270,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
     def test_repo_name_is_passed(self):
 
@@ -284,7 +286,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.er, repo_name="Test_Repo_Name_3",
+                self.els, repo_name="Test_Repo_Name_3",
                 args_array=self.args_array))
 
     def test_repo_name_not_passed(self):
@@ -301,7 +303,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.delete_dump(
-                self.er, args_array=self.args_array))
+                self.els, args_array=self.args_array))
 
 
 if __name__ == "__main__":
