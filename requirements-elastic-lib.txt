@@ -1,1 +1,1 @@
-git+ssh://git@sc.appdev.proj.coe.ic.gov/JAC-DSXD/elastic-lib.git#egg=elastic-lib
+git+ssh://git@sc.appdev.proj.coe.ic.gov/JAC-DSXD/elastic-lib.git@3.0.0#egg=elastic-lib
