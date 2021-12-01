@@ -5,6 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.3.5] - 2021-12-01
+### Change
+- config/elastic.py.TEMPLATE:  Added login credentials and SSL entries.
 
 
 ## [0.3.4] - 2020-06-16
