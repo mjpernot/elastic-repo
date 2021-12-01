@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.3.5] - 2021-12-01
+
+
 ## [0.3.4] - 2020-06-16
 ### Fixed
 - list_dumps:  Changed class attribute name to correct name.
