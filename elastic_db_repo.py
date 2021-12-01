@@ -88,7 +88,7 @@ WARN_TEMPLATE = "Warning:  Repository '%s' does not exist."
 PRT_TEMPLATE = "Reason: '%s'"
 
 
-def help_message(**kwargs):
+def help_message():
 
     """Function:  help_message
 
@@ -111,6 +111,8 @@ def list_dumps(els, **kwargs):
 
     Arguments:
         (input) els -> ElasticSearch class instance.
+        (input) **kwargs:
+            args_array -> Dict of command line options and values.
 
     """
 
@@ -291,7 +293,7 @@ def rename_repo(els, name_list=None, **kwargs):
               % (str(name_list)))
 
 
-def _rename(els, name_list, **kwargs):
+def _rename(els, name_list):
 
     """Function:  _rename
 
@@ -331,6 +333,8 @@ def disk_usage(els, **kwargs):
 
     Arguments:
         (input) els -> ElasticSearch class instance.
+        (input) **kwargs:
+            args_array -> Dict of command line options and values.
 
     """
 
@@ -359,13 +363,15 @@ def list_repos(els, **kwargs):
 
     Arguments:
         (input) els -> ElasticSearch class instance.
+        (input) **kwargs:
+            args_array -> Dict of command line options and values.
 
     """
 
     elastic_libs.list_repos2(els.repo_dict)
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args_array, func_dict):
 
     """Function:  run_program
 
@@ -391,7 +397,7 @@ def run_program(args_array, func_dict, **kwargs):
         for opt in set(args_array.keys()) & set(func_dict.keys()):
             els = elastic_class.ElasticSearchRepo(cfg.host, cfg.port,
                                                   repo=args_array.get("-L"))
-            func_dict[opt](els, args_array=args_array, **kwargs)
+            func_dict[opt](els, args_array=args_array)
 
         del prog_lock
 

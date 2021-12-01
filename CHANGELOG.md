@@ -7,6 +7,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [0.3.5] - 2021-12-01
 ### Change
 - config/elastic.py.TEMPLATE:  Added login credentials and SSL entries.
+- Removed non-required \*\*kwargs from function calls and parameter lists.
 - Documentation updates.
 
 
