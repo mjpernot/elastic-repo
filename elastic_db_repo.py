@@ -7,25 +7,38 @@
         Elasticsearch database cluster.
 
     Usage:
-        elastic_db_repo.py -c file -d path {-L [repo_name] | -R | -U
-            | -C repo_name -l path | -D repo_name
-            | -M old_repo_name new_repo_name | -S dump_name -r repo_name}
+        elastic_db_repo.py -c file -d path
+            {-L [repo_name] |
+             -R |
+             -U |
+             -C repo_name -l path |
+             -D repo_name |
+             -M old_repo_name new_repo_name |
+             -S dump_name -r repo_name}
             [-v | -h]
 
     Arguments:
+        -c file => Elasticsearch configuration file.  Required argument.
+        -d dir path => Directory path for option '-c'.  Required argument.
+
         -L [repo_name] => List of database dumps for an Elasticsearch
             database.  repo_name is name of repository to dump.  If no repo,
             then all repos and associated dumps will be displayed.
+
         -R => List of repositories in the Elasticsearch database.
-        -D repo_name => Delete a repository.
+
         -U => Display disk usage of any dump partitions.
+
+        -C repo_name => Create new repository name.
+            -l path => Directory path name.
+
+        -D repo_name => Delete a repository.
+
         -M old_repo_name new_repo_name => Rename a repository.
-        -S dump_name => Delete dump in a repository.  Requires -r option.
-        -r repo_name => Repository name.
-        -C repo_name => Create new repository name.  Requires -l option.
-        -l path => Directory path name.
-        -c file => Elasticsearch configuration file.  Required argument.
-        -d dir path => Directory path for option '-c'.  Required argument.
+
+        -S dump_name => Delete dump in a repository.
+            -r repo_name => Repository name.
+
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -42,6 +55,10 @@
             # Elasticsearch configuration file.
             name = ["HOST_NAME1", "HOST_NAME2"]
             port = 9200
+            user = None
+            japd = None
+            ssl_client_ca = None
+            scheme = "https"
 
     Example:
         elastic_db_repo.py -c elastic -d config -L Backup_Repo
