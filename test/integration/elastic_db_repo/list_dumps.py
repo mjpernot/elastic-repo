@@ -43,11 +43,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Integration testing initilization.
-        test_listdumps_none -> Test listing dumps in empty repository.
-        test_repo_dict -> Get dumps using pull from dictionary.
-        test_repo_class_attr -> Get dumps using class attribute.
-        tearDown -> Clean up of integration testing.
+        setUp
+        test_listdumps_none
+        test_repo_dict
+        test_repo_class_attr
+        tearDown
 
     """
 
