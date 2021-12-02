@@ -44,9 +44,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Integration testing initilization.
-        test_disk_usage -> Test displaying disk usage.
-        tearDown -> Clean up of integration testing.
+        setUp
+        test_disk_usage
+        tearDown
 
     """
 
