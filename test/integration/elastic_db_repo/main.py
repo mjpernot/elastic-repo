@@ -89,7 +89,15 @@ class UnitTest(unittest.TestCase):
         self.dump_name = "test_dump"
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
         self.els = None
-        els = elastic_class.ElasticSearchRepo(self.cfg.host, self.cfg.port)
+        self.user = cfg.user if hasattr(self.cfg, "user") else None
+        self.japd = cfg.japd if hasattr(self.cfg, "japd") else None
+        self.ca_cert = cfg.ssl_client_ca if hasattr(
+            self.cfg, "ssl_client_ca") else None
+        self.scheme = cfg.scheme if hasattr(self.cfg, "scheme") else "https"
+        els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        els.connect()
 
         if els.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
@@ -110,8 +118,10 @@ class UnitTest(unittest.TestCase):
         global ERROR_PRINT
 
         cmdline = gen_libs.get_inst(sys)
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els.connect()
         status, msg = self.els.create_repo(self.repo_name,
                                            self.cfg.log_repo_dir)
 
@@ -120,8 +130,11 @@ class UnitTest(unittest.TestCase):
             print(PRT_TEMPLATE % (msg))
             self.skipTest(SKIP_PRINT)
 
-        els = elastic_class.ElasticSearchDump(self.cfg.host,
-                                              repo=self.repo_name)
+        els = elastic_class.ElasticSearchDump(
+            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
+            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
+            scheme=self.scheme)
+        els.connect()
         els.dump_name = self.dump_name
         status, msg = els.dump_db()
 
@@ -138,7 +151,10 @@ class UnitTest(unittest.TestCase):
         cmdline.argv = self.argv_list
         elastic_db_repo.main()
         self.els = elastic_class.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name)
+            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
+            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
+            scheme=self.scheme)
+        self.els.connect()
 
         if self.dump_name not in elastic_class.get_dump_list(self.els.els,
                                                              self.repo_name):
@@ -168,8 +184,10 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append(self.repo_name2)
         self.argv_list.append(self.repo_name)
         cmdline.argv = self.argv_list
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els.connect()
         status, msg = self.els.create_repo(self.repo_name2,
                                            self.cfg.log_repo_dir)
 
@@ -180,7 +198,10 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.main()
         self.els = elastic_class.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name)
+            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
+            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
+            scheme=self.scheme)
+        self.els.connect()
 
         if self.repo_name in self.els.repo_dict:
             status = True
@@ -208,8 +229,10 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append("-D")
         self.argv_list.append(self.repo_name)
         cmdline.argv = self.argv_list
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els.connect()
         status, msg = self.els.create_repo(self.repo_name,
                                            self.cfg.log_repo_dir)
 
@@ -220,7 +243,10 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.main()
         self.els = elastic_class.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name)
+            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
+            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
+            scheme=self.scheme)
+        self.els.connect()
 
         if self.repo_name not in self.els.repo_dict:
             status = True
@@ -248,8 +274,10 @@ class UnitTest(unittest.TestCase):
         cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-U")
         cmdline.argv = self.argv_list
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els.connect()
         status, msg = self.els.create_repo(self.repo_name,
                                            self.cfg.log_repo_dir)
 
@@ -286,8 +314,10 @@ class UnitTest(unittest.TestCase):
         cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-R")
         cmdline.argv = self.argv_list
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els.connect()
         status, msg = self.els.create_repo(self.repo_name,
                                            self.cfg.log_repo_dir)
 
@@ -317,8 +347,10 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append("-L")
         self.argv_list.append(self.repo_name)
         cmdline.argv = self.argv_list
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els.connect()
         status, msg = self.els.create_repo(self.repo_name,
                                            self.cfg.log_repo_dir)
 
@@ -348,7 +380,10 @@ class UnitTest(unittest.TestCase):
         cmdline.argv = self.argv_list
         elastic_db_repo.main()
         self.els = elastic_class.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name)
+            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
+            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
+            scheme=self.scheme)
+        self.els.connect()
 
         if self.repo_name in self.els.repo_dict:
             status = True
