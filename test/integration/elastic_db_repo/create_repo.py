@@ -43,10 +43,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Integration testing initilization.
-        test_createrepo_cmdline -> Test creating repository from command line.
-        test_createrepo_arg -> Test creating repository from argument list.
-        tearDown -> Clean up of integration testing.
+        setUp
+        test_createrepo_cmdline
+        test_createrepo_arg
+        tearDown
 
     """
 
