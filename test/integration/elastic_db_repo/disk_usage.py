@@ -66,8 +66,15 @@ class UnitTest(unittest.TestCase):
         self.cfg = gen_libs.load_module("elastic", self.config_path)
         self.repo_name = "TEST_INTR_REPO"
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.user = cfg.user if hasattr(self.cfg, "user") else None
+        self.japd = cfg.japd if hasattr(self.cfg, "japd") else None
+        self.ca_cert = cfg.ssl_client_ca if hasattr(
+            self.cfg, "ssl_client_ca") else None
+        self.scheme = cfg.scheme if hasattr(self.cfg, "scheme") else "https"
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els.connect()
 
         if self.els.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
