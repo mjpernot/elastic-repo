@@ -52,11 +52,15 @@
         The configuration file format for the Elasticsearch connection to a
         database.
 
-            # Elasticsearch configuration file.
+            # Elasticsearch configuration file
             name = ["HOST_NAME1", "HOST_NAME2"]
             port = 9200
+
+            # Login credentials
             user = None
             japd = None
+
+            # SSL connection
             ssl_client_ca = None
             scheme = "https"
 
