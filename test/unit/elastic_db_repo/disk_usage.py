@@ -43,10 +43,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_repodict_multiple_entries -> Test repo_dict has multiple entries.
-        test_repodict_one_entry -> Test repo_dict has one entry.
-        test_repodict_empty -> Test repo_dict is empty.
+        setUp
+        test_repodict_multiple_entries
+        test_repodict_one_entry
+        test_repodict_empty
 
     """
 
@@ -67,7 +67,7 @@ class UnitTest(unittest.TestCase):
             Description:  Class representation of the ElasticSearchRepo class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
+                __init__
 
             """
 
