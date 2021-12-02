@@ -89,8 +89,15 @@ class UnitTest(unittest.TestCase):
                           "-M": elastic_db_repo.rename_repo,
                           "-U": elastic_db_repo.disk_usage}
         self.args = {"-c": "elastic", "-d": self.config_path}
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.user = cfg.user if hasattr(self.cfg, "user") else None
+        self.japd = cfg.japd if hasattr(self.cfg, "japd") else None
+        self.ca_cert = cfg.ssl_client_ca if hasattr(
+            self.cfg, "ssl_client_ca") else None
+        self.scheme = cfg.scheme if hasattr(self.cfg, "scheme") else "https"
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els.connect()
         self.els2 = None
 
         if self.els.repo_dict:
@@ -238,7 +245,9 @@ class UnitTest(unittest.TestCase):
         elastic_db_repo.run_program(self.args, self.func_dict)
 
         self.els2 = elastic_class.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name2)
+            self.cfg.host, self.cfg.port, repo=self.repo_name2, user=self.user,
+            japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els2.connect()
 
         if self.repo_name2 in self.els2.repo_dict:
             status = True
@@ -303,7 +312,9 @@ class UnitTest(unittest.TestCase):
         elastic_db_repo.run_program(self.args, self.func_dict)
 
         self.els2 = elastic_class.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name)
+            self.cfg.host, self.cfg.port, repo=self.repo_name, user=self.user,
+            japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els2.connect()
 
         if self.repo_name not in self.els2.repo_dict:
             status = True
@@ -329,7 +340,9 @@ class UnitTest(unittest.TestCase):
         elastic_db_repo.run_program(self.args, self.func_dict)
 
         self.els2 = elastic_class.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name)
+            self.cfg.host, self.cfg.port, repo=self.repo_name, user=self.user,
+            japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els2.connect()
 
         if self.repo_name in self.els2.repo_dict:
             status = True
@@ -353,8 +366,10 @@ class UnitTest(unittest.TestCase):
 
         if "-C" in self.args or "-R" in self.args or "-U" in self.args \
            or "-L" in self.args or "-S" in self.args:
-            els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                  self.cfg.port)
+            els = elastic_class.ElasticSearchRepo(
+                self.cfg.host, port=self.cfg.port, user=self.user,
+                japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+            els.connect()
 
             err_flag, status_msg = els.delete_repo(self.repo_name)
 
@@ -364,8 +379,10 @@ class UnitTest(unittest.TestCase):
                 print(PRT_TEMPLATE % (status_msg))
 
         elif "-M" in self.args:
-            els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                  self.cfg.port)
+            els = elastic_class.ElasticSearchRepo(
+                self.cfg.host, port=self.cfg.port, user=self.user,
+                japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+            els.connect()
 
             err_flag, status_msg = els.delete_repo(self.repo_name2)
 
