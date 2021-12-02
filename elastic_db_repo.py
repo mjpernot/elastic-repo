@@ -393,15 +393,26 @@ def run_program(args_array, func_dict):
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
     hostname = socket.gethostname().strip().split(".")[0]
+    user = cfg.user if hasattr(cfg, "user") else None
+    japd = cfg.japd if hasattr(cfg, "japd") else None
+    ca_cert = cfg.ssl_client_ca if hasattr(cfg, "ssl_client_ca") else None
+    scheme = cfg.scheme if hasattr(cfg, "scheme") else "https"
 
     try:
         prog_lock = gen_class.ProgramLock(cmdline.argv, hostname)
 
         # Find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
-            els = elastic_class.ElasticSearchRepo(cfg.host, cfg.port,
-                                                  repo=args_array.get("-L"))
-            func_dict[opt](els, args_array=args_array)
+            els = elastic_class.ElasticSearchRepo(
+                cfg.host, port=cfg.port, repo=args_array.get("-L"),
+                user=user, japd=japd, ca_cert=ca_cert, scheme=scheme)
+            els.connect()
+
+            if els.is_connected:
+                func_dict[opt](els, args_array=args_array)
+
+            else:
+                print("ERROR:  Failed to connect to Elasticsearch")
 
         del prog_lock
 
