@@ -42,7 +42,6 @@ def disk_usage(els, **kwargs):
     Description:  This is a function stub for elastic_db_repo.disk_usage.
 
     Arguments:
-        els -> Stub argument holder.
 
     """
 
@@ -61,7 +60,6 @@ def list_repos(els, **kwargs):
     Description:  This is a function stub for elastic_db_repo.list_repos.
 
     Arguments:
-        els -> Stub argument holder.
 
     """
 
@@ -80,7 +78,7 @@ class ProgramLock(object):
     Description:  Class stub holder for gen_class.ProgramLock class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -91,8 +89,6 @@ class ProgramLock(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) cmdline -> Argv command line.
-            (input) flavor -> Lock flavor ID.
 
         """
 
@@ -107,7 +103,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -180,12 +176,12 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_programlock_id -> Test ProgramLock with flavor ID.
-        test_exception_handler -> Test with exception handler.
-        test_func_call_multi -> Test run_program with multiple calls.
-        test_func_call_one -> Test run_program with one call to function.
-        test_func_call_zero -> Test run_program with zero calls to function.
+        setUp
+        test_programlock_id
+        test_exception_handler
+        test_func_call_multi
+        test_func_call_one
+        test_func_call_zero
 
     """
 
