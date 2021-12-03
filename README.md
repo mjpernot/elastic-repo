@@ -66,13 +66,6 @@ pip install -r requirements-elastic-python-lib.txt --target elastic_lib/lib --tr
 
 # Configuration:
 
-Create Elasticsearch configuration file.
-
-```
-cd config
-cp elastic.py.TEMPLATE elastic.py
-```
-
 Make the appropriate changes to the Elasticsearch environment.
   * Change these entries in the elasticsearch set up:
     - host = ["HOST_NAME1", "HOST_NAME2"]
@@ -89,6 +82,8 @@ Make the appropriate changes to the Elasticsearch environment.
     - scheme = "https"
 
 ```
+cd config
+cp elastic.py.TEMPLATE elastic.py
 vim elastic.py
 sudo chown elasticsearch:elasticsearch elastic.py
 ```
