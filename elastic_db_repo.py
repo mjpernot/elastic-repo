@@ -343,20 +343,20 @@ def disk_usage(els, **kwargs):
     """
 
     if els.repo_dict:
-        print("{0:30} {1:65} {2:10} {3:10} {4:15} {5:10}"
-              .format("Repository", "Partition", "Total", "Used", "Free",
-                      "Percent"))
+        print("{0:10} {1:10} {2:15} {3:10} {4:40} {5:65}"
+              .format("Total", "Used", "Free", "Percent", "Repository",
+                      "Partition"))
 
         for repo in els.repo_dict:
             partition = els.repo_dict[repo]["settings"]["location"]
             usage = gen_libs.disk_usage(partition)
 
-            print("{0:30} {1:65} {2:10} {3:10} {4:10} {5:10.2f}%"
-                  .format(repo, partition,
-                          gen_libs.bytes_2_readable(usage.total),
+            print("{0:10} {1:10} {2:10} {3:10.2f}%     {4:40} {5:65}"
+                  .format(gen_libs.bytes_2_readable(usage.total),
                           gen_libs.bytes_2_readable(usage.used),
                           gen_libs.bytes_2_readable(usage.free),
-                          (float(usage.used) / usage.total) * 100))
+                          (float(usage.used) / usage.total) * 100,
+                          repo, partition))
 
 
 def list_repos(els, **kwargs):
