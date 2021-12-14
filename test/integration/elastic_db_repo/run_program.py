@@ -89,11 +89,12 @@ class UnitTest(unittest.TestCase):
                           "-M": elastic_db_repo.rename_repo,
                           "-U": elastic_db_repo.disk_usage}
         self.args = {"-c": "elastic", "-d": self.config_path}
-        self.user = cfg.user if hasattr(self.cfg, "user") else None
-        self.japd = cfg.japd if hasattr(self.cfg, "japd") else None
-        self.ca_cert = cfg.ssl_client_ca if hasattr(
+        self.user = self.cfg.user if hasattr(self.cfg, "user") else None
+        self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
+        self.ca_cert = self.cfg.ssl_client_ca if hasattr(
             self.cfg, "ssl_client_ca") else None
-        self.scheme = cfg.scheme if hasattr(self.cfg, "scheme") else "https"
+        self.scheme = self.cfg.scheme if hasattr(
+            self.cfg, "scheme") else "https"
         self.els = elastic_class.ElasticSearchRepo(
             self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
             ca_cert=self.ca_cert, scheme=self.scheme)
