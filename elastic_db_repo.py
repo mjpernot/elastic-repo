@@ -135,7 +135,7 @@ def list_dumps(els, **kwargs):
 
     for repo in repo_list:
         print("\nList of Dumps for Reposistory: %s" % (str(repo)))
-        elastic_libs.list_dumps(elastic_class.get_dump_list(els.els, repo))
+        elastic_libs.list_dumps(elastic_class.get_dump_list(els.els, repo)[0])
 
 
 def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
