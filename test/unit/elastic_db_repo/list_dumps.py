@@ -87,6 +87,9 @@ class UnitTest(unittest.TestCase):
                 self.repo_dict = ["TEST_REPO", "TEST_REPO2"]
 
         self.els = ElasticSearchRepo()
+        self.results = (
+            [{"snapshot": "Test_Dump_Name_1"},
+             {"snapshot": "Test_Dump_Name_2"}], True, None)
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -102,7 +105,7 @@ class UnitTest(unittest.TestCase):
 
         self.els.repo = "TEST_REPO2"
 
-        mock_libs.get_dump_list.return_value = True
+        mock_libs.get_dump_list.return_value = self.results
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
@@ -123,7 +126,7 @@ class UnitTest(unittest.TestCase):
         self.els.repo = None
         self.els.repo_dict = []
 
-        mock_libs.get_dump_list.return_value = True
+        mock_libs.get_dump_list.return_value = self.results
         mock_cls.list_dumps.return_value = []
 
         self.assertFalse(elastic_db_repo.list_dumps(self.els))
@@ -142,7 +145,7 @@ class UnitTest(unittest.TestCase):
 
         self.els.repo = None
 
-        mock_libs.get_dump_list.return_value = True
+        mock_libs.get_dump_list.return_value = self.results
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
@@ -160,7 +163,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_libs.get_dump_list.return_value = True
+        mock_libs.get_dump_list.return_value = self.results
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():

@@ -113,8 +113,14 @@ class UnitTest(unittest.TestCase):
                 return err_flag, err_msg
 
         self.els = ElasticSearchRepo()
-
         self.args_array = {"-r": "Test_Repo_Name_1", "-S": "Test_Dump_Name_1"}
+        self.results = (
+            [{"snapshot": "Test_Dump_Name_1"},
+             {"snapshot": "Test_Dump_Name_2"}], True, None)
+        self.results2 = (
+            [{"snapshot": "Test_Dump_Name_1"},
+             {"snapshot": "Test_Dump_Name_2"},
+             {"snapshot": "Test_Dump_Name_Fail"}], True, None)
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_err_flag_true(self, mock_class):
@@ -127,9 +133,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"],
-                                                 ["Test_Dump_Name_Fail"]]
+        mock_class.get_dump_list.return_value = self.results2
 
         self.args_array["-S"] = "Test_Dump_Name_Fail"
 
@@ -148,8 +152,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.assertFalse(elastic_db_repo.delete_dump(
             self.els, args_array=self.args_array))
@@ -165,8 +168,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.assertFalse(elastic_db_repo.delete_dump(
             self.els, args_array=self.args_array))
@@ -182,8 +184,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.args_array["-S"] = "Test_Dump_Name_3"
 
@@ -202,8 +203,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.args_array["-S"] = "Test_Dump_Name_3"
 
@@ -238,8 +238,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.args_array["-r"] = "Test_Repo_Name_1"
 
@@ -259,8 +258,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.args_array["-S"] = "Test_Dump_Name_3"
 
