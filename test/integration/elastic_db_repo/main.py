@@ -157,14 +157,9 @@ class UnitTest(unittest.TestCase):
             scheme=self.scheme)
         self.els.connect()
 
-        if self.dump_name not in elastic_class.get_dump_list(self.els.els,
-                                                             self.repo_name):
-            status = True
-
-        else:
-            status = False
-
-        self.assertTrue(status)
+        self.assertTrue(
+            True if self.dump_name not in elastic_class.get_dump_list(
+                self.els.els, self.repo_name) else False)
 
     def test_rename_repo(self):
 
@@ -204,13 +199,8 @@ class UnitTest(unittest.TestCase):
             scheme=self.scheme)
         self.els.connect()
 
-        if self.repo_name in self.els.repo_dict:
-            status = True
-
-        else:
-            status = False
-
-        self.assertTrue(status)
+        self.assertTrue(
+            True if self.repo_name in self.els.repo_dict else False)
 
     def test_delete_repo(self):
 
@@ -249,13 +239,8 @@ class UnitTest(unittest.TestCase):
             scheme=self.scheme)
         self.els.connect()
 
-        if self.repo_name not in self.els.repo_dict:
-            status = True
-
-        else:
-            status = False
-
-        self.assertTrue(status)
+        self.assertTrue(
+            True if self.repo_name in self.els.repo_dict else False)
 
     @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):
@@ -386,13 +371,8 @@ class UnitTest(unittest.TestCase):
             scheme=self.scheme)
         self.els.connect()
 
-        if self.repo_name in self.els.repo_dict:
-            status = True
-
-        else:
-            status = False
-
-        self.assertTrue(status)
+        self.assertTrue(
+            True if self.repo_name in self.els.repo_dict else False)
 
     def test_arg_dir_chk_crt(self):
 
