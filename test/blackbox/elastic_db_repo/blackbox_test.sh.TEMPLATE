@@ -1,67 +1,57 @@
 #!/bin/bash
-# Blackbox testing program for the elastic_db_repo.py program.
+# Blackbox testing program for the elastic_db_dump.py program.
 
 # Modify these variables for testing.
-REPOSITORY_DIR="DIRECTORY_PATH/TEST_REPO_BLACKBOX_DIR"
+# Note 1:  **REPOSITORY_DIR** is the logical directory path to the share file system.  For use in a Docker set up.
+# Note 2:  **PYH_REPO_DIR** is the physical directory path to the share file system.
+# Note 3:  If running ElasticSearch as Docker setup, then these two paths will be different.  If running as a standard setup, they will be the same.
+REPOSITORY_DIR="LOGICAL_DIR_PATH/TEST_REPO_BLACKBOX_DIR"
+PYH_REPO_DIR="PHYSICAL_DIR_PATH/TEST_REPO_BLACKBOX_DIR"
 
 # Setup the test files for all blackbox tests.
 BASE_PATH=$PWD
-CONFIG_PATH="test/blackbox/elastic_db_repo/config"
+CONFIG_PATH="test/blackbox/elastic_db_dump/config"
 REPO_NAME="Test_Repo_Blackbox"
 REPO_NAME2="Test_Repo_Blackbox2"
-DUMP_NAME="test_blackbox_dump"
+REPO_NAME3="Test_Repo_Blackbox3"
+REPO_NAME4="Test_Repo_Blackbox4"
+SUCCESS="SUCCESS"
 
 echo "Scenario 1:  Create repository"
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -C $REPO_NAME -l $REPOSITORY_DIR
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -C $REPO_NAME
+./elastic_db_dump.py -c elastic -d $CONFIG_PATH -C $REPO_NAME -l $REPOSITORY_DIR
+test/blackbox/elastic_db_dump/blackbox_test.py -c elastic -d $CONFIG_PATH -C $REPO_NAME -P $PYH_REPO_DIR
 
 echo ""
 echo "Scenario 2:  List of repositories"
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -C $REPO_NAME -l $REPOSITORY_DIR
-if [ "$(./elastic_db_repo.py -c elastic -d $CONFIG_PATH -R | egrep -c ${REPO_NAME})" == 1 ] ; then
+./elastic_db_dump.py -c elastic -d $CONFIG_PATH -C $REPO_NAME2 -l $REPOSITORY_DIR
+if [ "$(./elastic_db_dump.py -c elastic -d $CONFIG_PATH -R | egrep -c ${REPO_NAME2})" == 1 ] ; then
     printf "\n\tTest Successful\n"
 else
     printf "\n\tTest Failure\n"
 fi
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -R $REPO_NAME
+test/blackbox/elastic_db_dump/blackbox_test.py -c elastic -d $CONFIG_PATH -R $REPO_NAME2 -P $PYH_REPO_DIR
 
 echo ""
-echo "Scenario 3:  Delete dump in repository"
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -C $REPO_NAME -l $REPOSITORY_DIR
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -T $REPO_NAME -n $DUMP_NAME
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -S $DUMP_NAME -r $REPO_NAME
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -S $DUMP_NAME -r $REPO_NAME 
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -R $REPO_NAME
+echo "Scenario 3:  Dump to repository"
+./elastic_db_dump.py -c elastic -d $CONFIG_PATH -C $REPO_NAME3 -l $REPOSITORY_DIR
+./elastic_db_dump.py -c elastic -d $CONFIG_PATH -D $REPO_NAME3
+test/blackbox/elastic_db_dump/blackbox_test.py -c elastic -d $CONFIG_PATH -D $REPO_NAME3 -P $PYH_REPO_DIR
 
 echo ""
 echo "Scenario 4: List dumps in repository"
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -C $REPO_NAME -l $REPOSITORY_DIR
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -T $REPO_NAME -n $DUMP_NAME
-if [ "$(./elastic_db_repo.py -c elastic -d $CONFIG_PATH -L $REPO_NAME | grep -c $DUMP_NAME)" == 1 ] ; then
+./elastic_db_dump.py -c elastic -d $CONFIG_PATH -C $REPO_NAME4 -l $REPOSITORY_DIR
+./elastic_db_dump.py -c elastic -d $CONFIG_PATH -D $REPO_NAME4
+if [ "$(./elastic_db_dump.py -c elastic -d $CONFIG_PATH -L $REPO_NAME4 | egrep -c ${SUCCESS})" -ge 1 ] ; then
     printf "\n\tTest Successful\n"
 else
     printf "\n\tTest Failure\n"
 fi
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -R $REPO_NAME
+test/blackbox/elastic_db_dump/blackbox_test.py -c elastic -d $CONFIG_PATH -R $REPO_NAME4 -P $PYH_REPO_DIR
 
 echo ""
-echo "Scenario 5:  Delete repository"
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -C $REPO_NAME -l $REPOSITORY_DIR
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -D $REPO_NAME
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -D $REPO_NAME
+echo "Scenario 5:  Dump to repository with -i option"
+dbs=`test/blackbox/elastic_db_dump/blackbox_test.py -c elastic -d $CONFIG_PATH -I`
+./elastic_db_dump.py -c elastic -d $CONFIG_PATH -C $REPO_NAME3 -l $REPOSITORY_DIR
+./elastic_db_dump.py -c elastic -d $CONFIG_PATH -D $REPO_NAME3 -i $dbs
+test/blackbox/elastic_db_dump/blackbox_test.py -c elastic -d $CONFIG_PATH -D $REPO_NAME3 -i $dbs -P $PYH_REPO_DIR
 
-echo ""
-echo "Scenario 6:  Rename repository"
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -C $REPO_NAME -l $REPOSITORY_DIR
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -M $REPO_NAME $REPO_NAME2
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -C $REPO_NAME2
-
-echo ""
-echo "Scenario 7:  Disk Usage"
-./elastic_db_repo.py -c elastic -d $CONFIG_PATH -C $REPO_NAME -l $REPOSITORY_DIR
-if [ "$(./elastic_db_repo.py -c elastic -d $CONFIG_PATH -U | grep -c $REPO_NAME)" == 1 ] ; then
-    printf "\n\tTest Successful\n"
-else
-    printf "\n\tTest Failure\n"
-fi
-test/blackbox/elastic_db_repo/blackbox_test.py -c elastic -d $CONFIG_PATH -R $REPO_NAME
