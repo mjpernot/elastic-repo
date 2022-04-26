@@ -250,13 +250,8 @@ class UnitTest(unittest.TestCase):
             japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
         self.els2.connect()
 
-        if self.repo_name2 in self.els2.repo_dict:
-            status = True
-
-        else:
-            status = False
-
-        self.assertTrue(status)
+        self.assertTrue(
+            True if self.repo_name2 in self.els2.repo_dict else False)
 
     def test_list_repos(self):
 
@@ -317,13 +312,8 @@ class UnitTest(unittest.TestCase):
             japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
         self.els2.connect()
 
-        if self.repo_name not in self.els2.repo_dict:
-            status = True
-
-        else:
-            status = False
-
-        self.assertTrue(status)
+        self.assertTrue(
+            True if self.repo_name not in self.els2.repo_dict else False)
 
     def test_create_repo(self):
 
@@ -345,13 +335,8 @@ class UnitTest(unittest.TestCase):
             japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
         self.els2.connect()
 
-        if self.repo_name in self.els2.repo_dict:
-            status = True
-
-        else:
-            status = False
-
-        self.assertTrue(status)
+        self.assertTrue(
+            True if self.repo_name in self.els2.repo_dict else False)
 
     def tearDown(self):
 
