@@ -43,6 +43,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_status_false
+        test_status_true
         test_err_flag_true
         test_err_flag_false
         test_dump_name_in_list
@@ -121,6 +123,42 @@ class UnitTest(unittest.TestCase):
             [{"snapshot": "Test_Dump_Name_1"},
              {"snapshot": "Test_Dump_Name_2"},
              {"snapshot": "Test_Dump_Name_Fail"}], True, None)
+        self.results3 = (
+            [{"snapshot": "Test_Dump_Name_1"},
+             {"snapshot": "Test_Dump_Name_2"}], False, "Error Message Here")
+
+    @mock.patch("elastic_db_repo.elastic_class")
+    def test_status_false(self, mock_class):
+
+        """Function:  test_status_false
+
+        Description:  Test status returns false.
+
+        Arguments:
+
+        """
+
+        mock_class.get_dump_list.return_value = self.results3
+
+        with gen_libs.no_std_out():
+            self.assertFalse(elastic_db_repo.delete_dump(
+                self.els, args_array=self.args_array))
+
+    @mock.patch("elastic_db_repo.elastic_class")
+    def test_status_true(self, mock_class):
+
+        """Function:  test_status_true
+
+        Description:  Test status returns true.
+
+        Arguments:
+
+        """
+
+        mock_class.get_dump_list.return_value = self.results
+
+        self.assertFalse(elastic_db_repo.delete_dump(
+            self.els, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_err_flag_true(self, mock_class):
