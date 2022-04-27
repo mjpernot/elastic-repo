@@ -168,8 +168,8 @@ def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
               % (repo_name, repo_dir))
 
     else:
-        err_flag, msg = els.create_repo(repo_name,
-                                        os.path.join(repo_dir, repo_name))
+        err_flag, msg = els.create_repo(
+            repo_name, os.path.join(repo_dir, repo_name))
 
         if err_flag:
             print("Error detected for Repository: '%s' at '%s'"
@@ -459,9 +459,8 @@ def main():
                     "-M": ["-L", "-R", "-S", "-C", "-D", "-U"]}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
-                                       opt_val=opt_val,
-                                       multi_val=opt_multi_list)
+    args_array = arg_parser.arg_parse2(
+        cmdline.argv, opt_val_list, opt_val=opt_val, multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and not arg_parser.arg_require(args_array, opt_req_list) \

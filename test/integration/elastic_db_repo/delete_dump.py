@@ -73,18 +73,18 @@ class UnitTest(unittest.TestCase):
             self.cfg, "ssl_client_ca") else None
         self.scheme = self.cfg.scheme if hasattr(
             self.cfg, "scheme") else "https"
-        self.els = elastic_class.ElasticSearchRepo(
+        self.elr = elastic_class.ElasticSearchRepo(
             self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
             ca_cert=self.ca_cert, scheme=self.scheme)
-        self.els.connect()
+        self.elr.connect()
 
         if self.elr.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.elr.create_repo(repo_name=self.repo_name,
-                                        repo_dir=self.cfg.log_repo_dir)
+            _, _ = self.elr.create_repo(
+                repo_name=self.repo_name, repo_dir=self.cfg.log_repo_dir)
 
             self.els = elastic_class.ElasticSearchDump(
                 self.cfg.host, port=self.cfg.port, repo=self.repo_name,
@@ -106,8 +106,8 @@ class UnitTest(unittest.TestCase):
 
         args_array = {"-r": self.repo_name, "-S": self.dump_name}
 
-        self.assertFalse(elastic_db_repo.delete_dump(self.elr,
-                                                     args_array=args_array))
+        self.assertFalse(elastic_db_repo.delete_dump(
+            self.elr, args_array=args_array))
 
     def test_deletedmp_arg(self):
 

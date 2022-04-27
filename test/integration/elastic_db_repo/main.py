@@ -123,8 +123,8 @@ class UnitTest(unittest.TestCase):
             self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
             ca_cert=self.ca_cert, scheme=self.scheme)
         self.els.connect()
-        status, msg = self.els.create_repo(self.repo_name,
-                                           self.cfg.log_repo_dir)
+        status, msg = self.els.create_repo(
+            self.repo_name, self.cfg.log_repo_dir)
 
         if status:
             print(ERROR_PRINT)
@@ -184,8 +184,8 @@ class UnitTest(unittest.TestCase):
             self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
             ca_cert=self.ca_cert, scheme=self.scheme)
         self.els.connect()
-        status, msg = self.els.create_repo(self.repo_name2,
-                                           self.cfg.log_repo_dir)
+        status, msg = self.els.create_repo(
+            self.repo_name2, self.cfg.log_repo_dir)
 
         if status:
             print(ERROR_PRINT)
@@ -224,8 +224,8 @@ class UnitTest(unittest.TestCase):
             self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
             ca_cert=self.ca_cert, scheme=self.scheme)
         self.els.connect()
-        status, msg = self.els.create_repo(self.repo_name,
-                                           self.cfg.log_repo_dir)
+        status, msg = self.els.create_repo(
+            self.repo_name, self.cfg.log_repo_dir)
 
         if status:
             print(ERROR_PRINT)
@@ -240,7 +240,7 @@ class UnitTest(unittest.TestCase):
         self.els.connect()
 
         self.assertTrue(
-            True if self.repo_name in self.els.repo_dict else False)
+            True if self.repo_name not in self.els.repo_dict else False)
 
     @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):

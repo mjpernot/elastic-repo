@@ -119,16 +119,19 @@ class UnitTest(unittest.TestCase):
         global PRT_TEMPLATE
         global ERROR_PRINT
 
-        err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.cfg.log_repo_dir)
+        err_flag, status_msg = self.els.create_repo(
+            self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
             print(PRT_TEMPLATE % (status_msg))
             self.skipTest(SKIP_PRINT)
 
-        els2 = elastic_class.ElasticSearchDump(self.cfg.host,
-                                               repo=self.repo_name)
+        els2 = elastic_class.ElasticSearchDump(
+            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
+            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
+            scheme=self.scheme)
+        els2.connect()
         els2.dump_name = self.dump_name
         err_flag, msg = els2.dump_db()
 
@@ -141,8 +144,8 @@ class UnitTest(unittest.TestCase):
         self.args["-S"] = self.dump_name
         self.args["-r"] = self.repo_name
 
-        self.assertFalse(elastic_db_repo.run_program(self.args,
-                                                     self.func_dict))
+        self.assertFalse(elastic_db_repo.run_program(
+            self.args, self.func_dict))
 
     def test_list_dumps(self):
 
@@ -158,16 +161,19 @@ class UnitTest(unittest.TestCase):
         global PRT_TEMPLATE
         global ERROR_PRINT
 
-        err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.cfg.log_repo_dir)
+        err_flag, status_msg = self.els.create_repo(
+            self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
             print(PRT_TEMPLATE % (status_msg))
             self.skipTest(SKIP_PRINT)
 
-        els2 = elastic_class.ElasticSearchDump(self.cfg.host,
-                                               repo=self.repo_name)
+        els2 = elastic_class.ElasticSearchDump(
+            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
+            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
+            scheme=self.scheme)
+        els2.connect()
         err_flag, msg = els2.dump_db()
 
         if err_flag:
@@ -179,8 +185,8 @@ class UnitTest(unittest.TestCase):
         self.args["-L"] = self.repo_name
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.run_program(self.args,
-                                                         self.func_dict))
+            self.assertFalse(
+                elastic_db_repo.run_program(self.args, self.func_dict))
 
     @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):
@@ -197,8 +203,8 @@ class UnitTest(unittest.TestCase):
         global PRT_TEMPLATE
         global ERROR_PRINT
 
-        err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.cfg.log_repo_dir)
+        err_flag, status_msg = self.els.create_repo(
+            self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
@@ -216,8 +222,8 @@ class UnitTest(unittest.TestCase):
         self.args["-U"] = True
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.run_program(self.args,
-                                                         self.func_dict))
+            self.assertFalse(
+                elastic_db_repo.run_program(self.args, self.func_dict))
 
     def test_rename_repo(self):
 
@@ -233,8 +239,8 @@ class UnitTest(unittest.TestCase):
         global PRT_TEMPLATE
         global ERROR_PRINT
 
-        err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.cfg.log_repo_dir)
+        err_flag, status_msg = self.els.create_repo(
+            self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
@@ -267,8 +273,8 @@ class UnitTest(unittest.TestCase):
         global PRT_TEMPLATE
         global ERROR_PRINT
 
-        err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.cfg.log_repo_dir)
+        err_flag, status_msg = self.els.create_repo(
+            self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
@@ -278,8 +284,8 @@ class UnitTest(unittest.TestCase):
         self.args["-R"] = True
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.run_program(self.args,
-                                                         self.func_dict))
+            self.assertFalse(
+                elastic_db_repo.run_program(self.args, self.func_dict))
 
     def test_delete_repo(self):
 
@@ -295,8 +301,8 @@ class UnitTest(unittest.TestCase):
         global PRT_TEMPLATE
         global ERROR_PRINT
 
-        err_flag, status_msg = self.els.create_repo(self.repo_name,
-                                                    self.cfg.log_repo_dir)
+        err_flag, status_msg = self.els.create_repo(
+            self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
             print(ERROR_PRINT)
