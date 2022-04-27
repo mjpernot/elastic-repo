@@ -42,17 +42,19 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_err_flag_true -> Test err_flag is set to True.
-        test_err_flag_false -> Test err_flag is set to False.
-        test_dump_name_in_list -> Test dump name is in list.
-        test_dump_name_not_in_list -> Test dump name is not in list.
-        test_repo_name_in_list -> Test repo name is in list.
-        test_repo_name_not_in_list -> Test repo name is not in list.
-        test_dump_name_is_passed -> Test dump name is passed as argument.
-        test_dump_name_not_passed -> Test dump name is not passed as argument.
-        test_repo_name_is_passed -> Test repo name is passed as argument.
-        test_repo_name_not_passed -> Test repo name is not passed as argument.
+        setUp
+        test_status_false
+        test_status_true
+        test_err_flag_true
+        test_err_flag_false
+        test_dump_name_in_list
+        test_dump_name_not_in_list
+        test_repo_name_in_list
+        test_repo_name_not_in_list
+        test_dump_name_is_passed
+        test_dump_name_not_passed
+        test_repo_name_is_passed
+        test_repo_name_not_passed
 
     """
 
@@ -73,8 +75,8 @@ class UnitTest(unittest.TestCase):
             Description:  Class representation of the ElasticSearchRepo class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
-                delete_repo -> Mock of deleting a repository.
+                __init__
+                delete_repo
 
             """
 
@@ -99,10 +101,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Mock of deleting a repository.
 
                 Arguments:
-                    (input) repo_name -> Name of repository.
-                    (input) dump_name -> Name of dump.
-                    (output) err_flag -> True | False - Error status.
-                    (output) status_msg -> Status error message or None.
 
                 """
 
@@ -117,8 +115,50 @@ class UnitTest(unittest.TestCase):
                 return err_flag, err_msg
 
         self.els = ElasticSearchRepo()
-
         self.args_array = {"-r": "Test_Repo_Name_1", "-S": "Test_Dump_Name_1"}
+        self.results = (
+            [{"snapshot": "Test_Dump_Name_1"},
+             {"snapshot": "Test_Dump_Name_2"}], True, None)
+        self.results2 = (
+            [{"snapshot": "Test_Dump_Name_1"},
+             {"snapshot": "Test_Dump_Name_2"},
+             {"snapshot": "Test_Dump_Name_Fail"}], True, None)
+        self.results3 = (
+            [{"snapshot": "Test_Dump_Name_1"},
+             {"snapshot": "Test_Dump_Name_2"}], False, "Error Message Here")
+
+    @mock.patch("elastic_db_repo.elastic_class")
+    def test_status_false(self, mock_class):
+
+        """Function:  test_status_false
+
+        Description:  Test status returns false.
+
+        Arguments:
+
+        """
+
+        mock_class.get_dump_list.return_value = self.results3
+
+        with gen_libs.no_std_out():
+            self.assertFalse(elastic_db_repo.delete_dump(
+                self.els, args_array=self.args_array))
+
+    @mock.patch("elastic_db_repo.elastic_class")
+    def test_status_true(self, mock_class):
+
+        """Function:  test_status_true
+
+        Description:  Test status returns true.
+
+        Arguments:
+
+        """
+
+        mock_class.get_dump_list.return_value = self.results
+
+        self.assertFalse(elastic_db_repo.delete_dump(
+            self.els, args_array=self.args_array))
 
     @mock.patch("elastic_db_repo.elastic_class")
     def test_err_flag_true(self, mock_class):
@@ -131,9 +171,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"],
-                                                 ["Test_Dump_Name_Fail"]]
+        mock_class.get_dump_list.return_value = self.results2
 
         self.args_array["-S"] = "Test_Dump_Name_Fail"
 
@@ -152,8 +190,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.assertFalse(elastic_db_repo.delete_dump(
             self.els, args_array=self.args_array))
@@ -169,8 +206,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.assertFalse(elastic_db_repo.delete_dump(
             self.els, args_array=self.args_array))
@@ -186,8 +222,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.args_array["-S"] = "Test_Dump_Name_3"
 
@@ -206,8 +241,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.args_array["-S"] = "Test_Dump_Name_3"
 
@@ -242,8 +276,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.args_array["-r"] = "Test_Repo_Name_1"
 
@@ -263,8 +296,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = [["Test_Dump_Name_1"],
-                                                 ["Test_Dump_Name_2"]]
+        mock_class.get_dump_list.return_value = self.results
 
         self.args_array["-S"] = "Test_Dump_Name_3"
 

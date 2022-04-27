@@ -31,17 +31,14 @@
     - python-pip
 
   * Local class/library dependencies within the program structure.
-    - lib/gen_class
-    - lib/arg_parser
-    - lib/gen_libs
-    - elastic_lib/elastic_class
-    - elastic_lib/elastic_libs
+    - python-lib
+    - elastic-lib
 
 
 # Installation:
 
 Install the project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
+  * From here on out, any reference to **{Python_Project}** or **PYTHON_PROJECT** replace with the baseline path of the python program.
 
 ```
 umask 022
@@ -64,23 +61,29 @@ Install supporting classes and libraries.
 ```
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-elastic-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 # Configuration:
 
-Create Elasticsearch configuration file.
+Make the appropriate changes to the Elasticsearch environment.
+  * Change these entries in the elasticsearch set up:
+    - host = ["HOST_NAME1", "HOST_NAME2"]
+
+  * If login credentials are required:
+    - user = None
+    - japd = None
+
+  * If SSL connections are being used:
+    - ssl_client_ca = None
+
+  * Change these entries only if required and you know what you are doing:
+    - port = 9200
+    - scheme = "https"
 
 ```
 cd config
 cp elastic.py.TEMPLATE elastic.py
-```
-
-Make the appropriate changes to the Elasticsearch environment.
-  * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.
-    - host = ["HOST_NAME1", "HOST_NAME2"]
-
-```
 vim elastic.py
 sudo chown elasticsearch:elasticsearch elastic.py
 ```
@@ -89,7 +92,6 @@ sudo chown elasticsearch:elasticsearch elastic.py
 # Program Help Function:
 
   All of the programs, except the command and class files, will have an -h (Help option) that will show display a help message for that particular program.  The help message will usually consist of a description, usage, arugments to the program, example, notes about the program, and any known bugs not yet fixed.  To run the help command:
-  * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 {Python_Project}/elastic-repo/elastic_db_repo.py -h
@@ -102,36 +104,9 @@ sudo chown elasticsearch:elasticsearch elastic.py
 
 ### Installation:
 
-Install the project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
-  * Replace **{Branch_Name}** with the name of the Git branch being tested.  See Git Merge Request.
-
-```
-umask 022
-cd {Python_Project}
-git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/elastic-repo.git
-```
-
-Install/upgrade system modules.
-
-```
-cd elastic-repo
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
-```
-
-Install supporting classes and libraries.
-
-```
-pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-```
+Install the project using the procedures in the Installation section.
 
 ### Testing:
-  * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 cd {Python_Project}/elastic-repo
@@ -149,44 +124,31 @@ test/unit/elastic_db_repo/code_coverage.sh
 
 ### Installation:
 
-Install the project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
-  * Replace **{Branch_Name}** with the name of the Git branch being tested.  See Git Merge Request.
-
-```
-umask 022
-cd {Python_Project}
-git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/elastic-repo.git
-```
-
-Install/upgrade system modules.
-
-```
-cd elastic-repo
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
-```
-
-Install supporting classes and libraries.
-
-```
-pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-```
+Install the project using the procedures in the Installation section.
 
 ### Configuration:
 
-Create Elasticsearch configuration file.  Make the appropriate changes to the Elasticsearch environment.
-  * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.
+Make the appropriate changes to the Elasticsearch environment.
+  * Change these entries in the elasticsearch set up:
     - host = ["HOST_NAME1", "HOST_NAME2"]
+
+  * If login credentials are required:
+    - user = None
+    - japd = None
+
+  * If SSL connections are being used:
+    - ssl_client_ca = None
+
+  * Change these entries only if required and you know what you are doing:
+    - port = 9200
+    - scheme = "https"
+
+  * In addition to the normal configuration entries, modify these entries for this testing section.
+    Note 1:  **log_repo_dir** is the logical directory path to the share file system.  For use in a Docker set up.
+    Note 2:  **phy_repo_dir** is the physical directory path to the share file system.
+    Note 3:  If running ElasticSearch as Docker setup, then these two paths will be different.  If running as a standard setup, they will be the same.
     - log_repo_dir = "LOGICAL_DIR_PATH"
     - phy_repo_dir = "PHYSICAL_DIR_PATH"
-  * **LOGICAL_DIR_PATH** is the logical directory path to the share file system.
-  * **phy_repo_dir** is the physical directory path to the share file system.
-    -  NOTE:  If running ElasticSearch as Docker setup, then these paths will be different.  If running as a standard setup, they will be the same.
 
 ```
 cd test/integration/elastic_db_repo/config
@@ -197,7 +159,6 @@ sudo chown elasticsearch:elasticsearch elastic.py
 
 ### Testing:
   * These tests must be run as the elasticsearch account:
-  * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 cd {Python_Project}/elastic-repo
@@ -215,48 +176,28 @@ test/integration/elastic_db_repo/code_coverage.sh
 
 ### Installation:
 
-Install the project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
-  * Replace **{Branch_Name}** with the name of the Git branch being tested.  See Git Merge Request.
-
-```
-umask 022
-cd {Python_Project}
-git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/elastic-repo.git
-```
-
-Install/upgrade system modules.
-
-```
-cd elastic-repo
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
-```
-
-Install supporting classes and libraries.
-
-```
-pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-```
+Install the project using the procedures in the Installation section.
 
 ### Configuration:
 
-Create Elasticsearch configuration file.
+Make the appropriate changes to the Elasticsearch environment.
+  * Change these entries in the elasticsearch set up:
+    - host = ["HOST_NAME1", "HOST_NAME2"]
+
+  * If login credentials are required:
+    - user = None
+    - japd = None
+
+  * If SSL connections are being used:
+    - ssl_client_ca = None
+
+  * Change these entries only if required and you know what you are doing:
+    - port = 9200
+    - scheme = "https"
 
 ```
 cd test/blackbox/elastic_db_repo/config
 cp ../../../../config/elastic.py.TEMPLATE elastic.py
-```
-
-Make the appropriate changes to the Elasticsearch environment.
-  * Change these entries in the elastic.py file.  List all the servers in the Elasticsearch cluster.
-    - host = ["HOST_NAME1", "HOST_NAME2"]
-
-```
 vim elastic.py
 sudo chown elasticsearch:elasticsearch elastic.py
 ```
@@ -274,7 +215,6 @@ vim blackbox_test.sh
 
 ### Testing:
   * These tests must be run as the elasticsearch account.
-  * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 cd {Python_Project}/elastic-repo

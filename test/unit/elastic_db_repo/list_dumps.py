@@ -42,11 +42,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_repo_name -> Test with repo name present.
-        test_repo_empty_list -> Test repo dict is an empty list.
-        test_repo_name_false -> Test repo name set to None.
-        test_repo_name_miss -> Test with repo name not present.
+        setUp
+        test_repo_name
+        test_repo_empty_list
+        test_repo_name_false
+        test_repo_name_miss
 
     """
 
@@ -67,7 +67,7 @@ class UnitTest(unittest.TestCase):
             Description:  Class representation of the ElasticSearchRepo class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
+                __init__
 
             """
 
@@ -87,6 +87,9 @@ class UnitTest(unittest.TestCase):
                 self.repo_dict = ["TEST_REPO", "TEST_REPO2"]
 
         self.els = ElasticSearchRepo()
+        self.results = (
+            [{"snapshot": "Test_Dump_Name_1"},
+             {"snapshot": "Test_Dump_Name_2"}], True, None)
 
     @mock.patch("elastic_db_repo.elastic_class")
     @mock.patch("elastic_db_repo.elastic_libs")
@@ -102,7 +105,7 @@ class UnitTest(unittest.TestCase):
 
         self.els.repo = "TEST_REPO2"
 
-        mock_libs.get_dump_list.return_value = True
+        mock_libs.get_dump_list.return_value = self.results
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
@@ -123,7 +126,7 @@ class UnitTest(unittest.TestCase):
         self.els.repo = None
         self.els.repo_dict = []
 
-        mock_libs.get_dump_list.return_value = True
+        mock_libs.get_dump_list.return_value = self.results
         mock_cls.list_dumps.return_value = []
 
         self.assertFalse(elastic_db_repo.list_dumps(self.els))
@@ -142,7 +145,7 @@ class UnitTest(unittest.TestCase):
 
         self.els.repo = None
 
-        mock_libs.get_dump_list.return_value = True
+        mock_libs.get_dump_list.return_value = self.results
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():
@@ -160,7 +163,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_libs.get_dump_list.return_value = True
+        mock_libs.get_dump_list.return_value = self.results
         mock_cls.list_dumps.return_value = []
 
         with gen_libs.no_std_out():

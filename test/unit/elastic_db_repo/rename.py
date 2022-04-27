@@ -41,11 +41,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_delete_err_false -> Test delete error flag is false.
-        test_delete_err_true -> Test delete error flag is true.
-        test_create_err_false -> Test create repo error flag is false.
-        test_create_err_true -> Test create repo error flag is true.
+        setUp
+        test_delete_err_false
+        test_delete_err_true
+        test_create_err_false
+        test_create_err_true
 
     """
 
@@ -66,9 +66,9 @@ class UnitTest(unittest.TestCase):
             Description:  Class representation of the ElasticSearchRepo class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
-                create_repo -> Mock of creating a repository.
-                delete_repo -> Mock of deleting a repository.
+                __init__
+                create_repo
+                delete_repo
 
             """
 
@@ -100,10 +100,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Mock of creating a repository.
 
                 Arguments:
-                    (input) repo -> Name of repository.
-                    (input) repo_dir -> Directory path to respository.
-                    (output) err_flag -> True | False - Error status.
-                    (output) status_msg -> Status error message or None.
 
                 """
 
@@ -124,9 +120,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Mock of deleting a repository.
 
                 Arguments:
-                    (input) repo -> Name of repository.
-                    (output) err_flag -> True | False - Error status.
-                    (output) status_msg -> Status error message or None.
 
                 """
 

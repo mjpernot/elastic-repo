@@ -75,13 +75,19 @@ def create_es_instance(cfg, instance, repo_name=None):
 
     Arguments:
         (input) cfg -> Server configuration settings.
-        (input) instance -> ElasticSearch instance name.
+        (input) instance -> ElasticSearch class name.
         (input) repo_name -> Name of repository.
         (output) -> ElasticSearch instance.
 
     """
 
-    return instance(cfg.host, cfg.port, repo=repo_name)
+    user = cfg.user if hasattr(cfg, "user") else None
+    japd = cfg.japd if hasattr(cfg, "japd") else None
+    ca_cert = cfg.ssl_client_ca if hasattr(cfg, "ssl_client_ca") else None
+    scheme = cfg.scheme if hasattr(cfg, "scheme") else "https"
+
+    return instance(cfg.host, port=cfg.port, repo=repo_name, user=user,
+                    japd=japd, ca_cert=ca_cert, scheme=scheme)
 
 
 def remove_repo(els, repo_name, dump_loc):
@@ -138,10 +144,12 @@ def main():
     cfg = load_cfg(args_array)
 
     if "-C" in args_array:
-        els = create_es_instance(cfg, elastic_class.ElasticSearchDump,
-                                 args_array["-C"])
-        elr = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
-                                 args_array["-C"])
+        els = create_es_instance(
+            cfg, elastic_class.ElasticSearchDump, args_array["-C"])
+        els.connect()
+        elr = create_es_instance(
+            cfg, elastic_class.ElasticSearchRepo, args_array["-C"])
+        elr.connect()
 
         if chk_create_repo(elr, args_array["-C"]):
             print(prt_success)
@@ -152,21 +160,25 @@ def main():
         _ = remove_repo(elr, args_array["-C"], els.dump_loc)
 
     elif "-R" in args_array:
-        els = create_es_instance(cfg, elastic_class.ElasticSearchDump,
-                                 args_array["-R"])
-        elr = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
-                                 args_array["-R"])
+        els = create_es_instance(
+            cfg, elastic_class.ElasticSearchDump, args_array["-R"])
+        els.connect()
+        elr = create_es_instance(
+            cfg, elastic_class.ElasticSearchRepo, args_array["-R"])
+        elr.connect()
         _ = remove_repo(elr, args_array["-R"], els.dump_loc)
 
     elif "-T" in args_array:
-        els = create_es_instance(cfg, elastic_class.ElasticSearchDump,
-                                 args_array["-T"])
+        els = create_es_instance(
+            cfg, elastic_class.ElasticSearchDump, args_array["-T"])
+        els.connect()
         els.dump_name = args_array["-n"]
         els.dump_db()
 
     elif "-S" in args_array:
-        els = create_es_instance(cfg, elastic_class.ElasticSearchDump,
-                                 args_array["-r"])
+        els = create_es_instance(
+            cfg, elastic_class.ElasticSearchDump, args_array["-r"])
+        els.connect()
 
         if args_array["-S"] in els.dump_list:
             print(prt_failure)
@@ -175,8 +187,9 @@ def main():
             print(prt_success)
 
     elif "-D" in args_array:
-        elr = create_es_instance(cfg, elastic_class.ElasticSearchRepo,
-                                 args_array["-D"])
+        elr = create_es_instance(
+            cfg, elastic_class.ElasticSearchRepo, args_array["-D"])
+        elr.connect()
 
         if args_array["-D"] in elr.repo_dict:
             print(prt_failure)
