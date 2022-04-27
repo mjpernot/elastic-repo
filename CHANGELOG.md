@@ -10,7 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Change
 - list_dumps:  Pulled only the database dump list from the elastic_class.get_dump_list call.
-- delete_dump:  Changed input arguments and output variables to elastic_class.get_dump_list due to elastic_class v4.0.0 update, also changed the status check.
+- delete_dump:  Changed input arguments and output variables to elastic_class.get_dump_list due to elastic_class v4.0.0 update and changed the status check.
 - disk_usage:  Changed format of output.
 - run_program:  Added connect call, check for elasticsearch connection status, and set login credentials and SSL connection settings.
 - config/elastic.py.TEMPLATE:  Added login credentials and SSL entries.
