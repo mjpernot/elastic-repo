@@ -41,19 +41,19 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_no_argsarray_is_passed -> Test when args_array is not passed.
-        test_namelist_delete_err_false -> Test delete error flag of false.
-        test_namelist_delete_err_true -> Test delete error flag of true.
-        test_namelist_create_err_false -> Test create repo error flag of false.
-        test_namelist_create_err_true -> Test create repo error flag of true.
-        test_namelist_arg2_does_exist -> Test name arg 2 repo does exist.
-        test_namelist_arg1_not_exist -> Test name arg 1 repo not exist.
-        test_namelist_is_equal -> Test name list arg 1 and arg 2 are equal.
-        test_namelist_is_not_list -> Test name list is not a list.
-        test_namelist_is_not_len_two -> Test name list is not a length of two.
-        test_namelist_is_passed -> Test name list is passed as argument.
-        test_namelist_not_passed -> Test name list is not passed as argument.
+        setUp
+        test_no_argsarray_is_passed
+        test_namelist_delete_err_false
+        test_namelist_delete_err_true
+        test_namelist_create_err_false
+        test_namelist_create_err_true
+        test_namelist_arg2_does_exist
+        test_namelist_arg1_not_exist
+        test_namelist_is_equal
+        test_namelist_is_not_list
+        test_namelist_is_not_len_two
+        test_namelist_is_passed
+        test_namelist_not_passed
 
     """
 
@@ -74,9 +74,9 @@ class UnitTest(unittest.TestCase):
             Description:  Class representation of the ElasticSearchRepo class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
-                create_repo -> Mock of creating a repository.
-                delete_repo -> Mock of deleting a repository.
+                __init__
+                create_repo
+                delete_repo
 
             """
 
@@ -108,10 +108,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Mock of creating a repository.
 
                 Arguments:
-                    (input) repo -> Name of repository.
-                    (input) repo_dir -> Directory path to respository.
-                    (output) err_flag -> True | False - Error status.
-                    (output) status_msg -> Status error message or None.
 
                 """
 
@@ -132,9 +128,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Mock of deleting a repository.
 
                 Arguments:
-                    (input) repo -> Name of repository.
-                    (output) err_flag -> True | False - Error status.
-                    (output) status_msg -> Status error message or None.
 
                 """
 

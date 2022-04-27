@@ -43,10 +43,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Integration testing initilization.
-        test_deleterepo_cmdline -> Test deleting repository from command line.
-        test_deleterepo_arg -> Test deleting repository from argument list.
-        tearDown -> Clean up of integration testing.
+        setUp
+        test_deleterepo_cmdline
+        test_deleterepo_arg
+        tearDown
 
     """
 
@@ -65,10 +65,17 @@ class UnitTest(unittest.TestCase):
         self.config_path = os.path.join(self.test_path, "config")
         self.cfg = gen_libs.load_module("elastic", self.config_path)
         self.repo_name = "TEST_INTR_REPO"
-        self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
-        self.els = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.user = self.cfg.user if hasattr(self.cfg, "user") else None
+        self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
+        self.ca_cert = self.cfg.ssl_client_ca if hasattr(
+            self.cfg, "ssl_client_ca") else None
+        self.scheme = self.cfg.scheme if hasattr(
+            self.cfg, "scheme") else "https"
+        self.els = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.els.connect()
 
         if self.els.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
@@ -76,7 +83,7 @@ class UnitTest(unittest.TestCase):
 
         else:
             _, _ = self.els.create_repo(repo_name=self.repo_name,
-                                        repo_dir=self.repo_dir)
+                                        repo_dir=self.cfg.log_repo_dir)
 
     def test_deleterepo_cmdline(self):
 
@@ -90,8 +97,8 @@ class UnitTest(unittest.TestCase):
 
         args_array = {"-D": "TEST_INTR_REPO"}
 
-        self.assertFalse(elastic_db_repo.delete_repo(self.els,
-                                                     args_array=args_array))
+        self.assertFalse(
+            elastic_db_repo.delete_repo(self.els, args_array=args_array))
 
     def test_deleterepo_arg(self):
 
@@ -103,8 +110,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(elastic_db_repo.delete_repo(
-            self.els, repo_name=self.repo_name, args_array={}))
+        self.assertFalse(
+            elastic_db_repo.delete_repo(
+                self.els, repo_name=self.repo_name, args_array={}))
 
     def tearDown(self):
 

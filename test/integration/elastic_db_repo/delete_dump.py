@@ -43,10 +43,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Integration testing initilization.
-        test_deletedmp_cmdline -> Test delete dump from command line.
-        test_deletedmp_arg -> Test delete dump from argument list.
-        tearDown -> Clean up of integration testing.
+        setUp
+        test_deletedmp_cmdline
+        test_deletedmp_arg
+        tearDown
 
     """
 
@@ -66,21 +66,31 @@ class UnitTest(unittest.TestCase):
         self.cfg = gen_libs.load_module("elastic", self.config_path)
         self.dump_name = "test_dump"
         self.repo_name = "TEST_INTR_REPO"
-        self.repo_dir = os.path.join(self.cfg.log_repo_dir, self.repo_name)
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
-        self.elr = elastic_class.ElasticSearchRepo(self.cfg.host,
-                                                   self.cfg.port)
+        self.user = self.cfg.user if hasattr(self.cfg, "user") else None
+        self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
+        self.ca_cert = self.cfg.ssl_client_ca if hasattr(
+            self.cfg, "ssl_client_ca") else None
+        self.scheme = self.cfg.scheme if hasattr(
+            self.cfg, "scheme") else "https"
+        self.elr = elastic_class.ElasticSearchRepo(
+            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert, scheme=self.scheme)
+        self.elr.connect()
 
         if self.elr.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.elr.create_repo(repo_name=self.repo_name,
-                                        repo_dir=self.repo_dir)
+            _, _ = self.elr.create_repo(
+                repo_name=self.repo_name, repo_dir=self.cfg.log_repo_dir)
 
             self.els = elastic_class.ElasticSearchDump(
-                self.cfg.host, self.cfg.port, repo=self.repo_name)
+                self.cfg.host, port=self.cfg.port, repo=self.repo_name,
+                user=self.user, japd=self.japd, ca_cert=self.ca_cert,
+                scheme=self.scheme)
+            self.els.connect()
             self.els.dump_name = self.dump_name
             self.els.dump_db()
 
@@ -96,8 +106,8 @@ class UnitTest(unittest.TestCase):
 
         args_array = {"-r": self.repo_name, "-S": self.dump_name}
 
-        self.assertFalse(elastic_db_repo.delete_dump(self.elr,
-                                                     args_array=args_array))
+        self.assertFalse(elastic_db_repo.delete_dump(
+            self.elr, args_array=args_array))
 
     def test_deletedmp_arg(self):
 

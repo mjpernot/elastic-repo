@@ -7,25 +7,38 @@
         Elasticsearch database cluster.
 
     Usage:
-        elastic_db_repo.py -c file -d path {-L [repo_name] | -R | -U
-            | -C repo_name -l path | -D repo_name
-            | -M old_repo_name new_repo_name | -S dump_name -r repo_name}
+        elastic_db_repo.py -c file -d path
+            {-L [repo_name] |
+             -R |
+             -U |
+             -C repo_name -l path |
+             -D repo_name |
+             -M old_repo_name new_repo_name |
+             -S dump_name -r repo_name}
             [-v | -h]
 
     Arguments:
+        -c file => Elasticsearch configuration file.  Required argument.
+        -d dir path => Directory path for option '-c'.  Required argument.
+
         -L [repo_name] => List of database dumps for an Elasticsearch
             database.  repo_name is name of repository to dump.  If no repo,
             then all repos and associated dumps will be displayed.
+
         -R => List of repositories in the Elasticsearch database.
-        -D repo_name => Delete a repository.
+
         -U => Display disk usage of any dump partitions.
+
+        -C repo_name => Create new repository name.
+            -l path => Directory path name.
+
+        -D repo_name => Delete a repository.
+
         -M old_repo_name new_repo_name => Rename a repository.
-        -S dump_name => Delete dump in a repository.  Requires -r option.
-        -r repo_name => Repository name.
-        -C repo_name => Create new repository name.  Requires -l option.
-        -l path => Directory path name.
-        -c file => Elasticsearch configuration file.  Required argument.
-        -d dir path => Directory path for option '-c'.  Required argument.
+
+        -S dump_name => Delete dump in a repository.
+            -r repo_name => Repository name.
+
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -39,9 +52,17 @@
         The configuration file format for the Elasticsearch connection to a
         database.
 
-            # Elasticsearch configuration file.
+            # Elasticsearch configuration file
             name = ["HOST_NAME1", "HOST_NAME2"]
             port = 9200
+
+            # Login credentials
+            user = None
+            japd = None
+
+            # SSL connection
+            ssl_client_ca = None
+            scheme = "https"
 
     Example:
         elastic_db_repo.py -c elastic -d config -L Backup_Repo
@@ -71,7 +92,7 @@ WARN_TEMPLATE = "Warning:  Repository '%s' does not exist."
 PRT_TEMPLATE = "Reason: '%s'"
 
 
-def help_message(**kwargs):
+def help_message():
 
     """Function:  help_message
 
@@ -94,6 +115,8 @@ def list_dumps(els, **kwargs):
 
     Arguments:
         (input) els -> ElasticSearch class instance.
+        (input) **kwargs:
+            args_array -> Dict of command line options and values.
 
     """
 
@@ -112,7 +135,7 @@ def list_dumps(els, **kwargs):
 
     for repo in repo_list:
         print("\nList of Dumps for Reposistory: %s" % (str(repo)))
-        elastic_libs.list_dumps(elastic_class.get_dump_list(els.els, repo))
+        elastic_libs.list_dumps(elastic_class.get_dump_list(els.els, repo)[0])
 
 
 def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
@@ -145,8 +168,8 @@ def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
               % (repo_name, repo_dir))
 
     else:
-        err_flag, msg = els.create_repo(repo_name,
-                                        os.path.join(repo_dir, repo_name))
+        err_flag, msg = els.create_repo(
+            repo_name, os.path.join(repo_dir, repo_name))
 
         if err_flag:
             print("Error detected for Repository: '%s' at '%s'"
@@ -216,9 +239,10 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
 
     if repo_name in els.repo_dict:
 
-        # See if the dump exist
-        if any(dump_name == x[0]
-               for x in elastic_class.get_dump_list(els.els, repo_name)):
+        dump_list, status, err_msg = elastic_class.get_dump_list(
+            els.els, repo_name, snapshot=dump_name)
+
+        if status and dump_list:
 
             err_flag, msg = els.delete_dump(repo_name, dump_name)
 
@@ -228,8 +252,8 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
                 print(PRT_TEMPLATE % (msg))
 
         else:
-            print("Warning:  Dump '%s' does not exist in Repository '%s'"
-                  % (dump_name, repo_name))
+            print("Warning: Failed to delete snapshot")
+            print(PRT_TEMPLATE % (err_msg))
 
     else:
         print(WARN_TEMPLATE % (repo_name))
@@ -274,7 +298,7 @@ def rename_repo(els, name_list=None, **kwargs):
               % (str(name_list)))
 
 
-def _rename(els, name_list, **kwargs):
+def _rename(els, name_list):
 
     """Function:  _rename
 
@@ -314,24 +338,26 @@ def disk_usage(els, **kwargs):
 
     Arguments:
         (input) els -> ElasticSearch class instance.
+        (input) **kwargs:
+            args_array -> Dict of command line options and values.
 
     """
 
     if els.repo_dict:
-        print("{0:30} {1:65} {2:10} {3:10} {4:15} {5:10}"
-              .format("Repository", "Partition", "Total", "Used", "Free",
-                      "Percent"))
+        print("{0:10} {1:10} {2:15} {3:10} {4:40} {5:65}"
+              .format("Total", "Used", "Free", "Percent", "Repository",
+                      "Partition"))
 
         for repo in els.repo_dict:
             partition = els.repo_dict[repo]["settings"]["location"]
             usage = gen_libs.disk_usage(partition)
 
-            print("{0:30} {1:65} {2:10} {3:10} {4:10} {5:10.2f}%"
-                  .format(repo, partition,
-                          gen_libs.bytes_2_readable(usage.total),
+            print("{0:10} {1:10} {2:10} {3:10.2f}%     {4:40} {5:65}"
+                  .format(gen_libs.bytes_2_readable(usage.total),
                           gen_libs.bytes_2_readable(usage.used),
                           gen_libs.bytes_2_readable(usage.free),
-                          (float(usage.used) / usage.total) * 100))
+                          (float(usage.used) / usage.total) * 100,
+                          repo, partition))
 
 
 def list_repos(els, **kwargs):
@@ -342,13 +368,15 @@ def list_repos(els, **kwargs):
 
     Arguments:
         (input) els -> ElasticSearch class instance.
+        (input) **kwargs:
+            args_array -> Dict of command line options and values.
 
     """
 
     elastic_libs.list_repos2(els.repo_dict)
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args_array, func_dict):
 
     """Function:  run_program
 
@@ -366,15 +394,26 @@ def run_program(args_array, func_dict, **kwargs):
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
     hostname = socket.gethostname().strip().split(".")[0]
+    user = cfg.user if hasattr(cfg, "user") else None
+    japd = cfg.japd if hasattr(cfg, "japd") else None
+    ca_cert = cfg.ssl_client_ca if hasattr(cfg, "ssl_client_ca") else None
+    scheme = cfg.scheme if hasattr(cfg, "scheme") else "https"
 
     try:
         prog_lock = gen_class.ProgramLock(cmdline.argv, hostname)
 
         # Find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
-            els = elastic_class.ElasticSearchRepo(cfg.host, cfg.port,
-                                                  repo=args_array.get("-L"))
-            func_dict[opt](els, args_array=args_array, **kwargs)
+            els = elastic_class.ElasticSearchRepo(
+                cfg.host, port=cfg.port, repo=args_array.get("-L"),
+                user=user, japd=japd, ca_cert=ca_cert, scheme=scheme)
+            els.connect()
+
+            if els.is_connected:
+                func_dict[opt](els, args_array=args_array)
+
+            else:
+                print("ERROR:  Failed to connect to Elasticsearch")
 
         del prog_lock
 
@@ -420,9 +459,8 @@ def main():
                     "-M": ["-L", "-R", "-S", "-C", "-D", "-U"]}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
-                                       opt_val=opt_val,
-                                       multi_val=opt_multi_list)
+    args_array = arg_parser.arg_parse2(
+        cmdline.argv, opt_val_list, opt_val=opt_val, multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and not arg_parser.arg_require(args_array, opt_req_list) \

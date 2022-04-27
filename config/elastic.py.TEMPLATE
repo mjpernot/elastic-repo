@@ -2,6 +2,24 @@
 # Classification (U)
 # Unclassified until filled.
 
+# List of elasticsearch nodes in cluster
 host = ["HOST_NAME1", "HOST_NAME2"]
-# Default of ElasticSearch is port 9200
+# Elasticsearch port - default is port 9200
 port = 9200
+# User name
+# If no user name is required then use None
+# Example:  user = "username"
+user = None
+# User pswd
+# Example:  japd = "xxx"
+japd = None
+
+# SSL Configuration settings
+# If not set will connect to Elasticsearch without using SSL connections.
+# File containing the SSL certificate authority.
+# Example: ssl_client_ca = "/etc/elasticsearch/certs/ca.pem"
+ssl_client_ca = None
+# Type of connection when using SSL connection.
+# Do not change unless you know what you are doing.
+scheme = "https"
+
