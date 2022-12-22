@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  run_program.py
@@ -19,13 +18,7 @@ import sys
 import os
 import shutil
 import time
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 
 # Local
 sys.path.append(os.getcwd())
@@ -81,7 +74,7 @@ class UnitTest(unittest.TestCase):
         self.repo_name2 = "TEST_INTR_REPO2"
         self.dump_name = "test_dump"
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
-        self.func_dict = {"-L": elastic_db_repo.list_dumps,
+        self.func_names = {"-L": elastic_db_repo.list_dumps,
                           "-R": elastic_db_repo.list_repos,
                           "-C": elastic_db_repo.create_repo,
                           "-D": elastic_db_repo.delete_repo,
@@ -145,7 +138,7 @@ class UnitTest(unittest.TestCase):
         self.args["-r"] = self.repo_name
 
         self.assertFalse(elastic_db_repo.run_program(
-            self.args, self.func_dict))
+            self.args, self.func_names))
 
     def test_list_dumps(self):
 
@@ -186,7 +179,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                elastic_db_repo.run_program(self.args, self.func_dict))
+                elastic_db_repo.run_program(self.args, self.func_names))
 
     @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):
@@ -223,7 +216,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                elastic_db_repo.run_program(self.args, self.func_dict))
+                elastic_db_repo.run_program(self.args, self.func_names))
 
     def test_rename_repo(self):
 
@@ -249,7 +242,7 @@ class UnitTest(unittest.TestCase):
 
         self.args["-M"] = [self.repo_name, self.repo_name2]
 
-        elastic_db_repo.run_program(self.args, self.func_dict)
+        elastic_db_repo.run_program(self.args, self.func_names)
 
         self.els2 = elastic_class.ElasticSearchRepo(
             self.cfg.host, self.cfg.port, repo=self.repo_name2, user=self.user,
@@ -285,7 +278,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                elastic_db_repo.run_program(self.args, self.func_dict))
+                elastic_db_repo.run_program(self.args, self.func_names))
 
     def test_delete_repo(self):
 
@@ -311,7 +304,7 @@ class UnitTest(unittest.TestCase):
 
         self.args["-D"] = self.repo_name
 
-        elastic_db_repo.run_program(self.args, self.func_dict)
+        elastic_db_repo.run_program(self.args, self.func_names)
 
         self.els2 = elastic_class.ElasticSearchRepo(
             self.cfg.host, self.cfg.port, repo=self.repo_name, user=self.user,
@@ -334,7 +327,7 @@ class UnitTest(unittest.TestCase):
         self.args["-C"] = self.repo_name
         self.args["-l"] = self.cfg.log_repo_dir
 
-        elastic_db_repo.run_program(self.args, self.func_dict)
+        elastic_db_repo.run_program(self.args, self.func_names)
 
         self.els2 = elastic_class.ElasticSearchRepo(
             self.cfg.host, self.cfg.port, repo=self.repo_name, user=self.user,
