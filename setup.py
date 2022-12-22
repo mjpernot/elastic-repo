@@ -46,10 +46,11 @@ setuptools.setup(
         "Operating System :: Linux :: Centos",
         "Operating System :: Linux :: Ubuntu",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
         "Topic :: Database",
         "Topic :: Database :: Elasticsearch",
-        "Topic :: Database :: Elasticsearch :: 5.4.0",
-        "Topic :: Database :: Elasticsearch :: 7.4.0",
-        "Topic :: Database :: Elasticsearch :: 7.12.0"])
+        "Topic :: Database :: Elasticsearch :: 6.4",
+        "Topic :: Database :: Elasticsearch :: 7.4",
+        "Topic :: Database :: Elasticsearch :: 7.12",
+        "Topic :: Database :: Elasticsearch :: 7.17"])
