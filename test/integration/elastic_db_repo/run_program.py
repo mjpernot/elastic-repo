@@ -12,6 +12,7 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
 
 # Standard
 import sys
@@ -74,13 +75,14 @@ class UnitTest(unittest.TestCase):
         self.repo_name2 = "TEST_INTR_REPO2"
         self.dump_name = "test_dump"
         self.phy_repo_dir = os.path.join(self.cfg.phy_repo_dir, self.repo_name)
-        self.func_names = {"-L": elastic_db_repo.list_dumps,
-                          "-R": elastic_db_repo.list_repos,
-                          "-C": elastic_db_repo.create_repo,
-                          "-D": elastic_db_repo.delete_repo,
-                          "-S": elastic_db_repo.delete_dump,
-                          "-M": elastic_db_repo.rename_repo,
-                          "-U": elastic_db_repo.disk_usage}
+        self.func_names = {
+            "-L": elastic_db_repo.list_dumps,
+            "-R": elastic_db_repo.list_repos,
+            "-C": elastic_db_repo.create_repo,
+            "-D": elastic_db_repo.delete_repo,
+            "-S": elastic_db_repo.delete_dump,
+            "-M": elastic_db_repo.rename_repo,
+            "-U": elastic_db_repo.disk_usage}
         self.args = {"-c": "elastic", "-d": self.config_path}
         self.user = self.cfg.user if hasattr(self.cfg, "user") else None
         self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
