@@ -7,7 +7,6 @@
 
 ###  This README file is broken down into the following sections:
   * Features
-  * Prerequisites
   * Installation
   * Configuration
   * Program Help Function
@@ -23,16 +22,6 @@
   * Renaming repositories.
   * List dumps in a repository.
   * Monitoring of disk usage in repositories.
-
-
-# Prerequisites:
-  * List of Linux packages that need to be installed on the server.
-    - git
-    - python-pip
-
-  * Local class/library dependencies within the program structure.
-    - python-lib
-    - elastic-lib
 
 
 # Installation:
