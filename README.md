@@ -57,7 +57,7 @@ pip install -r requirements-elastic-python-lib.txt --target elastic_lib/lib --tr
 
 Make the appropriate changes to the Elasticsearch environment.
   * Change these entries in the elasticsearch set up:
-    - host = ["HOST_NAME1", "HOST_NAME2"]
+    - host = ["https://HOST_NAME1:9200", "https://HOST_NAME2:9200"]
 
   * If login credentials are required:
     - user = None
@@ -119,7 +119,7 @@ Install the project using the procedures in the Installation section.
 
 Make the appropriate changes to the Elasticsearch environment.
   * Change these entries in the elasticsearch set up:
-    - host = ["HOST_NAME1", "HOST_NAME2"]
+    - host = ["https://HOST_NAME1:9200", "https://HOST_NAME2:9200"]
 
   * If login credentials are required:
     - user = None
@@ -171,7 +171,7 @@ Install the project using the procedures in the Installation section.
 
 Make the appropriate changes to the Elasticsearch environment.
   * Change these entries in the elasticsearch set up:
-    - host = ["HOST_NAME1", "HOST_NAME2"]
+    - host = ["https://HOST_NAME1:9200", "https://HOST_NAME2:9200"]
 
   * If login credentials are required:
     - user = None
