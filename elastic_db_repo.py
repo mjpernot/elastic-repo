@@ -77,7 +77,6 @@ from __future__ import absolute_import
 # Standard
 import sys
 import os
-import socket
 
 # Local
 try:
@@ -404,14 +403,14 @@ def run_program(args_array, func_dict):
     args_array = dict(args_array)
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
-    hostname = socket.gethostname().strip().split(".")[0]
     user = cfg.user if hasattr(cfg, "user") else None
     japd = cfg.japd if hasattr(cfg, "japd") else None
     ca_cert = cfg.ssl_client_ca if hasattr(cfg, "ssl_client_ca") else None
     scheme = cfg.scheme if hasattr(cfg, "scheme") else "https"
+    flavorid = "elasticrepo"
 
     try:
-        prog_lock = gen_class.ProgramLock(cmdline.argv, hostname)
+        prog_lock = gen_class.ProgramLock(cmdline.argv, flavor_id=flavorid)
 
         # Find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
@@ -429,7 +428,7 @@ def run_program(args_array, func_dict):
         del prog_lock
 
     except gen_class.SingleInstanceException:
-        print("WARNING:  elastic_db_repo lock in place for: %s" % (hostname))
+        print("WARNING:  elastic_db_repo lock in place for: %s" % (flavorid))
 
 
 def main():
