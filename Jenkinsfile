@@ -9,13 +9,13 @@ pipeline {
         stage('Test') {
             steps {
                 dir ('lib') {
-                    git branch: "mod/285", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
+                    git branch: "mod/294", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
                 dir ('elastic_lib') {
-                    git branch: "mod/400", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/elastic-lib.git"
+                    git branch: "mod/401", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/elastic-lib.git"
                 }
                 dir ('elastic_lib/lib') {
-                    git branch: "mod/286", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
+                    git branch: "mod/294", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
                 sh """
                 virtualenv test_env
@@ -24,17 +24,17 @@ pipeline {
                 pip2 install elasticsearch==7.0.2 --user
                 pip2 install requests==2.19.1 --user
                 pip2 install urllib3==1.24.3 --user
-                ./test/unit/elastic_db_repo/help_message.py
-                ./test/unit/elastic_db_repo/rename_repo.py
-                ./test/unit/elastic_db_repo/rename.py
-                ./test/unit/elastic_db_repo/list_repos.py
-                ./test/unit/elastic_db_repo/list_dumps.py
-                ./test/unit/elastic_db_repo/disk_usage.py
-                ./test/unit/elastic_db_repo/delete_repo.py
-                ./test/unit/elastic_db_repo/delete_dump.py
-                ./test/unit/elastic_db_repo/create_repo.py
-                ./test/unit/elastic_db_repo/run_program.py
-                ./test/unit/elastic_db_repo/main.py
+                /usr/bin/python ./test/unit/elastic_db_repo/help_message.py
+                /usr/bin/python ./test/unit/elastic_db_repo/rename_repo.py
+                /usr/bin/python ./test/unit/elastic_db_repo/rename.py
+                /usr/bin/python ./test/unit/elastic_db_repo/list_repos.py
+                /usr/bin/python ./test/unit/elastic_db_repo/list_dumps.py
+                /usr/bin/python ./test/unit/elastic_db_repo/disk_usage.py
+                /usr/bin/python ./test/unit/elastic_db_repo/delete_repo.py
+                /usr/bin/python ./test/unit/elastic_db_repo/delete_dump.py
+                /usr/bin/python ./test/unit/elastic_db_repo/create_repo.py
+                /usr/bin/python ./test/unit/elastic_db_repo/run_program.py
+                /usr/bin/python ./test/unit/elastic_db_repo/main.py
                 deactivate
                 rm -rf test_env
                 """
