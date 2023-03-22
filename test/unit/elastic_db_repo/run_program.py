@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  run_program.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -197,7 +190,7 @@ class UnitTest(unittest.TestCase):
 
         self.cfg = CfgTest()
         self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
-        self.func_dict = {"-U": disk_usage, "-R": list_repos}
+        self.func_names = {"-U": disk_usage, "-R": list_repos}
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
         self.elr = ElasticSearchRepo(
             self.cfg.host, self.cfg.port, None, self.cfg.user,
@@ -225,7 +218,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                elastic_db_repo.run_program(self.args, self.func_dict))
+                elastic_db_repo.run_program(self.args, self.func_names))
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
@@ -247,7 +240,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         self.assertFalse(
-            elastic_db_repo.run_program(self.args, self.func_dict))
+            elastic_db_repo.run_program(self.args, self.func_names))
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
@@ -269,7 +262,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         self.assertFalse(
-            elastic_db_repo.run_program(self.args, self.func_dict))
+            elastic_db_repo.run_program(self.args, self.func_names))
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
@@ -293,7 +286,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                elastic_db_repo.run_program(self.args, self.func_dict))
+                elastic_db_repo.run_program(self.args, self.func_names))
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
@@ -317,7 +310,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         self.assertFalse(
-            elastic_db_repo.run_program(self.args, self.func_dict))
+            elastic_db_repo.run_program(self.args, self.func_names))
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
@@ -339,7 +332,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         self.assertFalse(
-            elastic_db_repo.run_program(self.args, self.func_dict))
+            elastic_db_repo.run_program(self.args, self.func_names))
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
@@ -359,7 +352,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         self.assertFalse(
-            elastic_db_repo.run_program(self.args, self.func_dict))
+            elastic_db_repo.run_program(self.args, self.func_names))
 
 
 if __name__ == "__main__":

@@ -6,13 +6,13 @@
 
 echo ""
 echo "Integration test"
-test/integration/elastic_db_repo/list_dumps.py
-test/integration/elastic_db_repo/create_repo.py
-test/integration/elastic_db_repo/delete_repo.py
-test/integration/elastic_db_repo/delete_dump.py
-test/integration/elastic_db_repo/rename_repo.py
-test/integration/elastic_db_repo/disk_usage.py
-test/integration/elastic_db_repo/list_repos.py
-test/integration/elastic_db_repo/run_program.py
-test/integration/elastic_db_repo/main.py
+/usr/bin/python test/integration/elastic_db_repo/list_dumps.py
+/usr/bin/python test/integration/elastic_db_repo/create_repo.py
+/usr/bin/python test/integration/elastic_db_repo/delete_repo.py
+/usr/bin/python test/integration/elastic_db_repo/delete_dump.py
+/usr/bin/python test/integration/elastic_db_repo/rename_repo.py
+/usr/bin/python test/integration/elastic_db_repo/disk_usage.py
+/usr/bin/python test/integration/elastic_db_repo/list_repos.py
+/usr/bin/python test/integration/elastic_db_repo/run_program.py
+/usr/bin/python test/integration/elastic_db_repo/main.py
 
