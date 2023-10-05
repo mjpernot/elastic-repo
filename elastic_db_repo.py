@@ -80,7 +80,6 @@ import os
 
 # Local
 try:
-    from .lib import arg_parser
     from .lib import gen_libs
     from .lib import gen_class
     from .elastic_lib import elastic_class
@@ -88,7 +87,6 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.arg_parser as arg_parser
     import lib.gen_libs as gen_libs
     import lib.gen_class as gen_class
     import elastic_lib.elastic_class as elastic_class
@@ -124,9 +122,9 @@ def list_dumps(els, **kwargs):
         repositories.
 
     Arguments:
-        (input) els -> ElasticSearch class instance.
+        (input) els -> ElasticSearch class instance
         (input) **kwargs:
-            args_array -> Dict of command line options and values.
+            args_array -> Dict of command line options and values
 
     """
 
@@ -155,11 +153,11 @@ def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
     Description:  Create an ElasticSearch repository.
 
     Arguments:
-        (input) els -> ElasticSearch class instance.
-        (input) repo_name -> Name of repository.
-        (input) repo_dir -> Repository directory path.
+        (input) els -> ElasticSearch class instance
+        (input) repo_name -> Name of repository
+        (input) repo_dir -> Repository directory path
         (input) **kwargs:
-            args_array -> Dict of command line options and values.
+            args_array -> Dict of command line options and values
 
     """
 
@@ -194,10 +192,10 @@ def delete_repo(els, repo_name=None, **kwargs):
     Description:  Delete an Elasticsearch repository.
 
     Arguments:
-        (input) els -> ElasticSearch class instance.
-        (input) repo_name -> Name of repository.
+        (input) els -> ElasticSearch class instance
+        (input) repo_name -> Name of repository
         (input) **kwargs:
-            args_array -> Dict of command line options and values.
+            args_array -> Dict of command line options and values
 
     """
 
@@ -228,11 +226,11 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
     Description:  Delete a dump in an Elasticsearch repository.
 
     Arguments:
-        (input) els -> ElasticSearch class instance.
-        (input) repo_name -> Name of repository.
-        (input) dump_name -> Name of dump to delete.
+        (input) els -> ElasticSearch class instance
+        (input) repo_name -> Name of repository
+        (input) dump_name -> Name of dump to delete
         (input) **kwargs:
-            args_array -> Dict of command line options and values.
+            args_array -> Dict of command line options and values
 
     """
 
@@ -276,10 +274,10 @@ def rename_repo(els, name_list=None, **kwargs):
     Description:  Rename an Elasticseatch repository.
 
     Arguments:
-        (input) els -> ElasticSearch class instance.
-        (input) name_list -> List of two repository names for renaming process.
+        (input) els -> ElasticSearch class instance
+        (input) name_list -> List of two repository names for renaming process
         (input) **kwargs:
-            args_array -> Dict of command line options and values.
+            args_array -> Dict of command line options and values
 
     """
 
@@ -315,8 +313,8 @@ def _rename(els, name_list):
     Description:  Private function for rename_repo function.
 
     Arguments:
-        (input) els -> ElasticSearch class instance.
-        (input) name_list -> List of two repository names for renaming process.
+        (input) els -> ElasticSearch class instance
+        (input) name_list -> List of two repository names for renaming process
 
     """
 
@@ -347,9 +345,9 @@ def disk_usage(els, **kwargs):
     Description:  Display disk usage of dump partitions.
 
     Arguments:
-        (input) els -> ElasticSearch class instance.
+        (input) els -> ElasticSearch class instance
         (input) **kwargs:
-            args_array -> Dict of command line options and values.
+            args_array -> Dict of command line options and values
 
     """
 
@@ -377,9 +375,9 @@ def list_repos(els, **kwargs):
     Description:  Lists the repositories present.
 
     Arguments:
-        (input) els -> ElasticSearch class instance.
+        (input) els -> ElasticSearch class instance
         (input) **kwargs:
-            args_array -> Dict of command line options and values.
+            args_array -> Dict of command line options and values
 
     """
 
@@ -394,12 +392,11 @@ def run_program(args_array, func_dict):
         Create a program lock to prevent other instantiations from running.
 
     Arguments:
-        (input) args_array -> Dict of command line options and values.
-        (input) func_dict -> Dictionary list of functions and options.
+        (input) args_array -> Dict of command line options and values
+        (input) func_dict -> Dictionary list of functions and options
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
     args_array = dict(args_array)
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
@@ -410,7 +407,7 @@ def run_program(args_array, func_dict):
     flavorid = "elasticrepo"
 
     try:
-        prog_lock = gen_class.ProgramLock(cmdline.argv, flavor_id=flavorid)
+        prog_lock = gen_class.ProgramLock(sys.argv, flavor_id=flavorid)
 
         # Find which functions to call.
         for opt in set(args_array.keys()) & set(func_dict.keys()):
@@ -439,21 +436,20 @@ def main():
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories.
-        func_dict -> dictionary list for the function calls or other options.
-        opt_con_req_dict -> contains options requiring other options.
-        opt_multi_list -> contains the options that will have multiple values.
-        opt_req_list -> contains options that are required for the program.
-        opt_val -> List of options that allow 0 or 1 value for option.
-        opt_val_list -> contains options which require values.
-        opt_xor_dict -> contains dict with key that is xor with it's values.
+        dir_chk_list -> contains options which will be directories
+        func_dict -> dictionary list for the function calls or other options
+        opt_con_req_dict -> contains options requiring other options
+        opt_multi_list -> contains the options that will have multiple values
+        opt_req_list -> contains options that are required for the program
+        opt_val -> List of options that allow 0 or 1 value for option
+        opt_val_list -> contains options which require values
+        opt_xor_dict -> contains dict with key that is xor with it's values
 
     Arguments:
-        (input) argv -> Arguments from the command line.
+        (input) argv -> Arguments from the command line
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d"]
     func_dict = {"-L": list_dumps, "-R": list_repos, "-C": create_repo,
                  "-D": delete_repo, "-S": delete_dump, "-M": rename_repo,
@@ -470,7 +466,7 @@ def main():
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(
-        cmdline.argv, opt_val_list, opt_val=opt_val, multi_val=opt_multi_list)
+        sys.argv, opt_val_list, opt_val=opt_val, multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and not arg_parser.arg_require(args_array, opt_req_list) \
