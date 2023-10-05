@@ -124,7 +124,7 @@ def list_dumps(els, **kwargs):
     Arguments:
         (input) els -> ElasticSearch class instance
         (input) **kwargs:
-            args_array -> Dict of command line options and values
+            args -> ArgParser class instance
 
     """
 
@@ -157,19 +157,19 @@ def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
         (input) repo_name -> Name of repository
         (input) repo_dir -> Repository directory path
         (input) **kwargs:
-            args_array -> Dict of command line options and values
+            args -> ArgParser class instance
 
     """
 
     global PRT_TEMPLATE
 
-    args_array = dict(kwargs.get("args_array"))
+    args = kwargs.get("args")
 
     if not repo_name:
-        repo_name = args_array.get("-C")
+        repo_name = args.get_val("-C")
 
     if not repo_dir:
-        repo_dir = args_array.get("-l")
+        repo_dir = args.get_val("-l")
 
     if repo_name in els.repo_dict:
         print("Error:  '%s' repository already exists at: '%s'"
@@ -195,17 +195,17 @@ def delete_repo(els, repo_name=None, **kwargs):
         (input) els -> ElasticSearch class instance
         (input) repo_name -> Name of repository
         (input) **kwargs:
-            args_array -> Dict of command line options and values
+            args -> ArgParser class instance
 
     """
 
     global WARN_TEMPLATE
     global PRT_TEMPLATE
 
-    args_array = dict(kwargs.get("args_array"))
+    args = kwargs.get("args")
 
     if not repo_name:
-        repo_name = args_array.get("-D")
+        repo_name = args.get_val("-D")
 
     if repo_name in els.repo_dict:
 
@@ -230,20 +230,20 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
         (input) repo_name -> Name of repository
         (input) dump_name -> Name of dump to delete
         (input) **kwargs:
-            args_array -> Dict of command line options and values
+            args -> ArgParser class instance
 
     """
 
     global WARN_TEMPLATE
     global PRT_TEMPLATE
 
-    args_array = dict(kwargs.get("args_array"))
+    args = kwargs.get("args")
 
     if not repo_name:
-        repo_name = args_array.get("-r")
+        repo_name = args.get_val("-r")
 
     if not dump_name:
-        dump_name = args_array.get("-S")
+        dump_name = args.get_val("-S")
 
     if repo_name in els.repo_dict:
 
@@ -277,14 +277,14 @@ def rename_repo(els, name_list=None, **kwargs):
         (input) els -> ElasticSearch class instance
         (input) name_list -> List of two repository names for renaming process
         (input) **kwargs:
-            args_array -> Dict of command line options and values
+            args -> ArgParser class instance
 
     """
 
-    args_array = dict(kwargs.get("args_array"))
+    args = kwargs.get("args")
 
     if not name_list:
-        name_list = list(args_array.get("-M"))
+        name_list = list(args.get_val("-M"))
 
     if isinstance(name_list, list) and len(name_list) == 2:
 
@@ -347,7 +347,7 @@ def disk_usage(els, **kwargs):
     Arguments:
         (input) els -> ElasticSearch class instance
         (input) **kwargs:
-            args_array -> Dict of command line options and values
+            args -> ArgParser class instance
 
     """
 
@@ -377,14 +377,14 @@ def list_repos(els, **kwargs):
     Arguments:
         (input) els -> ElasticSearch class instance
         (input) **kwargs:
-            args_array -> Dict of command line options and values
+            args -> ArgParser class instance
 
     """
 
     elastic_libs.list_repos2(els.repo_dict)
 
 
-def run_program(args_array, func_dict):
+def run_program(args, func_dict):
 
     """Function:  run_program
 
@@ -392,14 +392,13 @@ def run_program(args_array, func_dict):
         Create a program lock to prevent other instantiations from running.
 
     Arguments:
-        (input) args_array -> Dict of command line options and values
+        (input) args -> ArgParser class instance
         (input) func_dict -> Dictionary list of functions and options
 
     """
 
-    args_array = dict(args_array)
     func_dict = dict(func_dict)
-    cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
     user = cfg.user if hasattr(cfg, "user") else None
     japd = cfg.japd if hasattr(cfg, "japd") else None
     ca_cert = cfg.ssl_client_ca if hasattr(cfg, "ssl_client_ca") else None
@@ -410,14 +409,14 @@ def run_program(args_array, func_dict):
         prog_lock = gen_class.ProgramLock(sys.argv, flavor_id=flavorid)
 
         # Find which functions to call.
-        for opt in set(args_array.keys()) & set(func_dict.keys()):
+        for opt in set(args.get_args_keys()) & set(func_dict.keys()):
             els = elastic_class.ElasticSearchRepo(
-                cfg.host, port=cfg.port, repo=args_array.get("-L"),
+                cfg.host, port=cfg.port, repo=args.get_val("-L"),
                 user=user, japd=japd, ca_cert=ca_cert, scheme=scheme)
             els.connect()
 
             if els.is_connected:
-                func_dict[opt](els, args_array=args_array)
+                func_dict[opt](els, args=args)
 
             else:
                 print("ERROR:  Failed to connect to Elasticsearch")
@@ -436,13 +435,14 @@ def main():
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories
+        dir_perms_chk -> contains options which will be directories and the
+            octal permission settings
         func_dict -> dictionary list for the function calls or other options
         opt_con_req_dict -> contains options requiring other options
         opt_multi_list -> contains the options that will have multiple values
         opt_req_list -> contains options that are required for the program
-        opt_val -> List of options that allow 0 or 1 value for option
-        opt_val_list -> contains options which require values
+        opt_val_bin -> List of options that allow 0 or 1 value for option
+        opt_val -> contains options which require values
         opt_xor_dict -> contains dict with key that is xor with it's values
 
     Arguments:
@@ -450,30 +450,33 @@ def main():
 
     """
 
-    dir_chk_list = ["-d"]
-    func_dict = {"-L": list_dumps, "-R": list_repos, "-C": create_repo,
-                 "-D": delete_repo, "-S": delete_dump, "-M": rename_repo,
-                 "-U": disk_usage}
+    dir_perms_chk = {"-d": 5}
+    func_dict = {
+        "-L": list_dumps, "-R": list_repos, "-C": create_repo,
+        "-D": delete_repo, "-S": delete_dump, "-M": rename_repo,
+        "-U": disk_usage}
     opt_con_req_dict = {"-C": ["-l"], "-S": ["-r"]}
     opt_multi_list = ["-M"]
     opt_req_list = ["-c", "-d"]
-    opt_val = ["-L"]
-    opt_val_list = ["-c", "-d", "-C", "-l", "-D", "-S", "-r", "-M"]
-    opt_xor_dict = {"-C": ["-L", "-R", "-S", "-D", "-M", "-U"],
-                    "-D": ["-L", "-R", "-S", "-C", "-M", "-U"],
-                    "-S": ["-L", "-R", "-C", "-D", "-M", "-U"],
-                    "-M": ["-L", "-R", "-S", "-C", "-D", "-U"]}
+    opt_val_bin = ["-L"]
+    opt_val = ["-c", "-d", "-C", "-l", "-D", "-S", "-r", "-M"]
+    opt_xor_dict = {
+        "-C": ["-L", "-R", "-S", "-D", "-M", "-U"],
+        "-D": ["-L", "-R", "-S", "-C", "-M", "-U"],
+        "-S": ["-L", "-R", "-C", "-D", "-M", "-U"],
+        "-M": ["-L", "-R", "-S", "-C", "-D", "-U"]}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(
-        sys.argv, opt_val_list, opt_val=opt_val, multi_val=opt_multi_list)
+    args = gen_class.ArgParser(
+        sys.argv, opt_val=opt_val, opt_val_bin=opt_val_bin,
+        multi_val=opt_multi_list, do_parse=True)
 
-    if not gen_libs.help_func(args_array, __version__, help_message) \
-       and not arg_parser.arg_require(args_array, opt_req_list) \
-       and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
-       and arg_parser.arg_cond_req_or(args_array, opt_con_req_dict) \
-       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
-        run_program(args_array, func_dict)
+    if not gen_libs.help_func(args, __version__, help_message)  \
+       and args.arg_require(opt_req=opt_req_list)               \
+       and args.arg_xor_dict(opt_xor_val=opt_xor_dict)          \
+       and args.arg_cond_req_or(opt_con_or=opt_con_req_dict)    \
+       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk):
+        run_program(args, func_dict)
 
 
 if __name__ == "__main__":

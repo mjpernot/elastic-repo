@@ -40,7 +40,7 @@ def disk_usage(els, **kwargs):
 
     status = True
 
-    if els and dict(kwargs.get("args_array")):
+    if els and kwargs.get("args"):
         status = True
 
     return status
@@ -58,10 +58,60 @@ def list_repos(els, **kwargs):
 
     status = True
 
-    if els and dict(kwargs.get("args_array")):
+    if els and kwargs.get("args"):
         status = True
 
     return status
+
+
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        get_args_keys
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {"-c": "mongo_cfg", "-d": "config"}
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+    def get_args_keys(self):
+
+        """Method:  get_args_keys
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args_keys.
+
+        Arguments:
+
+        """
+
+        return list(self.args_array.keys())
 
 
 class ProgramLock(object):
@@ -189,7 +239,9 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg = CfgTest()
-        self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
+        self.args = ArgParser()
+        self.args.args_array = {
+            "-c": "config_file", "-d": "config_dir", "-M": True}
         self.func_names = {"-U": disk_usage, "-R": list_repos}
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
         self.elr = ElasticSearchRepo(
@@ -209,7 +261,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-U"] = True
+        self.args.args_array["-U"] = True
         self.elr.is_connected = False
 
         mock_lock.return_value = self.proglock
@@ -233,7 +285,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-U"] = True
+        self.args.args_array["-U"] = True
 
         mock_lock.return_value = self.proglock
         mock_class.return_value = self.elr
@@ -255,7 +307,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-U"] = True
+        self.args.args_array["-U"] = True
 
         mock_lock.return_value = self.proglock
         mock_class.return_value = self.elr
@@ -277,7 +329,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-U"] = True
+        self.args.args_array["-U"] = True
 
         mock_lock.side_effect = \
             elastic_db_repo.gen_class.SingleInstanceException
@@ -302,8 +354,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-U"] = True
-        self.args["-R"] = True
+        self.args.args_array["-U"] = True
+        self.args.args_array["-R"] = True
 
         mock_lock.return_value = self.proglock
         mock_class.return_value = self.elr
@@ -325,7 +377,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-U"] = True
+        self.args.args_array["-U"] = True
 
         mock_lock.return_value = self.proglock
         mock_class.return_value = self.elr
