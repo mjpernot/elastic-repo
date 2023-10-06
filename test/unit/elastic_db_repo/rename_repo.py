@@ -196,7 +196,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-M": ["Test_Repo_Name_2", "Test_Repo_Name_5"]}
+        self.args.args_array = {"-M": ["Test_Repo_Name_2", "Test_Repo_Name_5"]}
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -290,7 +290,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-M": ("Test_Repo_Name_1", "Test_Repo_Name_5")}
+        self.args.args_array = {"-M": ("Test_Repo_Name_1", "Test_Repo_Name_5")}
 
         with gen_libs.no_std_out():
             self.assertFalse(
