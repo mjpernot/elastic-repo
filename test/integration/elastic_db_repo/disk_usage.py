@@ -77,7 +77,7 @@ class UnitTest(unittest.TestCase):
 
         else:
             _, _ = self.els.create_repo(repo_name=self.cfg.log_repo_dir,
-                                        repo_dir=self.repo_dir)
+                                        repo_dir=self.phy_repo_dir)
 
     @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):

@@ -51,4 +51,5 @@ setuptools.setup(
         "Topic :: Database :: Elasticsearch :: 6.4",
         "Topic :: Database :: Elasticsearch :: 7.4",
         "Topic :: Database :: Elasticsearch :: 7.12",
-        "Topic :: Database :: Elasticsearch :: 7.17"])
+        "Topic :: Database :: Elasticsearch :: 7.17",
+        "Topic :: Database :: Elasticsearch :: 8.5"])

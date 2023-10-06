@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
+## [0.3.7] - 2023-10-05
+- Updated to work in Elasticsearch v8.5.2
+- Replaced the arg_parser code with gen_class.ArgParser code.
+
+### Changed
+- Multiple functions: Replaced the arg_parser code with gen_class.ArgParser code.
+- main, run_program: Removed gen_libs.get_inst call.
+- Documentation update
+
 
 ## [0.3.6] - 2022-12-22
 - Updated to work in Python 3 too

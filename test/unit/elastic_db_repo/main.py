@@ -27,6 +27,100 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_cond_req_or
+        arg_dir_chk
+        arg_require
+        arg_xor_dict
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+        self.opt_req = None
+        self.opt_req2 = True
+        self.dir_perms_chk = None
+        self.dir_perms_chk2 = True
+        self.opt_con_or = None
+        self.opt_con_or2 = True
+        self.opt_xor_val = None
+        self.opt_xor_val2 = True
+
+    def arg_cond_req_or(self, opt_con_or):
+
+        """Method:  arg_cond_req_or
+
+        Description:  Method stub holder for
+            gen_class.ArgParser.arg_cond_req_or.
+
+        Arguments:
+
+        """
+
+        self.opt_con_or = opt_con_or
+
+        return self.opt_con_or2
+
+    def arg_dir_chk(self, dir_perms_chk):
+
+        """Method:  arg_dir_chk
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_dir_chk.
+
+        Arguments:
+
+        """
+
+        self.dir_perms_chk = dir_perms_chk
+
+        return self.dir_perms_chk2
+
+    def arg_require(self, opt_req):
+
+        """Method:  arg_require
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_require.
+
+        Arguments:
+
+        """
+
+        self.opt_req = opt_req
+
+        return self.opt_req2
+
+    def arg_xor_dict(self, opt_xor_val):
+
+        """Method:  arg_xor_dict
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_xor_dict.
+
+        Arguments:
+
+        """
+
+        self.opt_xor_val = opt_xor_val
+
+        return self.opt_xor_val2
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -37,14 +131,15 @@ class UnitTest(unittest.TestCase):
         setUp
         test_help_true
         test_help_false
-        test_require_true
         test_require_false
+        test_require_true
         test_xor_dict_false
         test_xor_dict_true
         test_con_req_or_false
         test_con_req_or_true
-        test_dir_chk_crt_true
-        test_dir_chk_crt_false
+        test_arg_dir_chk_false
+        test_arg_dir_chk_true
+        test_run_program
 
     """
 
@@ -58,10 +153,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args = {"-c": "config_file", "-d": "config_dir", "-R": True}
+        self.args = ArgParser()
+        self.args.args_array = {
+            "-c": "config_file", "-d": "config_dir", "-R": True}
 
     @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser.arg_parse2")
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
     def test_help_true(self, mock_arg, mock_help):
 
         """Function:  test_help_true
@@ -78,7 +175,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(elastic_db_repo.main())
 
     @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser")
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
     def test_help_false(self, mock_arg, mock_help):
 
         """Function:  test_help_false
@@ -89,32 +186,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.opt_req2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
 
         self.assertFalse(elastic_db_repo.main())
 
     @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser")
-    def test_require_true(self, mock_arg, mock_help):
-
-        """Function:  test_require_true
-
-        Description:  Test with arg_require returns True.
-
-        Arguments:
-
-        """
-
-        mock_arg.arg_parse2.return_value = self.args
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
-
-        self.assertFalse(elastic_db_repo.main())
-
-    @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser")
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
     def test_require_false(self, mock_arg, mock_help):
 
         """Function:  test_require_false
@@ -125,15 +205,34 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.opt_req2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_xor_dict.return_value = False
 
         self.assertFalse(elastic_db_repo.main())
 
     @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser")
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
+    def test_require_true(self, mock_arg, mock_help):
+
+        """Function:  test_require_true
+
+        Description:  Test with arg_require returns True.
+
+        Arguments:
+
+        """
+
+        self.args.opt_xor_val2 = False
+
+        mock_arg.return_value = self.args
+        mock_help.return_value = False
+
+        self.assertFalse(elastic_db_repo.main())
+
+    @mock.patch("elastic_db_repo.gen_libs.help_func")
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
     def test_xor_dict_false(self, mock_arg, mock_help):
 
         """Function:  test_xor_dict_false
@@ -144,15 +243,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.opt_xor_val2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_xor_dict.return_value = False
 
         self.assertFalse(elastic_db_repo.main())
 
     @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser")
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
     def test_xor_dict_true(self, mock_arg, mock_help):
 
         """Function:  test_xor_dict_true
@@ -163,16 +262,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.opt_con_or2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_xor_dict.return_value = True
-        mock_arg.arg_cond_req_or.return_value = False
 
         self.assertFalse(elastic_db_repo.main())
 
     @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser")
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
     def test_con_req_or_false(self, mock_arg, mock_help):
 
         """Function:  test_con_req_or_false
@@ -183,16 +281,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.opt_con_or2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_xor_dict.return_value = True
-        mock_arg.arg_cond_req_or.return_value = False
 
         self.assertFalse(elastic_db_repo.main())
 
     @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser")
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
     def test_con_req_or_true(self, mock_arg, mock_help):
 
         """Function:  test_con_req_or_true
@@ -203,56 +300,65 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.dir_perms_chk2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_xor_dict.return_value = True
-        mock_arg.arg_cond_req_or.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = True
 
         self.assertFalse(elastic_db_repo.main())
 
     @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser")
-    def test_dir_chk_crt_true(self, mock_arg, mock_help):
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
+    def test_arg_dir_chk_false(self, mock_arg, mock_help):
 
-        """Function:  test_dir_chk_crt_true
+        """Function:  test_arg_dir_chk_false
 
-        Description:  Test with arg_dir_chk_crt returns True.
+        Description:  Test with arg_dir_chk returns False.
 
         Arguments:
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.dir_perms_chk2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_xor_dict.return_value = True
-        mock_arg.arg_cond_req_or.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = True
 
         self.assertFalse(elastic_db_repo.main())
 
-    @mock.patch("elastic_db_repo.run_program")
+    @mock.patch("elastic_db_repo.run_program", mock.Mock(return_value=True))
     @mock.patch("elastic_db_repo.gen_libs.help_func")
-    @mock.patch("elastic_db_repo.arg_parser")
-    def test_dir_chk_crt_false(self, mock_arg, mock_help, mock_run):
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
+    def test_arg_dir_chk_true(self, mock_arg, mock_help):
 
-        """Function:  test_dir_chk_crt_false
+        """Function:  test_arg_dir_chk_true
 
-        Description:  Test with arg_dir_chk_crt returns False.
+        Description:  Test with arg_dir_chk returns True.
 
         Arguments:
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_xor_dict.return_value = True
-        mock_arg.arg_cond_req_or.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_run.return_value = True
+
+        self.assertFalse(elastic_db_repo.main())
+
+    @mock.patch("elastic_db_repo.run_program", mock.Mock(return_value=True))
+    @mock.patch("elastic_db_repo.gen_libs.help_func")
+    @mock.patch("elastic_db_repo.gen_class.ArgParser")
+    def test_run_program(self, mock_arg, mock_help):
+
+        """Function:  test_run_program
+
+        Description:  Test with calling run_program.
+
+        Arguments:
+
+        """
+
+        mock_arg.return_value = self.args
+        mock_help.return_value = False
 
         self.assertFalse(elastic_db_repo.main())
 
