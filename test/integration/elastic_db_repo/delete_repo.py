@@ -30,6 +30,43 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -54,6 +91,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
         self.base_dir = "test/integration/elastic_db_repo"
         self.test_path = os.path.join(os.getcwd(), self.base_dir)
         self.config_path = os.path.join(self.test_path, "config")
@@ -89,10 +127,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        args_array = {"-D": "TEST_INTR_REPO"}
+        self.args.args_array = {"-D": "TEST_INTR_REPO"}
 
-        self.assertFalse(
-            elastic_db_repo.delete_repo(self.els, args_array=args_array))
+        self.assertFalse(elastic_db_repo.delete_repo(self.els, args=self.args))
 
     def test_deleterepo_arg(self):
 
@@ -106,7 +143,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(
             elastic_db_repo.delete_repo(
-                self.els, repo_name=self.repo_name, args_array={}))
+                self.els, repo_name=self.repo_name, args=self.args))
 
     def tearDown(self):
 

@@ -27,6 +27,117 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
+class ElasticSearchRepo(object):
+
+    """Class:  ElasticSearchRepo
+
+    Description:  Class representation of the ElasticSearchRepo class.
+
+    Methods:
+        __init__
+        create_repo
+        delete_repo
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the class.
+
+        Arguments:
+
+        """
+
+        self.repo_dict = {
+            "Test_Repo_Name_1": {
+                "type": "fs", "settings": {
+                    "compress": "true",
+                    "location": "/dir/TEST_REPO1"}},
+            "Test_Repo_Name_2": {
+                "type": "fs", "settings": {
+                    "compress": "true",
+                    "location": "/dir/TEST_REPO2"}}}
+        self.repo_dir = None
+
+    def create_repo(self, repo_name, repo_dir):
+
+        """Method:  create_repo
+
+        Description:  Mock of creating a repository.
+
+        Arguments:
+
+        """
+
+        self.repo_dir = repo_dir
+        err_flag = False
+        err_msg = None
+
+        if repo_name == "Test_Repo_Name_F":
+            err_flag = True
+            err_msg = "Error_Message_Here1"
+
+        return err_flag, err_msg
+
+    def delete_repo(self, repo_name):
+
+        """Method:  delete_repo
+
+        Description:  Mock of deleting a repository.
+
+        Arguments:
+
+        """
+
+        err_flag = False
+        err_msg = None
+
+        if repo_name == "Test_Repo_Name_2":
+            err_flag = True
+            err_msg = "Error_Message_Here2"
+
+        return err_flag, err_msg
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -35,7 +146,6 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_no_argsarray_is_passed
         test_namelist_delete_err_false
         test_namelist_delete_err_true
         test_namelist_create_err_false
@@ -60,97 +170,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        class ElasticSearchRepo(object):
-
-            """Class:  ElasticSearchRepo
-
-            Description:  Class representation of the ElasticSearchRepo class.
-
-            Methods:
-                __init__
-                create_repo
-                delete_repo
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the class.
-
-                Arguments:
-
-                """
-
-                self.repo_dict = {
-                    "Test_Repo_Name_1": {
-                        "type": "fs", "settings": {
-                            "compress": "true",
-                            "location": "/dir/TEST_REPO1"}},
-                    "Test_Repo_Name_2": {
-                        "type": "fs", "settings": {
-                            "compress": "true",
-                            "location": "/dir/TEST_REPO2"}}}
-                self.repo_dir = None
-
-            def create_repo(self, repo_name, repo_dir):
-
-                """Method:  create_repo
-
-                Description:  Mock of creating a repository.
-
-                Arguments:
-
-                """
-
-                self.repo_dir = repo_dir
-                err_flag = False
-                err_msg = None
-
-                if repo_name == "Test_Repo_Name_F":
-                    err_flag = True
-                    err_msg = "Error_Message_Here1"
-
-                return err_flag, err_msg
-
-            def delete_repo(self, repo_name):
-
-                """Method:  delete_repo
-
-                Description:  Mock of deleting a repository.
-
-                Arguments:
-
-                """
-
-                err_flag = False
-                err_msg = None
-
-                if repo_name == "Test_Repo_Name_2":
-                    err_flag = True
-                    err_msg = "Error_Message_Here2"
-
-                return err_flag, err_msg
-
         self.els = ElasticSearchRepo()
-
-        self.args_array = {"-M": ["Test_Repo_Name_1", "Test_Dump_Name_5"]}
-
-    @unittest.skip("Known Bug: Requires the args_array to be passed.")
-    def test_no_argsarray_is_passed(self):
-
-        """Function:  test_no_argsarray_is_passed
-
-        Description:  Test when args_array is not passed to function.
-
-        Arguments:
-
-        """
-
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, name_list=["Test_Repo_Name_1"]))
+        self.args = ArgParser()
+        self.args.args_array = {"-M": ["Test_Repo_Name_1", "Test_Dump_Name_5"]}
 
     def test_namelist_delete_err_false(self):
 
@@ -162,8 +184,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(elastic_db_repo.rename_repo(
-            self.els, args_array=self.args_array))
+        self.assertFalse(elastic_db_repo.rename_repo(self.els, args=self.args))
 
     def test_namelist_delete_err_true(self):
 
@@ -175,11 +196,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-M": ["Test_Repo_Name_2", "Test_Repo_Name_5"]}
+        self.args.args_array = {"-M": ["Test_Repo_Name_2", "Test_Repo_Name_5"]}
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.rename_repo(self.els, args=self.args))
 
     def test_namelist_create_err_false(self):
 
@@ -191,10 +212,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-M": ["Test_Repo_Name_1", "Test_Repo_Name_5"]}
+        self.args.args_array = {"-M": ["Test_Repo_Name_1", "Test_Repo_Name_5"]}
 
-        self.assertFalse(elastic_db_repo.rename_repo(
-            self.els, args_array=self.args_array))
+        self.assertFalse(elastic_db_repo.rename_repo(self.els, args=self.args))
 
     def test_namelist_create_err_true(self):
 
@@ -206,11 +226,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-M": ["Test_Repo_Name_1", "Test_Repo_Name_F"]}
+        self.args.args_array = {"-M": ["Test_Repo_Name_1", "Test_Repo_Name_F"]}
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.rename_repo(self.els, args=self.args))
 
     def test_namelist_arg2_does_exist(self):
 
@@ -222,11 +242,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-M": ["Test_Repo_Name_1", "Test_Repo_Name_2"]}
+        self.args.args_array = {"-M": ["Test_Repo_Name_1", "Test_Repo_Name_2"]}
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.rename_repo(self.els, args=self.args))
 
     def test_namelist_arg1_not_exist(self):
 
@@ -238,11 +258,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-M": ["Test_Repo_Name_5", "Test_Repo_Name_6"]}
+        self.args.args_array = {"-M": ["Test_Repo_Name_5", "Test_Repo_Name_6"]}
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.rename_repo(self.els, args=self.args))
 
     def test_namelist_is_equal(self):
 
@@ -254,11 +274,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-M": ["Test_Repo_Name_1", "Test_Repo_Name_1"]}
+        self.args.args_array = {"-M": ["Test_Repo_Name_1", "Test_Repo_Name_1"]}
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.rename_repo(self.els, args=self.args))
 
     def test_namelist_is_not_list(self):
 
@@ -270,11 +290,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-M": ("Test_Repo_Name_1", "Test_Repo_Name_5")}
+        self.args.args_array = {"-M": ("Test_Repo_Name_1", "Test_Repo_Name_5")}
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.rename_repo(self.els, args=self.args))
 
     def test_namelist_is_not_len_two(self):
 
@@ -286,11 +306,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-M"] = ["Test_Repo_Name_1"]
+        self.args.args_array["-M"] = ["Test_Repo_Name_1"]
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.rename_repo(self.els, args=self.args))
 
     def test_namelist_is_passed(self):
 
@@ -302,9 +322,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = dict()
+
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, name_list=["Test_Repo_Name_1"], args_array={}))
+            self.assertFalse(
+                elastic_db_repo.rename_repo(
+                    self.els, name_list=["Test_Repo_Name_1"], args=self.args))
 
     def test_namelist_not_passed(self):
 
@@ -316,11 +339,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-M"] = ["Test_Repo_Name_1"]
+        self.args.args_array["-M"] = ["Test_Repo_Name_1"]
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.rename_repo(
-                self.els, args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.rename_repo(self.els, args=self.args))
 
 
 if __name__ == "__main__":

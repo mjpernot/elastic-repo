@@ -27,6 +27,88 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
+class ElasticSearchRepo(object):
+
+    """Class:  ElasticSearchRepo
+
+    Description:  Class representation of the ElasticSearchRepo class.
+
+    Methods:
+        __init__
+        delete_repo
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the class.
+
+        Arguments:
+
+        """
+
+        self.repo_dict = ["Test_Repo_Name_1", "Test_Rep_Name_2",
+                          "Test_Repo_Name_False"]
+
+    def delete_repo(self, repo_name):
+
+        """Method:  delete_repo
+
+        Description:  Mock of deleting a repository.
+
+        Arguments:
+
+        """
+
+        err_flag = False
+        err_msg = None
+
+        if repo_name == "Test_Repo_Name_False":
+            err_flag = True
+            err_msg = "Error_Message_Here"
+
+        return err_flag, err_msg
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -35,7 +117,6 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_no_argsarray_is_passed
         test_err_flag_true
         test_err_flag_false
         test_repo_name_in_list
@@ -55,68 +136,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        class ElasticSearchRepo(object):
-
-            """Class:  ElasticSearchRepo
-
-            Description:  Class representation of the ElasticSearchRepo class.
-
-            Methods:
-                __init__
-                delete_repo
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the class.
-
-                Arguments:
-
-                """
-
-                self.repo_dict = ["Test_Repo_Name_1", "Test_Rep_Name_2",
-                                  "Test_Repo_Name_False"]
-
-            def delete_repo(self, repo_name):
-
-                """Method:  delete_repo
-
-                Description:  Mock of deleting a repository.
-
-                Arguments:
-
-                """
-
-                err_flag = False
-                err_msg = None
-
-                if repo_name == "Test_Repo_Name_False":
-                    err_flag = True
-                    err_msg = "Error_Message_Here"
-
-                return err_flag, err_msg
-
         self.els = ElasticSearchRepo()
 
-        self.args_array = {"-D": "Test_Repo_Name_1"}
-
-    @unittest.skip("Known Bug: Requires the args_array to be passed.")
-    def test_no_argsarray_is_passed(self):
-
-        """Function:  test_no_argsarray_is_passed
-
-        Description:  Test when args_array is not passed to function.
-
-        Arguments:
-
-        """
-
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.delete_repo(
-                self.els, repo_name="Test_Repo_Name_3"))
+        self.args = ArgParser()
+        self.args.args_array = {"-D": "Test_Repo_Name_1"}
 
     def test_err_flag_true(self):
 
@@ -128,11 +151,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-D"] = "Test_Repo_Name_False"
+        self.args.args_array["-D"] = "Test_Repo_Name_False"
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.delete_repo(
-                self.els, args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.delete_repo(self.els, args=self.args))
 
     def test_err_flag_false(self):
 
@@ -144,8 +167,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(elastic_db_repo.delete_repo(
-            self.els, args_array=self.args_array))
+        self.assertFalse(elastic_db_repo.delete_repo(self.els, args=self.args))
 
     def test_repo_name_in_list(self):
 
@@ -157,8 +179,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(elastic_db_repo.delete_repo(
-            self.els, args_array=self.args_array))
+        self.assertFalse(elastic_db_repo.delete_repo(self.els, args=self.args))
 
     def test_repo_name_not_in_list(self):
 
@@ -171,9 +192,9 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.delete_repo(
-                self.els, repo_name="Test_Repo_Name_3",
-                args_array=self.args_array))
+            self.assertFalse(
+                elastic_db_repo.delete_repo(
+                    self.els, repo_name="Test_Repo_Name_3", args=self.args))
 
     def test_repo_name_is_passed(self):
 
@@ -185,9 +206,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = dict()
+
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.delete_repo(
-                self.els, repo_name="Test_Repo_Name_3", args_array={}))
+            self.assertFalse(
+                elastic_db_repo.delete_repo(
+                    self.els, repo_name="Test_Repo_Name_3", args=self.args))
 
     def test_repo_name_not_passed(self):
 
@@ -199,9 +223,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = {"-D": "Test_Repo_Name_3"}
+
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.delete_repo(
-                self.els, args_array={"-D": "Test_Repo_Name_3"}))
+            self.assertFalse(
+                elastic_db_repo.delete_repo(self.els, args=self.args))
 
 
 if __name__ == "__main__":
