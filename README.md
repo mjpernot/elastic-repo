@@ -7,6 +7,7 @@
 
 ###  This README file is broken down into the following sections:
   * Features
+  * Prerequisites
   * Installation
   * Configuration
   * Program Help Function
@@ -24,34 +25,56 @@
   * Monitoring of disk usage in repositories.
 
 
+# Prerequisites:
+
+  * List of Linux packages that need to be installed on the server.
+    - Centos 7 (Running Python 2.7):
+      -> python-pip
+    - Redhat 8 (Running Python 3.6):
+      -> python3-pip
+
+
 # Installation:
 
 Install the project using git.
   * From here on out, any reference to **{Python_Project}** or **PYTHON_PROJECT** replace with the baseline path of the python program.
 
 ```
-umask 022
-cd {Python_Project}
 git clone git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/elastic-repo.git
+cd elastic-repo
 ```
 
 Install/upgrade system modules.
 
+Centos 7 (Running Python 2.7):
 ```
-cd elastic-repo
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
+sudo pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
+
+Redhat 8 (Running Python 3.6):
+NOTE: Install as the user that will run the program.
+
+```
+python -m pip install --user -r requirements3.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
+```
+
 
 Install supporting classes and libraries.
 
+Centos 7 (Running Python 2.7):
 ```
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-elastic-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
+
+Redhat 8 (Running Python 3.6):
+```
+python -m pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
+python -m pip install -r requirements-elastic-lib.txt --target elastic_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+python -m pip install -r requirements-elastic-python-lib.txt --target elastic_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+```
+
 
 # Configuration:
 

@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
+## [0.3.8] - 2024-03-04
+- Updated to work in Red Hat 8
+- Updated python-lib to v3.0.3
+- Updated elastic-lib to v4.0.2
+
+### Changed
+- set elasticsearch to 7.17.9 for Python.
+- Set simplejson to 3.12.0 for Python 3.
+- Set chardet to 3.0.4 for Python 2.
+- Documentation updates.
+
+
 ## [0.3.7] - 2023-10-05
 - Updated to work in Elasticsearch v8.5.2
 - Replaced the arg_parser code with gen_class.ArgParser code.
