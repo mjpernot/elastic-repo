@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
+## [0.3.9] - 2024-08-01
+- Set urllib3 to 1.26.19 for Python 2 for security reasons.
+- Set requests to 2.22.0 for Python 2
+- Updated elastic-lib to v4.0.3
+
+### Changed
+- main: Removed parsing from gen_class.ArgParser call and called arg_parse2 as part of "if" statement.
+
+
 ## [0.3.8] - 2024-03-04
 - Updated to work in Red Hat 8
 - Updated python-lib to v3.0.3
