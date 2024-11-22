@@ -1,7 +1,9 @@
-certifi==2019.11.28
+certifi==2024.6.2
 chardet==3.0.4
-requests==2.6.0
-distro==1.6.0
+distro==1.9.0
+idna==2.10
+urllib3==1.26.19
+requests==2.25.0
 simplejson==3.13.2
-urllib3==1.24.3
-elasticsearch==7.17.9
+elastic-transport==8.10.0
+elasticsearch==8.11.1
