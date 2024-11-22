@@ -122,7 +122,7 @@ Install the project using the procedures in the Installation section.
 
 ```
 cd {Python_Project}/elastic-repo
-test/unit/elastic_db_repo/unit_test_run.sh
+test/unit/elastic_db_repo/unit_test_run3.sh
 ```
 
 ### Code coverage:
@@ -174,7 +174,7 @@ sudo chown elasticsearch:elasticsearch elastic.py
 
 ```
 cd {Python_Project}/elastic-repo
-test/integration/elastic_db_repo/integration_test_run.sh
+test/integration/elastic_db_repo/integration_test_run3.sh
 ```
 
 ### Code coverage:
