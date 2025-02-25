@@ -8,13 +8,8 @@
 
     Usage:
         elastic_db_repo.py -c file -d path
-            {-L [repo_name] |
-             -R |
-             -U |
-             -C repo_name -l path |
-             -D repo_name |
-             -M old_repo_name new_repo_name |
-             -S dump_name -r repo_name}
+            {-L [repo_name] | -R | -U | -C repo_name -l path | -D repo_name |
+             -M old_repo_name new_repo_name | -S dump_name -r repo_name}
             [-v | -h]
 
     Arguments:
@@ -71,8 +66,6 @@
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Standard
 import sys
@@ -87,17 +80,15 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import elastic_lib.elastic_class as elastic_class
-    import elastic_lib.elastic_libs as elastic_libs
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import elastic_lib.elastic_class as elastic_class   # pylint:disable=R0402
+    import elastic_lib.elastic_libs as elastic_libs     # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
 
 # Global variables
-WARN_TEMPLATE = "Warning:  Repository '%s' does not exist."
-PRT_TEMPLATE = "Reason: '%s'"
 
 
 def help_message():
@@ -114,7 +105,7 @@ def help_message():
     print(__doc__)
 
 
-def list_dumps(els, **kwargs):
+def list_dumps(els, **kwargs):                          # pylint:disable=W0613
 
     """Function:  list_dumps
 
@@ -128,21 +119,19 @@ def list_dumps(els, **kwargs):
 
     """
 
-    global WARN_TEMPLATE
-
     repo_list = []
 
     if els.repo and els.repo in els.repo_dict:
         repo_list.append(els.repo)
 
     elif els.repo and els.repo not in els.repo_dict:
-        print(WARN_TEMPLATE % (els.repo))
+        print(f"Warning:  Repository {els.repo} does not exist.")
 
     else:
         repo_list = els.repo_dict
 
     for repo in repo_list:
-        print("\nList of Dumps for Reposistory: %s" % (str(repo)))
+        print(f"\nList of Dumps for Reposistory: {str(repo)}")
         elastic_libs.list_dumps(elastic_class.get_dump_list(els.els, repo)[0])
 
 
@@ -161,8 +150,6 @@ def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
 
     """
 
-    global PRT_TEMPLATE
-
     args = kwargs.get("args")
 
     if not repo_name:
@@ -172,17 +159,15 @@ def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
         repo_dir = args.get_val("-l")
 
     if repo_name in els.repo_dict:
-        print("Error:  '%s' repository already exists at: '%s'"
-              % (repo_name, repo_dir))
+        print(f"Error:  {repo_name} repository already exists at: {repo_dir}")
 
     else:
         err_flag, msg = els.create_repo(
             repo_name, os.path.join(repo_dir, repo_name))
 
         if err_flag:
-            print("Error detected for Repository: '%s' at '%s'"
-                  % (repo_name, repo_dir))
-            print(PRT_TEMPLATE % (msg))
+            print(f"Error detected for Repository: {repo_name} at {repo_dir}")
+            print(f"Reason: {msg}")
 
 
 def delete_repo(els, repo_name=None, **kwargs):
@@ -199,9 +184,6 @@ def delete_repo(els, repo_name=None, **kwargs):
 
     """
 
-    global WARN_TEMPLATE
-    global PRT_TEMPLATE
-
     args = kwargs.get("args")
 
     if not repo_name:
@@ -212,11 +194,11 @@ def delete_repo(els, repo_name=None, **kwargs):
         err_flag, msg = els.delete_repo(repo_name)
 
         if err_flag:
-            print("Error: Failed to remove repository '%s'" % (repo_name))
-            print(PRT_TEMPLATE % (msg))
+            print(f"Error: Failed to remove repository {repo_name}")
+            print(f"Reason: {msg}")
 
     else:
-        print(WARN_TEMPLATE % (repo_name))
+        print(f"Warning:  Repository {repo_name} does not exist.")
 
 
 def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
@@ -233,9 +215,6 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
             args -> ArgParser class instance
 
     """
-
-    global WARN_TEMPLATE
-    global PRT_TEMPLATE
 
     args = kwargs.get("args")
 
@@ -255,16 +234,16 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
             err_flag, msg = els.delete_dump(repo_name, dump_name)
 
             if err_flag:
-                print("Error detected for Repository: '%s' Dump: '%s'"
-                      % (repo_name, dump_name))
-                print(PRT_TEMPLATE % (msg))
+                print(f"Error detected for Repository: {repo_name} Dump:"
+                      f" {dump_name}")
+                print(f"Reason: {msg}")
 
         else:
             print("Warning: Failed to delete snapshot")
-            print(PRT_TEMPLATE % (err_msg))
+            print(f"Reason: {err_msg}")
 
     else:
-        print(WARN_TEMPLATE % (repo_name))
+        print(f"Warning:  Repository {repo_name} does not exist.")
 
 
 def rename_repo(els, name_list=None, **kwargs):
@@ -289,28 +268,27 @@ def rename_repo(els, name_list=None, **kwargs):
     if isinstance(name_list, list) and len(name_list) == 2:
 
         if name_list[0] == name_list[1]:
-            print("Error:  Cannot rename to same name: %s" % (name_list))
+            print(f"Error:  Cannot rename to same name: {name_list}")
 
         elif name_list[0] not in els.repo_dict:
-            print("Error:  Source respository '%s' does not exist"
-                  % (name_list[0]))
+            print(f"Error:  Source respository {name_list[0]} does not exist")
 
         elif name_list[1] in els.repo_dict:
-            print("Error:  Cannot rename to existing repository '%s'"
-                  % (name_list[1]))
+            print(f"Error:  Cannot rename to existing repository"
+                  f" {name_list[1]}")
         else:
-            _rename(els, name_list)
+            rename(els, name_list)
 
     else:
-        print("Error: Incorrect number of args or is not a list: %s "
-              % (str(name_list)))
+        print(f"Error: Incorrect number of args or is not a list:"
+              f" {str(name_list)} ")
 
 
-def _rename(els, name_list):
+def rename(els, name_list):
 
-    """Function:  _rename
+    """Function:  rename
 
-    Description:  Private function for rename_repo function.
+    Description:  Create new respository and remove old repository.
 
     Arguments:
         (input) els -> ElasticSearch class instance
@@ -318,27 +296,24 @@ def _rename(els, name_list):
 
     """
 
-    global PRT_TEMPLATE
-
     name_list = list(name_list)
     err_flag, msg = els.create_repo(
         name_list[1], els.repo_dict[name_list[0]]["settings"]["location"])
 
     if err_flag:
-        print("Error: Unable to rename repository from '%s' to '%s'"
-              % (name_list[0], name_list[1]))
-        print(PRT_TEMPLATE % (msg))
+        print(f"Error: Unable to rename repository from {name_list[0]} to"
+              f" {name_list[1]}")
+        print(f"Reason: {msg}")
 
     else:
         err_flag, msg = els.delete_repo(name_list[0])
 
         if err_flag:
-            print("Error: Failed to remove repository '%s'"
-                  % (name_list[0]))
-            print(PRT_TEMPLATE % (msg))
+            print(f"Error: Failed to remove repository {name_list[0]}")
+            print(f"Reason: {msg}")
 
 
-def disk_usage(els, **kwargs):
+def disk_usage(els, **kwargs):                          # pylint:disable=W0613
 
     """Function:  disk_usage
 
@@ -352,23 +327,21 @@ def disk_usage(els, **kwargs):
     """
 
     if els.repo_dict:
-        print("{0:10} {1:10} {2:15} {3:10} {4:40} {5:65}"
-              .format("Total", "Used", "Free", "Percent", "Repository",
-                      "Partition"))
+        print(f'{"Total":10} {"Used":10} {"Free":15} {"Percent":10}'
+              f' {"Repository":40} {"Partition":65}')
 
         for repo in els.repo_dict:
             partition = els.repo_dict[repo]["settings"]["location"]
             usage = gen_libs.disk_usage(partition)
 
-            print("{0:10} {1:10} {2:10} {3:10.2f}%     {4:40} {5:65}"
-                  .format(gen_libs.bytes_2_readable(usage.total),
-                          gen_libs.bytes_2_readable(usage.used),
-                          gen_libs.bytes_2_readable(usage.free),
-                          (float(usage.used) / usage.total) * 100,
-                          repo, partition))
+            print(f"{gen_libs.bytes_2_readable(usage.total):10}"
+                  f" {gen_libs.bytes_2_readable(usage.used):10}"
+                  f" {gen_libs.bytes_2_readable(usage.free):10}"
+                  f" {(float(usage.used) / usage.total) * 100:10.2f}%"
+                  f"     {repo:40} {partition:65}")
 
 
-def list_repos(els, **kwargs):
+def list_repos(els, **kwargs):                          # pylint:disable=W0613
 
     """Function:  list_repos
 
@@ -424,7 +397,7 @@ def run_program(args, func_dict):
         del prog_lock
 
     except gen_class.SingleInstanceException:
-        print("WARNING:  elastic_db_repo lock in place for: %s" % (flavorid))
+        print(f"WARNING:  elastic_db_repo lock in place for: {flavorid}")
 
 
 def main():

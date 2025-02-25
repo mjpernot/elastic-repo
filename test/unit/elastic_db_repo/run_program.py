@@ -21,9 +21,9 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import elastic_db_repo
-import lib.gen_libs as gen_libs
-import version
+import elastic_db_repo                          # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -64,7 +64,7 @@ def list_repos(els, **kwargs):
     return status
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -114,7 +114,7 @@ class ArgParser(object):
         return list(self.args_array.keys())
 
 
-class ProgramLock(object):
+class ProgramLock():                                    # pylint:disable=R0903
 
     """Class:  ProgramLock
 
@@ -139,7 +139,7 @@ class ProgramLock(object):
         self.flavor = flavor
 
 
-class CfgTest(object):
+class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
 
@@ -168,7 +168,7 @@ class CfgTest(object):
         self.scheme = "https"
 
 
-class ElasticSearchRepo(object):
+class ElasticSearchRepo():                              # pylint:disable=R0903
 
     """Class:  ElasticSearchRepo
 
@@ -180,7 +180,8 @@ class ElasticSearchRepo(object):
 
     """
 
-    def __init__(self, host, port, repo, user, japd, ca_cert, scheme):
+    def __init__(                                       # pylint:disable=R0913
+            self, host, port, repo, user, japd, ca_cert, scheme):
 
         """Method:  __init__
 

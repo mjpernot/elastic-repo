@@ -21,11 +21,38 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import elastic_db_repo
-import lib.gen_libs as gen_libs
-import version
+import elastic_db_repo                          # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
+
+
+class ElasticSearchRepo():                              # pylint:disable=R0903
+
+    """Class:  ElasticSearchRepo
+
+    Description:  Class representation of the ElasticSearchRepo class.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the class.
+
+        Arguments:
+
+        """
+
+        self.els = "Elastic_Search_Class"
+        self.repo = "Test_Repo_Name"
+        self.dump_list = []
+        self.repo_dict = ["TEST_REPO", "TEST_REPO2"]
 
 
 class UnitTest(unittest.TestCase):
@@ -52,32 +79,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        class ElasticSearchRepo(object):
-
-            """Class:  ElasticSearchRepo
-
-            Description:  Class representation of the ElasticSearchRepo class.
-
-            Methods:
-                __init__
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the class.
-
-                Arguments:
-
-                """
-
-                self.els = "Elastic_Search_Class"
-                self.repo = "Test_Repo_Name"
-                self.dump_list = []
-                self.repo_dict = ["TEST_REPO", "TEST_REPO2"]
 
         self.els = ElasticSearchRepo()
         self.results = (

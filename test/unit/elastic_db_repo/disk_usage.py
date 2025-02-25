@@ -22,11 +22,48 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import elastic_db_repo
-import lib.gen_libs as gen_libs
-import version
+import elastic_db_repo                          # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
+
+
+class ElasticSearchRepo():                              # pylint:disable=R0903
+
+    """Class:  ElasticSearchRepo
+
+    Description:  Class representation of the ElasticSearchRepo class.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the class.
+
+        Arguments:
+
+        """
+
+        self.repo_dict = {
+            "Test_Repo_Name_1": {
+                "type": "fs", "settings": {
+                    "compress": "true",
+                    "location": "/dir/TEST_REPO1"}}}
+        self.repo_dict2 = {
+            "Test_Repo_Name_1": {
+                "type": "fs", "settings": {
+                    "compress": "true",
+                    "location": "/dir/TEST_REPO1"}},
+            "Test_Repo_Name_2": {
+                "type": "fs", "settings": {
+                    "compress": "true",
+                    "location": "/dir/TEST_REPO2"}}}
 
 
 class UnitTest(unittest.TestCase):
@@ -52,42 +89,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        class ElasticSearchRepo(object):
-
-            """Class:  ElasticSearchRepo
-
-            Description:  Class representation of the ElasticSearchRepo class.
-
-            Methods:
-                __init__
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the class.
-
-                Arguments:
-
-                """
-
-                self.repo_dict = {
-                    "Test_Repo_Name_1": {
-                        "type": "fs", "settings": {
-                            "compress": "true",
-                            "location": "/dir/TEST_REPO1"}}}
-                self.repo_dict2 = {
-                    "Test_Repo_Name_1": {
-                        "type": "fs", "settings": {
-                            "compress": "true",
-                            "location": "/dir/TEST_REPO1"}},
-                    "Test_Repo_Name_2": {
-                        "type": "fs", "settings": {
-                            "compress": "true",
-                            "location": "/dir/TEST_REPO2"}}}
 
         self.els = ElasticSearchRepo()
 
