@@ -3,6 +3,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
+## [1.0.0] - 2025-02-25
+- General Release.
+- Breaking Changes
+
+- Removed support for Python 2.7.
+- Updated python-lib==4.0.0
+- Updated elastic-lib==4.1.0
+- Updated certifi==2024.12.14
+- Updated urllib3==1.26.20
+
+### Added
+- rename: Create new respository and remove old repository.
+
+### Changed
+- rename_repo: Replaced \_rename call with rename call.
+- Converted strings to f-strings.
+- Documentation changes.
+
+### Removed
+- \_rename function.
+
+
 ## [0.3.12] - 2024-11-22
 - Updated certifi==2024.6.2 for Python 3.
 - Updated distro==1.9.0 for Python 3.

@@ -12,7 +12,6 @@
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
 
 # Standard
 import sys
@@ -23,17 +22,14 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import elastic_db_repo
-import lib.gen_libs as gen_libs
-import elastic_lib.elastic_class as elastic_class
-import version
+import elastic_db_repo                          # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import elastic_lib.elastic_class as elcs    # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 # Global
-SKIP_PRINT = "Pre-conditions not met."
-PRT_TEMPLATE = "Reason:  %s"
-ERROR_PRINT = "ERROR: Test repo failed to be created."
 
 
 class UnitTest(unittest.TestCase):
@@ -65,8 +61,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        global SKIP_PRINT
-
         self.base_dir = "test/integration/elastic_db_repo"
         self.test_path = os.path.join(os.getcwd(), self.base_dir)
         self.config_path = os.path.join(self.test_path, "config")
@@ -90,7 +84,7 @@ class UnitTest(unittest.TestCase):
             self.cfg, "ssl_client_ca") else None
         self.scheme = self.cfg.scheme if hasattr(
             self.cfg, "scheme") else "https"
-        self.els = elastic_class.ElasticSearchRepo(
+        self.els = elcs.ElasticSearchRepo(
             self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
             ca_cert=self.ca_cert, scheme=self.scheme)
         self.els.connect()
@@ -98,7 +92,7 @@ class UnitTest(unittest.TestCase):
 
         if self.els.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
-            self.skipTest(SKIP_PRINT)
+            self.skipTest("Pre-conditions not met.")
 
     def test_delete_dump(self):
 
@@ -110,19 +104,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        global SKIP_PRINT
-        global PRT_TEMPLATE
-        global ERROR_PRINT
-
         err_flag, status_msg = self.els.create_repo(
             self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
-            print(ERROR_PRINT)
-            print(PRT_TEMPLATE % (status_msg))
-            self.skipTest(SKIP_PRINT)
+            print("ERROR: Test repo failed to be created.")
+            print(f"Reason:  {status_msg}")
+            self.skipTest("Pre-conditions not met.")
 
-        els2 = elastic_class.ElasticSearchDump(
+        els2 = elcs.ElasticSearchDump(
             self.cfg.host, port=self.cfg.port, repo=self.repo_name,
             user=self.user, japd=self.japd, ca_cert=self.ca_cert,
             scheme=self.scheme)
@@ -131,9 +121,8 @@ class UnitTest(unittest.TestCase):
         err_flag, msg = els2.dump_db()
 
         if err_flag:
-            print("Error detected for dump in repository: %s"
-                  % (self.repo_name))
-            print("Reason: %s" % (msg))
+            print(f"Error detected for dump in repository: {self.repo_name}")
+            print(f"Reason: {msg}")
             self.skipTest("Dump failed")
 
         self.args["-S"] = self.dump_name
@@ -152,19 +141,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        global SKIP_PRINT
-        global PRT_TEMPLATE
-        global ERROR_PRINT
-
         err_flag, status_msg = self.els.create_repo(
             self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
-            print(ERROR_PRINT)
-            print(PRT_TEMPLATE % (status_msg))
-            self.skipTest(SKIP_PRINT)
+            print("ERROR: Test repo failed to be created.")
+            print(f"Reason:  {status_msg}")
+            self.skipTest("Pre-conditions not met.")
 
-        els2 = elastic_class.ElasticSearchDump(
+        els2 = elcs.ElasticSearchDump(
             self.cfg.host, port=self.cfg.port, repo=self.repo_name,
             user=self.user, japd=self.japd, ca_cert=self.ca_cert,
             scheme=self.scheme)
@@ -172,9 +157,8 @@ class UnitTest(unittest.TestCase):
         err_flag, msg = els2.dump_db()
 
         if err_flag:
-            print("Error detected for dump in repository: %s"
-                  % (self.repo_name))
-            print("Reason: %s" % (msg))
+            print(f"Error detected for dump in repository: {self.repo_name}")
+            print(f"Reason: {msg}")
             self.skipTest("Dump failed")
 
         self.args["-L"] = self.repo_name
@@ -194,17 +178,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        global SKIP_PRINT
-        global PRT_TEMPLATE
-        global ERROR_PRINT
-
         err_flag, status_msg = self.els.create_repo(
             self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
-            print(ERROR_PRINT)
-            print(PRT_TEMPLATE % (status_msg))
-            self.skipTest(SKIP_PRINT)
+            print("ERROR: Test repo failed to be created.")
+            print(f"Reason:  {status_msg}")
+            self.skipTest("Pre-conditions not met.")
 
         # Wait until the repo dir has been created.
         while True:
@@ -230,29 +210,24 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        global SKIP_PRINT
-        global PRT_TEMPLATE
-        global ERROR_PRINT
-
         err_flag, status_msg = self.els.create_repo(
             self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
-            print(ERROR_PRINT)
-            print(PRT_TEMPLATE % (status_msg))
-            self.skipTest(SKIP_PRINT)
+            print("ERROR: Test repo failed to be created.")
+            print(f"Reason:  {status_msg}")
+            self.skipTest("Pre-conditions not met.")
 
         self.args["-M"] = [self.repo_name, self.repo_name2]
 
         elastic_db_repo.run_program(self.args, self.func_names)
 
-        self.els2 = elastic_class.ElasticSearchRepo(
+        self.els2 = elcs.ElasticSearchRepo(
             self.cfg.host, self.cfg.port, repo=self.repo_name2, user=self.user,
             japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
         self.els2.connect()
 
-        self.assertTrue(
-            True if self.repo_name2 in self.els2.repo_dict else False)
+        self.assertIn(self.repo_name2, self.els2.repo_dict)
 
     def test_list_repos(self):
 
@@ -264,17 +239,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        global SKIP_PRINT
-        global PRT_TEMPLATE
-        global ERROR_PRINT
-
         err_flag, status_msg = self.els.create_repo(
             self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
-            print(ERROR_PRINT)
-            print(PRT_TEMPLATE % (status_msg))
-            self.skipTest(SKIP_PRINT)
+            print("ERROR: Test repo failed to be created.")
+            print(f"Reason:  {status_msg}")
+            self.skipTest("Pre-conditions not met.")
 
         self.args["-R"] = True
 
@@ -292,29 +263,24 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        global SKIP_PRINT
-        global PRT_TEMPLATE
-        global ERROR_PRINT
-
         err_flag, status_msg = self.els.create_repo(
             self.repo_name, self.cfg.log_repo_dir)
 
         if err_flag:
-            print(ERROR_PRINT)
-            print(PRT_TEMPLATE % (status_msg))
-            self.skipTest(SKIP_PRINT)
+            print("ERROR: Test repo failed to be created.")
+            print(f"Reason:  {status_msg}")
+            self.skipTest("Pre-conditions not met.")
 
         self.args["-D"] = self.repo_name
 
         elastic_db_repo.run_program(self.args, self.func_names)
 
-        self.els2 = elastic_class.ElasticSearchRepo(
+        self.els2 = elcs.ElasticSearchRepo(
             self.cfg.host, self.cfg.port, repo=self.repo_name, user=self.user,
             japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
         self.els2.connect()
 
-        self.assertTrue(
-            True if self.repo_name not in self.els2.repo_dict else False)
+        self.assertNotIn(self.repo_name, self.els2.repo_dict)
 
     def test_create_repo(self):
 
@@ -331,13 +297,12 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.run_program(self.args, self.func_names)
 
-        self.els2 = elastic_class.ElasticSearchRepo(
+        self.els2 = elcs.ElasticSearchRepo(
             self.cfg.host, self.cfg.port, repo=self.repo_name, user=self.user,
             japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
         self.els2.connect()
 
-        self.assertTrue(
-            True if self.repo_name in self.els2.repo_dict else False)
+        self.assertIn(self.repo_name, self.els2.repo_dict)
 
     def tearDown(self):
 
@@ -349,11 +314,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        global PRT_TEMPLATE
-
         if "-C" in self.args or "-R" in self.args or "-U" in self.args \
            or "-L" in self.args or "-S" in self.args:
-            els = elastic_class.ElasticSearchRepo(
+            els = elcs.ElasticSearchRepo(
                 self.cfg.host, port=self.cfg.port, user=self.user,
                 japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
             els.connect()
@@ -361,12 +324,11 @@ class UnitTest(unittest.TestCase):
             err_flag, status_msg = els.delete_repo(self.repo_name)
 
             if err_flag:
-                print("Error: Failed to remove repository '%s'"
-                      % (self.repo_name))
-                print(PRT_TEMPLATE % (status_msg))
+                print(f"Error: Failed to remove repository {self.repo_name}")
+                print(f"Reason:  {status_msg}")
 
         elif "-M" in self.args:
-            els = elastic_class.ElasticSearchRepo(
+            els = elcs.ElasticSearchRepo(
                 self.cfg.host, port=self.cfg.port, user=self.user,
                 japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
             els.connect()
@@ -374,9 +336,8 @@ class UnitTest(unittest.TestCase):
             err_flag, status_msg = els.delete_repo(self.repo_name2)
 
             if err_flag:
-                print("Error: Failed to remove repository '%s'"
-                      % (self.repo_name2))
-                print(PRT_TEMPLATE % (status_msg))
+                print(f"Error: Failed to remove repository {self.repo_name2}")
+                print(f"Reason:  {status_msg}")
 
         if os.path.isdir(self.phy_repo_dir):
             shutil.rmtree(self.phy_repo_dir)

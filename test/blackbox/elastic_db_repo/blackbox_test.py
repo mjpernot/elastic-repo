@@ -22,10 +22,10 @@ import shutil
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
-import lib.arg_parser as arg_parser
-import elastic_lib.elastic_class as elastic_class
-import version
+import lib.arg_parser as arg_parser         # pylint:disable=E0401,C0413,R0402
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import elastic_lib.elastic_class as elcs    # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -110,8 +110,8 @@ def remove_repo(els, repo_name, dump_loc):
     if err_flag:
         status = False
 
-        print("Error: Failed to remove repo '%s'" % repo_name)
-        print("Reason: '%s'" % (msg))
+        print(f"Error: Failed to remove repo {repo_name}")
+        print(f"Reason: {msg}")
 
     if os.path.isdir(dump_loc):
         shutil.rmtree(dump_loc)
@@ -144,10 +144,10 @@ def main():
 
     if "-C" in args_array:
         els = create_es_instance(
-            cfg, elastic_class.ElasticSearchDump, args_array["-C"])
+            cfg, elcs.ElasticSearchDump, args_array["-C"])
         els.connect()
         elr = create_es_instance(
-            cfg, elastic_class.ElasticSearchRepo, args_array["-C"])
+            cfg, elcs.ElasticSearchRepo, args_array["-C"])
         elr.connect()
 
         if chk_create_repo(elr, args_array["-C"]):
@@ -160,23 +160,23 @@ def main():
 
     elif "-R" in args_array:
         els = create_es_instance(
-            cfg, elastic_class.ElasticSearchDump, args_array["-R"])
+            cfg, elcs.ElasticSearchDump, args_array["-R"])
         els.connect()
         elr = create_es_instance(
-            cfg, elastic_class.ElasticSearchRepo, args_array["-R"])
+            cfg, elcs.ElasticSearchRepo, args_array["-R"])
         elr.connect()
         _ = remove_repo(elr, args_array["-R"], els.dump_loc)
 
     elif "-T" in args_array:
         els = create_es_instance(
-            cfg, elastic_class.ElasticSearchDump, args_array["-T"])
+            cfg, elcs.ElasticSearchDump, args_array["-T"])
         els.connect()
         els.dump_name = args_array["-n"]
         els.dump_db()
 
     elif "-S" in args_array:
         els = create_es_instance(
-            cfg, elastic_class.ElasticSearchDump, args_array["-r"])
+            cfg, elcs.ElasticSearchDump, args_array["-r"])
         els.connect()
 
         if args_array["-S"] in els.dump_list:
@@ -187,7 +187,7 @@ def main():
 
     elif "-D" in args_array:
         elr = create_es_instance(
-            cfg, elastic_class.ElasticSearchRepo, args_array["-D"])
+            cfg, elcs.ElasticSearchRepo, args_array["-D"])
         elr.connect()
 
         if args_array["-D"] in elr.repo_dict:

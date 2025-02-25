@@ -20,14 +20,14 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import elastic_db_repo
-import lib.gen_libs as gen_libs
-import version
+import elastic_db_repo                          # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -49,7 +49,7 @@ class ArgParser(object):
 
         """
 
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -64,7 +64,7 @@ class ArgParser(object):
         return self.args_array.get(skey, def_val)
 
 
-class ElasticSearchRepo(object):
+class ElasticSearchRepo():                              # pylint:disable=R0903
 
     """Class:  ElasticSearchRepo
 
@@ -206,7 +206,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = dict()
+        self.args.args_array = {}
 
         with gen_libs.no_std_out():
             self.assertFalse(

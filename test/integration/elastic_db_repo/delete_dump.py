@@ -12,7 +12,6 @@
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
 
 # Standard
 import sys
@@ -22,15 +21,15 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import elastic_db_repo
-import lib.gen_libs as gen_libs
-import elastic_lib.elastic_class as elastic_class
-import version
+import elastic_db_repo                          # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import elastic_lib.elastic_class as els     # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -52,7 +51,7 @@ class ArgParser(object):
 
         """
 
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -105,7 +104,7 @@ class UnitTest(unittest.TestCase):
             self.cfg, "ssl_client_ca") else None
         self.scheme = self.cfg.scheme if hasattr(
             self.cfg, "scheme") else "https"
-        self.elr = elastic_class.ElasticSearchRepo(
+        self.elr = els.ElasticSearchRepo(
             self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
             ca_cert=self.ca_cert, scheme=self.scheme)
         self.elr.connect()
@@ -118,7 +117,7 @@ class UnitTest(unittest.TestCase):
             _, _ = self.elr.create_repo(
                 repo_name=self.repo_name, repo_dir=self.cfg.log_repo_dir)
 
-            self.els = elastic_class.ElasticSearchDump(
+            self.els = els.ElasticSearchDump(
                 self.cfg.host, port=self.cfg.port, repo=self.repo_name,
                 user=self.user, japd=self.japd, ca_cert=self.ca_cert,
                 scheme=self.scheme)
@@ -168,9 +167,8 @@ class UnitTest(unittest.TestCase):
         err_flag, msg = self.elr.delete_repo(self.repo_name)
 
         if err_flag:
-            print("Error: Failed to remove repository '%s'"
-                  % self.repo_name)
-            print("Reason: '%s'" % (msg))
+            print(f"Error: Failed to remove repository {self.repo_name}")
+            print(f"Reason: {msg}")
 
         if os.path.isdir(self.phy_repo_dir):
             shutil.rmtree(self.phy_repo_dir)
