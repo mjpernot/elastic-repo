@@ -90,7 +90,7 @@ class UnitTest(unittest.TestCase):
 
         if els.repo_dict:
             print("ERROR: Test environment not clean - repositories exist.")
-            self.skipTest("Pre-conditions not met.")
+            self.skipTest("setUp: Pre-conditions not met.")
 
     def test_delete_dump(self):
 
@@ -111,9 +111,9 @@ class UnitTest(unittest.TestCase):
             self.repo_name, self.cfg.log_repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
+            print("test_delete_dump: ERROR: Test repo failed to be created.")
             print(f"Reason:  {msg}")
-            self.skipTest("Pre-conditions not met.")
+            self.skipTest("test_delete_dump: Pre-conditions not met.")
 
         els = elcs.ElasticSearchDump(
             self.cfg.host, port=self.cfg.port, repo=self.repo_name,
@@ -166,9 +166,9 @@ class UnitTest(unittest.TestCase):
             self.repo_name2, self.cfg.log_repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
+            print("test_rename_repo: ERROR: Test repo failed to be created.")
             print(f"Reason:  {msg}")
-            self.skipTest("Pre-conditions not met.")
+            self.skipTest("test_rename_repo: Pre-conditions not met.")
 
         elastic_db_repo.main()
         self.els = elcs.ElasticSearchRepo(
@@ -201,9 +201,9 @@ class UnitTest(unittest.TestCase):
             self.repo_name, self.cfg.log_repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
+            print("test_delete_repo: ERROR: Test repo failed to be created.")
             print(f"Reason:  {msg}")
-            self.skipTest("Pre-conditions not met.")
+            self.skipTest("test_delete_repo: Pre-conditions not met.")
 
         elastic_db_repo.main()
         self.els = elcs.ElasticSearchRepo(
@@ -236,9 +236,9 @@ class UnitTest(unittest.TestCase):
                                            self.cfg.log_repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
+            print("test_disk_usage: ERROR: Test repo failed to be created.")
             print(f"Reason:  {msg}")
-            self.skipTest("Pre-conditions not met.")
+            self.skipTest("test_disk_usage: Pre-conditions not met.")
 
         # Wait until the repo dir has been created.
         while True:
@@ -272,9 +272,9 @@ class UnitTest(unittest.TestCase):
             self.repo_name, self.cfg.log_repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
+            print("test_list_repos: ERROR: Test repo failed to be created.")
             print(f"Reason:  {msg}")
-            self.skipTest("Pre-conditions not met.")
+            self.skipTest("test_list_repos: Pre-conditions not met.")
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
@@ -301,9 +301,9 @@ class UnitTest(unittest.TestCase):
                                            self.cfg.log_repo_dir)
 
         if status:
-            print("ERROR: Test repo failed to be created.")
+            print("test_list_dumps: ERROR: Test repo failed to be created.")
             print(f"Reason:  {msg}")
-            self.skipTest("Pre-conditions not met.")
+            self.skipTest("test_list_dumps: Pre-conditions not met.")
 
         with gen_libs.no_std_out():
             self.assertFalse(elastic_db_repo.main())
