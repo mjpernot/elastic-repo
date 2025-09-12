@@ -53,7 +53,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3.12",
         "Topic :: Database",
         "Topic :: Database :: Elasticsearch",
-        "Topic :: Database :: Elasticsearch :: 6.4",
         "Topic :: Database :: Elasticsearch :: 7.4",
         "Topic :: Database :: Elasticsearch :: 7.12",
         "Topic :: Database :: Elasticsearch :: 7.17",

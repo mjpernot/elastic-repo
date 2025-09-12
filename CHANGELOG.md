@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
+
+## [1.1.0] - 2025-09-12
+- Updated python-lib v4.0.3
+- Updated elastic-lib v4.2.0
+
+### Changed
+- config/elastic.py.TEMPLATE: Removed port and scheme entries.
+- Documentation changes.
+
+### Deprecated
+- Support for Elasticsearch v7.4, v7.12 and v7.17
+
+### Removed
+- Support for Elasticsearch v6.4
+
+
 ## [1.0.0] - 2025-02-25
 - General Release.
 - Breaking Changes

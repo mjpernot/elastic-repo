@@ -49,7 +49,6 @@
 
             # Elasticsearch configuration file
             host = ["https://HOST_NAME1:9200", "https://HOST_NAME2:9200"]
-            port = 9200
 
             # Login credentials
             user = None
@@ -57,7 +56,6 @@
 
             # SSL connection
             ssl_client_ca = None
-            scheme = "https"
 
     Example:
         elastic_db_repo.py -c elastic -d config -L Backup_Repo
