@@ -102,11 +102,9 @@ class UnitTest(unittest.TestCase):
         self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
         self.ca_cert = self.cfg.ssl_client_ca if hasattr(
             self.cfg, "ssl_client_ca") else None
-        self.scheme = self.cfg.scheme if hasattr(
-            self.cfg, "scheme") else "https"
         self.elr = els.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.elr.connect()
 
         if self.elr.repo_dict:
@@ -118,9 +116,8 @@ class UnitTest(unittest.TestCase):
                 repo_name=self.repo_name, repo_dir=self.cfg.log_repo_dir)
 
             self.els = els.ElasticSearchDump(
-                self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-                user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-                scheme=self.scheme)
+                self.cfg.host, repo=self.repo_name, user=self.user,
+                japd=self.japd, ca_cert=self.ca_cert)
             self.els.connect()
             self.els.dump_name = self.dump_name
             self.els.dump_db()

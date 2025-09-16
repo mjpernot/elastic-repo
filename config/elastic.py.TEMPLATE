@@ -5,7 +5,6 @@
 # List of elasticsearch nodes in cluster
 # Secure Syntax: host = ["https://servername:port", "https://servername2:port"]
 # Unsecure Syntax: host = ["http://servername:port", "http://servername2:port"]
-#   Note:  If using the old syntax must also use port and scheme entries.
 host = ["https://HOST_NAME1:9200", "https://HOST_NAME2:9200"]
 # User name
 # If no user name is required then use None

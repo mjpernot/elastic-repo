@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated elastic-lib v4.2.0
 
 ### Changed
+- run_program: Removed port and scheme arguments to the elastic_class calls.
 - config/elastic.py.TEMPLATE: Removed port and scheme entries.
 - Documentation changes.
 

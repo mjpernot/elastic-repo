@@ -82,11 +82,9 @@ class UnitTest(unittest.TestCase):
         self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
         self.ca_cert = self.cfg.ssl_client_ca if hasattr(
             self.cfg, "ssl_client_ca") else None
-        self.scheme = self.cfg.scheme if hasattr(
-            self.cfg, "scheme") else "https"
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
         self.els2 = None
 
@@ -113,9 +111,8 @@ class UnitTest(unittest.TestCase):
             self.skipTest("test_delete_dump: Pre-conditions not met.")
 
         els2 = elcs.ElasticSearchDump(
-            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-            scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         els2.connect()
         els2.dump_name = self.dump_name
         err_flag, msg = els2.dump_db()
@@ -150,9 +147,8 @@ class UnitTest(unittest.TestCase):
             self.skipTest("test_list_dumps: Pre-conditions not met.")
 
         els2 = elcs.ElasticSearchDump(
-            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-            scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         els2.connect()
         err_flag, msg = els2.dump_db()
 
@@ -223,8 +219,8 @@ class UnitTest(unittest.TestCase):
         elastic_db_repo.run_program(self.args, self.func_names)
 
         self.els2 = elcs.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name2, user=self.user,
-            japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name2, user=self.user,
+            japd=self.japd, ca_cert=self.ca_cert)
         self.els2.connect()
 
         self.assertIn(self.repo_name2, self.els2.repo_dict)
@@ -276,8 +272,8 @@ class UnitTest(unittest.TestCase):
         elastic_db_repo.run_program(self.args, self.func_names)
 
         self.els2 = elcs.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name, user=self.user,
-            japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user,
+            japd=self.japd, ca_cert=self.ca_cert)
         self.els2.connect()
 
         self.assertNotIn(self.repo_name, self.els2.repo_dict)
@@ -298,8 +294,8 @@ class UnitTest(unittest.TestCase):
         elastic_db_repo.run_program(self.args, self.func_names)
 
         self.els2 = elcs.ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, repo=self.repo_name, user=self.user,
-            japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user,
+            japd=self.japd, ca_cert=self.ca_cert)
         self.els2.connect()
 
         self.assertIn(self.repo_name, self.els2.repo_dict)
@@ -317,8 +313,8 @@ class UnitTest(unittest.TestCase):
         if "-C" in self.args or "-R" in self.args or "-U" in self.args \
            or "-L" in self.args or "-S" in self.args:
             els = elcs.ElasticSearchRepo(
-                self.cfg.host, port=self.cfg.port, user=self.user,
-                japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+                self.cfg.host, user=self.user, japd=self.japd,
+                ca_cert=self.ca_cert)
             els.connect()
 
             err_flag, status_msg = els.delete_repo(self.repo_name)
@@ -329,8 +325,8 @@ class UnitTest(unittest.TestCase):
 
         elif "-M" in self.args:
             els = elcs.ElasticSearchRepo(
-                self.cfg.host, port=self.cfg.port, user=self.user,
-                japd=self.japd, ca_cert=self.ca_cert, scheme=self.scheme)
+                self.cfg.host, user=self.user, japd=self.japd,
+                ca_cert=self.ca_cert)
             els.connect()
 
             err_flag, status_msg = els.delete_repo(self.repo_name2)

@@ -373,7 +373,6 @@ def run_program(args, func_dict):
     user = cfg.user if hasattr(cfg, "user") else None
     japd = cfg.japd if hasattr(cfg, "japd") else None
     ca_cert = cfg.ssl_client_ca if hasattr(cfg, "ssl_client_ca") else None
-    scheme = cfg.scheme if hasattr(cfg, "scheme") else "https"
     flavorid = "elasticrepo"
 
     try:
@@ -382,8 +381,8 @@ def run_program(args, func_dict):
         # Find which functions to call.
         for opt in set(args.get_args_keys()) & set(func_dict.keys()):
             els = elastic_class.ElasticSearchRepo(
-                cfg.host, port=cfg.port, repo=args.get_val("-L"),
-                user=user, japd=japd, ca_cert=ca_cert, scheme=scheme)
+                cfg.host, repo=args.get_val("-L"), user=user, japd=japd,
+                ca_cert=ca_cert)
             els.connect()
 
             if els.is_connected:
