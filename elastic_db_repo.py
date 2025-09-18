@@ -103,6 +103,30 @@ def help_message():
     print(__doc__)
 
 
+def create_header(dtg, name=None):
+
+    """Function:  create_header
+
+    Description:  Create standard dictionary header and add Check entry to
+        header if needed.
+
+    Arguments:
+        (input) dtg -> TimeFormat instance
+        (input) name -> Name of check
+        (output) header -> Dictionary header
+
+    """
+
+    header = {
+        "Application": "Elastic_Repo",
+        "AsOf": dtg.get_time("zulu")}
+
+    if name:
+        header["Check"] = name
+
+    return header
+
+
 def list_dumps(els, **kwargs):                          # pylint:disable=W0613
 
     """Function:  list_dumps
@@ -352,7 +376,16 @@ def list_repos(els, **kwargs):                          # pylint:disable=W0613
 
     """
 
-    elastic_libs.list_repos2(els.repo_dict)
+    data = create_header(kwargs.get("dtg"), name="ListRepositories")
+    data["Repositories"] = []
+
+    for repo in els.repo_dict:
+        tdata = {
+            "Repo": repo,
+            "Location": els.repo_dict[repo]["settings"]["location"]}
+        data["Repositories"].append(tdata)
+
+    data_out(data, kwargs.get("args"))
 
 
 def run_program(args, func_dict):
@@ -374,6 +407,8 @@ def run_program(args, func_dict):
     japd = cfg.japd if hasattr(cfg, "japd") else None
     ca_cert = cfg.ssl_client_ca if hasattr(cfg, "ssl_client_ca") else None
     flavorid = "elasticrepo"
+    dtg = gen_class.TimeFormat()
+    dtg.create_time()
 
     try:
         prog_lock = gen_class.ProgramLock(sys.argv, flavor_id=flavorid)
@@ -386,7 +421,7 @@ def run_program(args, func_dict):
             els.connect()
 
             if els.is_connected:
-                func_dict[opt](els, args=args)
+                func_dict[opt](els, args=args, dtg=dtg)
 
             else:
                 print("ERROR:  Failed to connect to Elasticsearch")

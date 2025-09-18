@@ -4,11 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [1.1.0] - 2025-09-12
+## [2.0.0] - 2025-09-12
 - Updated python-lib v4.0.3
 - Updated elastic-lib v4.2.0
 
+### Added
+- create_header:
+- data_out:
+
 ### Changed
+- list_repos: Refactored function and converted output to JSON format.
+- run_program: Initialized an instance of the gen_class.TimeFormat class and passed to all functions called.
 - run_program: Removed port and scheme arguments to the elastic_class calls.
 - config/elastic.py.TEMPLATE: Removed port and scheme entries.
 - Documentation changes.
