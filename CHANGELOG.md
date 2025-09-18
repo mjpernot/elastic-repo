@@ -6,19 +6,20 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.0.0] - 2025-09-12
 - Converted output to JSON format.
-- Added data out options (i.e. email, file, standard out, suppression) to many of the options.
+- Added data out options (i.e. email, file, standard out, suppression) to the display options.
 - Updated python-lib v4.0.3
 - Updated elastic-lib v4.2.0
 
 ### Added
+- get_dumps: Retrieve dumps from the Elasticsearch cluster and return the dumps in a dictionary format.
 - create_header: Create standard dictionary header and add Check entry to header if needed.
 - data_out: Determine where the data will be sent to such as email, file, standard out.
 
 ### Changed
 - main: Added options for the data_out function to the checks.
-- list_repos: Refactored function and converted output to JSON format and added call to create_header and data_out.
+- list_dumps, list_repos: Refactored function and converted output to JSON format and added call to create_header and data_out.
 - run_program: Initialized an instance of the gen_class.TimeFormat class and passed to all functions called.
-- run_program: Removed port and scheme arguments to the elastic_class calls.
+- run_program: Removed port and scheme arguments to the elastic_class calls and removed the repo argument from elastic_class.ElasticSearchRepo instance call.
 - config/elastic.py.TEMPLATE: Removed port and scheme entries.
 - Documentation changes.
 

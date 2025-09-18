@@ -28,6 +28,43 @@ import version                                  # pylint:disable=E0401,C0413
 __version__ = version.__version__
 
 
+class ArgParser():                                      # pylint:disable=R0903
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {}
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class ElasticSearchRepo():                              # pylint:disable=R0903
 
     """Class:  ElasticSearchRepo
@@ -36,6 +73,7 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
 
     Methods:
         __init__
+        get_repo_list
 
     """
 
@@ -49,10 +87,20 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
 
         """
 
-        self.els = "Elastic_Search_Class"
-        self.repo = "Test_Repo_Name"
-        self.dump_list = []
-        self.repo_dict = ["TEST_REPO", "TEST_REPO2"]
+        self.hosts = ["https://nodename1:9200", "https://nodename2:9200"]
+        self.repo_dict = {"reponame": "Repo", "reponame2": "Repo"}
+
+    def get_repo_list(self):
+
+        """Method:  get_repo_list
+
+        Description:  Return repositiory list.
+
+        Arguments:
+
+        """
+
+        return self.repo_dict
 
 
 class UnitTest(unittest.TestCase):
@@ -63,10 +111,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_repo_name
-        test_repo_empty_list
-        test_repo_name_false
-        test_repo_name_miss
+        test_repo_incorrect
+        test_no_repo
+        test_repo
 
     """
 
@@ -81,87 +128,69 @@ class UnitTest(unittest.TestCase):
         """
 
         self.els = ElasticSearchRepo()
-        self.results = (
-            [{"snapshot": "Test_Dump_Name_1"},
-             {"snapshot": "Test_Dump_Name_2"}], True, None)
+        self.args = ArgParser()
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    @mock.patch("elastic_db_repo.elastic_libs")
-    def test_repo_name(self, mock_libs, mock_cls):
+    @mock.patch("elastic_db_repo.data_out", mock.Mock(return_value=True))
+    @mock.patch("elastic_db_repo.create_header",
+                mock.Mock(return_value={"Header": "DTG"}))
+    def test_repo_incorrect(self):
 
-        """Function:  test_repo_name
+        """Function:  test_repo_incorrect
 
-        Description:  Test with repo name present.
+        Description:  Test with incorrect repo name.
 
         Arguments:
 
         """
 
-        self.els.repo = "TEST_REPO2"
-
-        mock_libs.get_dump_list.return_value = self.results
-        mock_cls.list_dumps.return_value = []
+        self.args.args_array = {"-L": "reponame3"}
 
         with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.els))
+            self.assertFalse(
+                elastic_db_repo.list_dumps(self.els, args=self.args))
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    @mock.patch("elastic_db_repo.elastic_libs")
-    def test_repo_empty_list(self, mock_libs, mock_cls):
+    @mock.patch("elastic_db_repo.data_out", mock.Mock(return_value=True))
+    @mock.patch("elastic_db_repo.elastic_class.get_repo_list")
+    @mock.patch("elastic_db_repo.get_dumps",
+                mock.Mock(return_value={"key": "data"}))
+    @mock.patch("elastic_db_repo.create_header",
+                mock.Mock(return_value={"Header": "DTG"}))
+    def test_no_repo(self, mock_repo):
 
-        """Function:  test_repo_empty_list
+        """Function:  test_no_repo
 
-        Description:  Test repo dict is an empty list.
-
-        Arguments:
-
-        """
-
-        self.els.repo = None
-        self.els.repo_dict = []
-
-        mock_libs.get_dump_list.return_value = self.results
-        mock_cls.list_dumps.return_value = []
-
-        self.assertFalse(elastic_db_repo.list_dumps(self.els))
-
-    @mock.patch("elastic_db_repo.elastic_class")
-    @mock.patch("elastic_db_repo.elastic_libs")
-    def test_repo_name_false(self, mock_libs, mock_cls):
-
-        """Function:  test_repo_name_false
-
-        Description:  Test repo name set to None.
+        Description:  Test with no repo name passed.
 
         Arguments:
 
         """
 
-        self.els.repo = None
+        self.args.args_array = {"-L": None}
 
-        mock_libs.get_dump_list.return_value = self.results
-        mock_cls.list_dumps.return_value = []
+        mock_repo.return_value = {"repo1": True, "repo2": True}
 
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.els))
+        self.assertFalse(
+            elastic_db_repo.list_dumps(self.els, args=self.args))
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    @mock.patch("elastic_db_repo.elastic_libs")
-    def test_repo_name_miss(self, mock_libs, mock_cls):
+    @mock.patch("elastic_db_repo.data_out", mock.Mock(return_value=True))
+    @mock.patch("elastic_db_repo.get_dumps",
+                mock.Mock(return_value={"key": "data"}))
+    @mock.patch("elastic_db_repo.create_header",
+                mock.Mock(return_value={"Header": "DTG"}))
+    def test_repo(self):
 
-        """Function:  test_repo_name_miss
+        """Function:  test_repo
 
-        Description:  Test with repo name not present.
+        Description:  Test with repo name passed.
 
         Arguments:
 
         """
 
-        mock_libs.get_dump_list.return_value = self.results
-        mock_cls.list_dumps.return_value = []
+        self.args.args_array = {"-L": "reponame"}
 
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.els))
+        self.assertFalse(
+            elastic_db_repo.list_dumps(self.els, args=self.args))
 
 
 if __name__ == "__main__":

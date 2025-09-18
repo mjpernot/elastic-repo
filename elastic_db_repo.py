@@ -8,7 +8,8 @@
 
     Usage:
         elastic_db_repo.py -c file -d path
-            {-L [repo_name] |
+            {-L [repo_name] [-t email_addr [email_addr ...] -s subject_line]
+                [-o dir_path/file [-a]] [-j] ]-z] |
              -R [-t email_addr [email_addr ...] -s subject_line]
                 [-o dir_path/file [-a]] [-j] ]-z] |
              -U |
@@ -19,12 +20,21 @@
             [-v | -h]
 
     Arguments:
-        -c file => Elasticsearch configuration file.  Required argument.
-        -d dir path => Directory path for option '-c'.  Required argument.
+        -c file => Elasticsearch configuration file.
+        -d dir path => Directory path for the configuration file.
 
         -L [repo_name] => List of database dumps for an Elasticsearch
             database.  repo_name is name of repository to dump.  If no repo,
             then all repos and associated dumps will be displayed.
+            -t email_addr [email_addr ...] => Enables emailing out all output.
+                    Sends the output to one or more email addresses.
+                -s Subject Line => Subject line of email.  If none is provided
+                    then a default one will be used.
+                -x => Override the default mail command and use mailx.
+            -o directory_path/file => Directory path and file name for output.
+                -a => Append output to the file.  By default will overwrite.
+            -j => Expand JSON data structure.
+            -z => Suppress standard out.
 
         -R => List of repositories in the Elasticsearch database.
             -t email_addr [email_addr ...] => Enables emailing out all output.
@@ -143,7 +153,7 @@ def create_header(dtg, name=None):
         "AsOf": dtg.get_time("zulu")}
 
     if name:
-        header["Check"] = name
+        header["Option"] = name
 
     return header
 
@@ -190,7 +200,35 @@ def data_out(data, args):
         print(data)
 
 
-def list_dumps(els, **kwargs):                          # pylint:disable=W0613
+def get_dumps(els, repo):
+
+    """Function:  get_dumps
+
+    Description:  Retrieve dumps from the Elasticsearch cluster and return the
+        dumps in a dictionary format.
+
+    Arguments:
+        (input) els -> Elasticsearch class instance
+        (input) repo -> Repository name
+        (output) data -> Dictionary of repository dumps
+
+    """
+
+    data = {repo: []}
+
+    for dump in els.get_dump_list(repo=repo)[0]:
+        tdata = {
+            "Status": dump["state"], "StartTime": dump["start_time"],
+            "ShardSuccess": dump["shards"]["successful"],
+            "ShardFail": dump["shards"]["failed"],
+            "ShardTotal": dump["shards"]["total"],
+            "DumpName": dump["snapshot"]}
+        data[repo].append(tdata)
+
+    return data
+
+
+def list_dumps(els, **kwargs):
 
     """Function:  list_dumps
 
@@ -201,23 +239,27 @@ def list_dumps(els, **kwargs):                          # pylint:disable=W0613
         (input) els -> ElasticSearch class instance
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
-    repo_list = []
+    repo = kwargs.get("args").get_val("-L", def_val=None)
+    data = create_header(kwargs.get("dtg"), name="ListDumps")
 
-    if els.repo and els.repo in els.repo_dict:
-        repo_list.append(els.repo)
+    if repo and repo not in els.repo_dict:
+        data["Repos"] = []
+        print(f"Warning:  Repository {repo} does not exist.")
 
-    elif els.repo and els.repo not in els.repo_dict:
-        print(f"Warning:  Repository {els.repo} does not exist.")
+    elif repo:
+        data["Repos"] = [get_dumps(els, repo)]
 
     else:
-        repo_list = els.repo_dict
+        data["Repos"] = []
 
-    for repo in repo_list:
-        print(f"\nList of Dumps for Reposistory: {str(repo)}")
-        elastic_libs.list_dumps(elastic_class.get_dump_list(els.els, repo)[0])
+        for repo in els.get_repo_list():
+            data["Repos"].append(get_dumps(els, repo))
+
+    data_out(data, kwargs.get("args"))
 
 
 def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
@@ -436,6 +478,7 @@ def list_repos(els, **kwargs):                          # pylint:disable=W0613
         (input) els -> ElasticSearch class instance
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
@@ -479,8 +522,7 @@ def run_program(args, func_dict):
         # Find which functions to call.
         for opt in set(args.get_args_keys()) & set(func_dict.keys()):
             els = elastic_class.ElasticSearchRepo(
-                cfg.host, repo=args.get_val("-L"), user=user, japd=japd,
-                ca_cert=ca_cert)
+                cfg.host, user=user, japd=japd, ca_cert=ca_cert)
             els.connect()
 
             if els.is_connected:

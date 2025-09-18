@@ -67,7 +67,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            elastic_db_repo.create_header(self.dtg, name=self.name)["Check"],
+            elastic_db_repo.create_header(self.dtg, name=self.name)["Option"],
             self.results2)
 
     def test_base_header(self):
