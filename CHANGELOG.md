@@ -5,15 +5,18 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.0.0] - 2025-09-12
+- Converted output to JSON format.
+- Added data out options (i.e. email, file, standard out, suppression) to many of the options.
 - Updated python-lib v4.0.3
 - Updated elastic-lib v4.2.0
 
 ### Added
-- create_header:
-- data_out:
+- create_header: Create standard dictionary header and add Check entry to header if needed.
+- data_out: Determine where the data will be sent to such as email, file, standard out.
 
 ### Changed
-- list_repos: Refactored function and converted output to JSON format.
+- main: Added options for the data_out function to the checks.
+- list_repos: Refactored function and converted output to JSON format and added call to create_header and data_out.
 - run_program: Initialized an instance of the gen_class.TimeFormat class and passed to all functions called.
 - run_program: Removed port and scheme arguments to the elastic_class calls.
 - config/elastic.py.TEMPLATE: Removed port and scheme entries.

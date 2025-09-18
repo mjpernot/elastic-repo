@@ -6,6 +6,8 @@
 
 echo ""
 echo "Unit test"
+/usr/bin/python test/unit/elastic_db_repo/create_header.py
+/usr/bin/python test/unit/elastic_db_repo/data_out.py
 /usr/bin/python test/unit/elastic_db_repo/help_message.py
 /usr/bin/python test/unit/elastic_db_repo/list_dumps.py
 /usr/bin/python test/unit/elastic_db_repo/create_repo.py

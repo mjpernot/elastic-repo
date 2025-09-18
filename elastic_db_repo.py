@@ -8,8 +8,14 @@
 
     Usage:
         elastic_db_repo.py -c file -d path
-            {-L [repo_name] | -R | -U | -C repo_name -l path | -D repo_name |
-             -M old_repo_name new_repo_name | -S dump_name -r repo_name}
+            {-L [repo_name] |
+             -R [-t email_addr [email_addr ...] -s subject_line]
+                [-o dir_path/file [-a]] [-j] ]-z] |
+             -U |
+             -C repo_name -l path |
+             -D repo_name |
+             -M old_repo_name new_repo_name |
+             -S dump_name -r repo_name}
             [-v | -h]
 
     Arguments:
@@ -21,6 +27,15 @@
             then all repos and associated dumps will be displayed.
 
         -R => List of repositories in the Elasticsearch database.
+            -t email_addr [email_addr ...] => Enables emailing out all output.
+                    Sends the output to one or more email addresses.
+                -s Subject Line => Subject line of email.  If none is provided
+                    then a default one will be used.
+                -x => Override the default mail command and use mailx.
+            -o directory_path/file => Directory path and file name for output.
+                -a => Append output to the file.  By default will overwrite.
+            -j => Expand JSON data structure.
+            -z => Suppress standard out.
 
         -U => Display disk usage of any dump partitions.
 
@@ -68,6 +83,12 @@
 # Standard
 import sys
 import os
+import pprint
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 # Local
 try:
@@ -125,6 +146,48 @@ def create_header(dtg, name=None):
         header["Check"] = name
 
     return header
+
+
+def data_out(data, args):
+
+    """Function:  data_out
+
+    Description:  Determine where the data will be sent to such as email, file,
+        standard out and in the type of format it will be displayed.
+
+    Arguments:
+        (input) data -> Data to be sent out
+        (input) args -> ArgParser class instance
+
+    """
+
+    if not isinstance(data, dict):
+        print(f"Error: Is not a dictionary: {data}")
+        return
+
+    data = dict(data)
+    mode = "a" if args.arg_exist("-a") else "w"
+    indent = {"indent": 4} if args.arg_exist("-j") else {}
+
+    if args.arg_exist("-t"):
+        subj = args.get_val("-s", def_val="Elasticsearch_Repo")
+        mail = gen_class.setup_mail(args.get_val("-t"), subj=subj)
+        mail.add_2_msg(json.dumps(data, **indent))
+        mail.send_mail(use_mailx=args.arg_exist("-x"))
+
+    if args.arg_exist("-o") and indent:
+        with open(args.get_val("-o"), mode, encoding="UTF-8") as outfile:
+            pprint.pprint(data, stream=outfile, **indent)
+
+    elif args.arg_exist("-o"):
+        gen_libs.write_file(
+            args.get_val("-o"), mode, json.dumps(data, **indent))
+
+    if not args.arg_exist("-z") and indent:
+        pprint.pprint(data, **indent)
+
+    elif not args.arg_exist("-z"):
+        print(data)
 
 
 def list_dumps(els, **kwargs):                          # pylint:disable=W0613
@@ -460,11 +523,11 @@ def main():
         "-L": list_dumps, "-R": list_repos, "-C": create_repo,
         "-D": delete_repo, "-S": delete_dump, "-M": rename_repo,
         "-U": disk_usage}
-    opt_con_req_dict = {"-C": ["-l"], "-S": ["-r"]}
-    opt_multi_list = ["-M"]
+    opt_con_req_dict = {"-C": ["-l"], "-S": ["-r"], "-s": ["-t"]}
+    opt_multi_list = ["-M", "-t", "-s"]
     opt_req_list = ["-c", "-d"]
     opt_val_bin = ["-L"]
-    opt_val = ["-c", "-d", "-C", "-l", "-D", "-S", "-r", "-M"]
+    opt_val = ["-c", "-d", "-C", "-l", "-D", "-S", "-r", "-M", "-o"]
     opt_xor_dict = {
         "-C": ["-L", "-R", "-S", "-D", "-M", "-U"],
         "-D": ["-L", "-R", "-S", "-C", "-M", "-U"],
