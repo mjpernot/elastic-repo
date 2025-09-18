@@ -12,11 +12,12 @@
                 [-o dir_path/file [-a]] [-j] ]-z] |
              -R [-t email_addr [email_addr ...] -s subject_line]
                 [-o dir_path/file [-a]] [-j] ]-z] |
-             -U |
+             -U [repo_name] [-t email_addr [email_addr ...] -s subject_line]
+                [-o dir_path/file [-a]] [-j] ]-z] |
              -C repo_name -l path |
              -D repo_name |
              -M old_repo_name new_repo_name |
-             -S dump_name -r repo_name}
+             -S dump_name [dump_name2 ...] -r repo_name}
             [-v | -h]
 
     Arguments:
@@ -48,6 +49,15 @@
             -z => Suppress standard out.
 
         -U => Display disk usage of any dump partitions.
+            -t email_addr [email_addr ...] => Enables emailing out all output.
+                    Sends the output to one or more email addresses.
+                -s Subject Line => Subject line of email.  If none is provided
+                    then a default one will be used.
+                -x => Override the default mail command and use mailx.
+            -o directory_path/file => Directory path and file name for output.
+                -a => Append output to the file.  By default will overwrite.
+            -j => Expand JSON data structure.
+            -z => Suppress standard out.
 
         -C repo_name => Create new repository name.
             -l path => Directory path name.
@@ -56,7 +66,7 @@
 
         -M old_repo_name new_repo_name => Rename a repository.
 
-        -S dump_name => Delete dump in a repository.
+        -S dump_name [dump_name2 ...] => Name of dump(s) to delete in a repo.
             -r repo_name => Repository name.
 
         -v => Display version of this program.
@@ -274,6 +284,7 @@ def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
         (input) repo_dir -> Repository directory path
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
@@ -308,6 +319,7 @@ def delete_repo(els, repo_name=None, **kwargs):
         (input) repo_name -> Name of repository
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
@@ -328,7 +340,7 @@ def delete_repo(els, repo_name=None, **kwargs):
         print(f"Warning:  Repository {repo_name} does not exist.")
 
 
-def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
+def delete_dump(els, repo_name=None, dump_list=None, **kwargs):
 
     """Function:  delete_dump
 
@@ -337,37 +349,36 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
     Arguments:
         (input) els -> ElasticSearch class instance
         (input) repo_name -> Name of repository
-        (input) dump_name -> Name of dump to delete
+        (input) dump_list -> List of dumps to delete
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
-    args = kwargs.get("args")
-
     if not repo_name:
-        repo_name = args.get_val("-r")
+        repo_name = kwargs.get("args").get_val("-r")
 
-    if not dump_name:
-        dump_name = args.get_val("-S")
+    dump_list = list(dump_list) if dump_list else list(
+        kwargs.get("args").get_val("-S"))
 
     if repo_name in els.repo_dict:
 
-        dump_list, status, err_msg = elastic_class.get_dump_list(
-            els.els, repo_name, snapshot=dump_name)
+        for dump_name in dump_list:
+            _, status, err_msg = els.get_dump_list(
+                repo_name, snapshot=dump_name, ignore=False)
 
-        if status and dump_list:
+            if status:
+                err_flag, msg = els.delete_dump(repo_name, dump_name)
 
-            err_flag, msg = els.delete_dump(repo_name, dump_name)
+                if err_flag:
+                    print(f"Error detected for Repository: {repo_name} Dump:"
+                          f" {dump_name}")
+                    print(f"Message: {msg}")
 
-            if err_flag:
-                print(f"Error detected for Repository: {repo_name} Dump:"
-                      f" {dump_name}")
-                print(f"Reason: {msg}")
-
-        else:
-            print("Warning: Failed to delete snapshot")
-            print(f"Reason: {err_msg}")
+            else:
+                print(f"Warning: Failed to find dump: {dump_name}")
+                print(f"Message: {err_msg}")
 
     else:
         print(f"Warning:  Repository {repo_name} does not exist.")
@@ -384,6 +395,7 @@ def rename_repo(els, name_list=None, **kwargs):
         (input) name_list -> List of two repository names for renaming process
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
@@ -450,22 +462,27 @@ def disk_usage(els, **kwargs):                          # pylint:disable=W0613
         (input) els -> ElasticSearch class instance
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
+    data = create_header(kwargs.get("dtg"), name="DiskUsage")
+    data["DiskPartitionUsage"] = []
+
     if els.repo_dict:
-        print(f'{"Total":10} {"Used":10} {"Free":15} {"Percent":10}'
-              f' {"Repository":40} {"Partition":65}')
 
         for repo in els.repo_dict:
             partition = els.repo_dict[repo]["settings"]["location"]
             usage = gen_libs.disk_usage(partition)
+            tdata = {
+                "Partition": partition, "Repository": repo,
+                "Percent": f"{(float(usage.used) / usage.total) * 100:0.2f}%",
+                "Free": gen_libs.bytes_2_readable(usage.free),
+                "Used": gen_libs.bytes_2_readable(usage.used),
+                "Total": gen_libs.bytes_2_readable(usage.total)}
+            data["DiskPartitionUsage"].append(tdata)
 
-            print(f"{gen_libs.bytes_2_readable(usage.total):10}"
-                  f" {gen_libs.bytes_2_readable(usage.used):10}"
-                  f" {gen_libs.bytes_2_readable(usage.free):10}"
-                  f" {(float(usage.used) / usage.total) * 100:10.2f}%"
-                  f"     {repo:40} {partition:65}")
+    data_out(data, kwargs.get("args"))
 
 
 def list_repos(els, **kwargs):                          # pylint:disable=W0613
@@ -566,10 +583,11 @@ def main():
         "-D": delete_repo, "-S": delete_dump, "-M": rename_repo,
         "-U": disk_usage}
     opt_con_req_dict = {"-C": ["-l"], "-S": ["-r"], "-s": ["-t"]}
-    opt_multi_list = ["-M", "-t", "-s"]
+    opt_multi_list = ["-M", "-t", "-s", "-S"]
     opt_req_list = ["-c", "-d"]
     opt_val_bin = ["-L"]
-    opt_val = ["-c", "-d", "-C", "-l", "-D", "-S", "-r", "-M", "-o"]
+    opt_val = [
+        "-c", "-d", "-C", "-l", "-D", "-S", "-r", "-M", "-o", "-t", "-s"]
     opt_xor_dict = {
         "-C": ["-L", "-R", "-S", "-D", "-M", "-U"],
         "-D": ["-L", "-R", "-S", "-C", "-M", "-U"],
