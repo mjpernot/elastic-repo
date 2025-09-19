@@ -23,6 +23,7 @@ import unittest
 sys.path.append(os.getcwd())
 import elastic_db_repo                          # pylint:disable=E0401,C0413
 import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
 import elastic_lib.elastic_class as elcs    # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
@@ -62,6 +63,12 @@ class UnitTest(unittest.TestCase):
         self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
         self.ca_cert = self.cfg.ssl_client_ca if hasattr(
             self.cfg, "ssl_client_ca") else None
+        opt_val = ["-c", "-d"]
+        self.args = gen_class.ArgParser(
+            ["-c", "elastic", "-d", self.config_path, "-z"])
+        self.args.arg_parse2()
+        self.dtg = gen_class.TimeFormat()
+        self.dtg.create_time()
         self.els = elcs.ElasticSearchRepo(
             self.cfg.host, user=self.user, japd=self.japd,
             ca_cert=self.ca_cert)
@@ -72,8 +79,8 @@ class UnitTest(unittest.TestCase):
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.els.create_repo(repo_name=self.repo_name,
-                                        repo_dir=self.cfg.log_repo_dir)
+            _, _ = self.els.create_repo(
+                repo_name=self.repo_name, repo_dir=self.cfg.log_repo_dir)
 
     def test_list_repos(self):
 
@@ -85,8 +92,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_repos(self.els))
+        self.assertFalse(
+            elastic_db_repo.list_repos(self.els, dtg=self.dtg, args=self.args))
 
     def tearDown(self):
 

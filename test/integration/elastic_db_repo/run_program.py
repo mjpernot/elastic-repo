@@ -24,6 +24,7 @@ import unittest
 sys.path.append(os.getcwd())
 import elastic_db_repo                          # pylint:disable=E0401,C0413
 import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
 import elastic_lib.elastic_class as elcs    # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
@@ -77,7 +78,12 @@ class UnitTest(unittest.TestCase):
             "-S": elastic_db_repo.delete_dump,
             "-M": elastic_db_repo.rename_repo,
             "-U": elastic_db_repo.disk_usage}
-        self.args = {"-c": "elastic", "-d": self.config_path}
+        self.opt_val = ["-c", "-d"]
+        self.argv = [
+            "elastic_db_repo.py", "-c", "elastic", "-d", self.config_path,
+            "-z"]
+        self.args = gen_class.ArgParser(self.argv, opt_val=self.opt_val)
+        self.args.arg_parse2()
         self.user = self.cfg.user if hasattr(self.cfg, "user") else None
         self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
         self.ca_cert = self.cfg.ssl_client_ca if hasattr(
@@ -122,11 +128,11 @@ class UnitTest(unittest.TestCase):
             print(f"Reason: {msg}")
             self.skipTest("Dump failed")
 
-        self.args["-S"] = self.dump_name
-        self.args["-r"] = self.repo_name
+        self.args.args_array["-S"] = self.dump_name
+        self.args.args_array["-r"] = self.repo_name
 
-        self.assertFalse(elastic_db_repo.run_program(
-            self.args, self.func_names))
+        self.assertFalse(
+            elastic_db_repo.run_program(self.args, self.func_names))
 
     def test_list_dumps(self):
 
@@ -157,13 +163,11 @@ class UnitTest(unittest.TestCase):
             print(f"Reason: {msg}")
             self.skipTest("Dump failed")
 
-        self.args["-L"] = self.repo_name
+        self.args.args_array["-L"] = self.repo_name
 
-        with gen_libs.no_std_out():
-            self.assertFalse(
-                elastic_db_repo.run_program(self.args, self.func_names))
+        self.assertFalse(
+            elastic_db_repo.run_program(self.args, self.func_names))
 
-    @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):
 
         """Function:  test_disk_usage
@@ -182,19 +186,10 @@ class UnitTest(unittest.TestCase):
             print(f"Reason:  {status_msg}")
             self.skipTest("test_disk_usage: Pre-conditions not met.")
 
-        # Wait until the repo dir has been created.
-        while True:
-            if not os.path.isdir(self.phy_repo_dir):
-                time.sleep(1)
+        self.args.args_array["-U"] = True
 
-            else:
-                break
-
-        self.args["-U"] = True
-
-        with gen_libs.no_std_out():
-            self.assertFalse(
-                elastic_db_repo.run_program(self.args, self.func_names))
+        self.assertFalse(
+            elastic_db_repo.run_program(self.args, self.func_names))
 
     def test_rename_repo(self):
 
@@ -214,7 +209,7 @@ class UnitTest(unittest.TestCase):
             print(f"Reason:  {status_msg}")
             self.skipTest("test_rename_repo: Pre-conditions not met.")
 
-        self.args["-M"] = [self.repo_name, self.repo_name2]
+        self.args.args_array["-M"] = [self.repo_name, self.repo_name2]
 
         elastic_db_repo.run_program(self.args, self.func_names)
 
@@ -243,11 +238,10 @@ class UnitTest(unittest.TestCase):
             print(f"Reason:  {status_msg}")
             self.skipTest("test_list_repos: Pre-conditions not met.")
 
-        self.args["-R"] = True
+        self.args.args_array["-R"] = True
 
-        with gen_libs.no_std_out():
-            self.assertFalse(
-                elastic_db_repo.run_program(self.args, self.func_names))
+        self.assertFalse(
+            elastic_db_repo.run_program(self.args, self.func_names))
 
     def test_delete_repo(self):
 
@@ -267,7 +261,7 @@ class UnitTest(unittest.TestCase):
             print(f"Reason:  {status_msg}")
             self.skipTest("test_list_repos: Pre-conditions not met.")
 
-        self.args["-D"] = self.repo_name
+        self.args.args_array["-D"] = self.repo_name
 
         elastic_db_repo.run_program(self.args, self.func_names)
 
@@ -288,8 +282,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-C"] = self.repo_name
-        self.args["-l"] = self.cfg.log_repo_dir
+        self.args.args_array["-C"] = self.repo_name
+        self.args.args_array["-l"] = self.cfg.log_repo_dir
 
         elastic_db_repo.run_program(self.args, self.func_names)
 
@@ -310,8 +304,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        if "-C" in self.args or "-R" in self.args or "-U" in self.args \
-           or "-L" in self.args or "-S" in self.args:
+        if "-C" in self.args.args_array or "-R" in self.args.args_array \
+           or "-U" in self.args.args_array or "-L" in self.args.args_array \
+           or "-S" in self.args.args_array:
             els = elcs.ElasticSearchRepo(
                 self.cfg.host, user=self.user, japd=self.japd,
                 ca_cert=self.ca_cert)
@@ -323,7 +318,7 @@ class UnitTest(unittest.TestCase):
                 print(f"Error: Failed to remove repository {self.repo_name}")
                 print(f"Reason:  {status_msg}")
 
-        elif "-M" in self.args:
+        elif "-M" in self.args.args_array:
             els = elcs.ElasticSearchRepo(
                 self.cfg.host, user=self.user, japd=self.japd,
                 ca_cert=self.ca_cert)
