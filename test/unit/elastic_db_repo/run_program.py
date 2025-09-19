@@ -178,7 +178,7 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
 
     """
 
-    def __init__(                                       # pylint:disable=R0913
+    def __init__(                               # pylint:disable=R0913,R0917
             self, host, repo, user, japd, ca_cert):
 
         """Method:  __init__
