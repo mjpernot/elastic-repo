@@ -427,9 +427,9 @@ class UnitTest(unittest.TestCase):
         """
 
         if self.els and (                               # pylint:disable=R0916
-            "-C" in self.argv_list or "-L" in self.argv_list or
-            "-R" in self.argv_list or "-U" in self.argv_list or
-            "-M" in self.argv_list or "-S" in self.argv_list):
+                "-C" in self.argv_list or "-L" in self.argv_list or
+                "-R" in self.argv_list or "-U" in self.argv_list or
+                "-M" in self.argv_list or "-S" in self.argv_list):
 
             status, msg = self.els.delete_repo(self.repo_name)
 
