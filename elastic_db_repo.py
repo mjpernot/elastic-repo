@@ -115,14 +115,12 @@ try:
     from .lib import gen_libs
     from .lib import gen_class
     from .elastic_lib import elastic_class
-    from .elastic_lib import elastic_libs
     from . import version
 
 except (ValueError, ImportError) as err:
     import lib.gen_libs as gen_libs                     # pylint:disable=R0402
     import lib.gen_class as gen_class                   # pylint:disable=R0402
     import elastic_lib.elastic_class as elastic_class   # pylint:disable=R0402
-    import elastic_lib.elastic_libs as elastic_libs     # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
