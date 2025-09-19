@@ -73,7 +73,8 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
 
     Methods:
         __init__
-        delete_repo
+        delete_dump
+        get_dump_list
 
     """
 
@@ -90,12 +91,14 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
         self.els = "Elastic_Search_Class"
         self.repo_dict = ["Test_Repo_Name_1", "Test_Rep_Name_2"]
         self.repo_name = None
+        self.ignore = True
+        self.dump_list = [{"snapshot": "Test_Dump_Name_1"}]
 
     def delete_dump(self, repo_name, dump_name):
 
-        """Method:  delete_repo
+        """Method:  delete_dump
 
-        Description:  Mock of deleting a repository.
+        Description:  Mock of deleting a dump in a repository.
 
         Arguments:
 
@@ -110,6 +113,27 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
             err_msg = "Error_Message_Here"
 
         return err_flag, err_msg
+
+    def get_dump_list(self, repo_name, snapshot, ignore=False):
+
+        """Method:  get_dump_list
+
+        Description:  Mock of return a list of dumps in a repository.
+
+        Arguments:
+
+        """
+
+        self.repo_name = repo_name
+        self.ignore = ignore
+        err_flag = True
+        err_msg = None
+
+        if snapshot == "No_Such_Dump":
+            err_flag = False
+            err_msg = "Error Message Here"
+
+        return self.dump_list, err_flag, err_msg
 
 
 class UnitTest(unittest.TestCase):
@@ -148,37 +172,36 @@ class UnitTest(unittest.TestCase):
         self.els = ElasticSearchRepo()
         self.args = ArgParser()
         self.args.args_array = {
-            "-r": "Test_Repo_Name_1", "-S": "Test_Dump_Name_1"}
-        self.results = (
-            [{"snapshot": "Test_Dump_Name_1"},
-             {"snapshot": "Test_Dump_Name_2"}], True, None)
-        self.results2 = (
-            [{"snapshot": "Test_Dump_Name_1"},
-             {"snapshot": "Test_Dump_Name_2"},
-             {"snapshot": "Test_Dump_Name_Fail"}], True, None)
-        self.results3 = (
-            [{"snapshot": "Test_Dump_Name_1"},
-             {"snapshot": "Test_Dump_Name_2"}], False, "Error Message Here")
+            "-r": "Test_Repo_Name_1", "-S": ["Test_Dump_Name_1"]}
+#        self.results = (
+#            [{"snapshot": "Test_Dump_Name_1"},
+#             {"snapshot": "Test_Dump_Name_2"}], True, None)
+#        self.results2 = (
+#            [{"snapshot": "Test_Dump_Name_1"},
+#             {"snapshot": "Test_Dump_Name_2"},
+#             {"snapshot": "Test_Dump_Name_Fail"}], True, None)
+#        self.results3 = (
+#            [{"snapshot": "Test_Dump_Name_1"},
+#             {"snapshot": "Test_Dump_Name_2"}], False, "Error Message Here")
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    def test_status_false(self, mock_class):
+    def test_status_false(self):
 
         """Function:  test_status_false
 
-        Description:  Test status returns false.
+        Description:  Test status returns false - failed to find dump.
 
         Arguments:
 
         """
 
-        mock_class.get_dump_list.return_value = self.results3
+        self.args.args_array = {
+            "-r": "Test_Repo_Name_1", "-S": ["No_Such_Dump"]}
 
         with gen_libs.no_std_out():
             self.assertFalse(
                 elastic_db_repo.delete_dump(self.els, args=self.args))
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    def test_status_true(self, mock_class):
+    def test_status_true(self):
 
         """Function:  test_status_true
 
@@ -188,46 +211,37 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = self.results
-
         self.assertFalse(elastic_db_repo.delete_dump(self.els, args=self.args))
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    def test_err_flag_true(self, mock_class):
+    def test_err_flag_true(self):
 
         """Function:  test_err_flag_true
 
-        Description:  Test err_flag is set to True.
+        Description:  Test err_flag returns True.
 
         Arguments:
 
         """
 
-        mock_class.get_dump_list.return_value = self.results2
-
-        self.args.args_array["-S"] = "Test_Dump_Name_Fail"
+        self.args.args_array["-S"] = ["Test_Dump_Name_Fail"]
 
         with gen_libs.no_std_out():
             self.assertFalse(
                 elastic_db_repo.delete_dump(self.els, args=self.args))
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    def test_err_flag_false(self, mock_class):
+    def test_err_flag_false(self):
 
         """Function:  test_err_flag_false
 
-        Description:  Test err_flag is set to False.
+        Description:  Test err_flag returns False.
 
         Arguments:
 
         """
 
-        mock_class.get_dump_list.return_value = self.results
-
         self.assertFalse(elastic_db_repo.delete_dump(self.els, args=self.args))
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    def test_dump_name_in_list(self, mock_class):
+    def test_dump_name_in_list(self):
 
         """Function:  test_dump_name_in_list
 
@@ -237,12 +251,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = self.results
-
         self.assertFalse(elastic_db_repo.delete_dump(self.els, args=self.args))
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    def test_dump_name_not_in_list(self, mock_class):
+    def test_dump_name_not_in_list(self):
 
         """Function:  test_dump_name_not_in_list
 
@@ -252,16 +263,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = self.results
+        self.args.args_array["-S"] = ["Test_Dump_Name_3"]
 
-        self.args.args_array["-S"] = "Test_Dump_Name_3"
+        self.assertFalse(
+            elastic_db_repo.delete_dump(self.els, args=self.args))
 
-        with gen_libs.no_std_out():
-            self.assertFalse(
-                elastic_db_repo.delete_dump(self.els, args=self.args))
-
-    @mock.patch("elastic_db_repo.elastic_class")
-    def test_repo_name_in_list(self, mock_class):
+    def test_repo_name_in_list(self):
 
         """Function:  test_repo_name_in_list
 
@@ -271,13 +278,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = self.results
+        self.args.args_array["-S"] = ["Test_Dump_Name_3"]
 
-        self.args.args_array["-S"] = "Test_Dump_Name_3"
-
-        with gen_libs.no_std_out():
-            self.assertFalse(
-                elastic_db_repo.delete_dump(self.els, args=self.args))
+        self.assertFalse(
+            elastic_db_repo.delete_dump(self.els, args=self.args))
 
     def test_repo_name_not_in_list(self):
 
@@ -289,16 +293,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array["-r"] = "Test_Repo_Name_3"
+        self.args.args_array["-r"] = ["Test_Repo_Name_3"]
 
         with gen_libs.no_std_out():
             self.assertFalse(
                 elastic_db_repo.delete_dump(self.els, args=self.args))
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    def test_dump_name_is_passed(self, mock_class):
+    def test_dump_name_is_passed(self):
 
-        """Function:  test_repo_name_not_passed
+        """Function:  test_dump_name_is_passed
 
         Description:  Test dump name is passed as an argument.
 
@@ -306,17 +309,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = self.results
-
         self.args.args_array["-r"] = "Test_Repo_Name_1"
 
-        with gen_libs.no_std_out():
-            self.assertFalse(
-                elastic_db_repo.delete_dump(
-                    self.els, dump_name="Test_Dump_Name_3", args=self.args))
+        self.assertFalse(
+            elastic_db_repo.delete_dump(
+                self.els, dump_name=["Test_Dump_Name_3"], args=self.args))
 
-    @mock.patch("elastic_db_repo.elastic_class")
-    def test_dump_name_not_passed(self, mock_class):
+    def test_dump_name_not_passed(self):
 
         """Function:  test_dump_name_not_passed
 
@@ -326,13 +325,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_class.get_dump_list.return_value = self.results
+        self.args.args_array["-S"] = []
 
-        self.args.args_array["-S"] = "Test_Dump_Name_3"
-
-        with gen_libs.no_std_out():
-            self.assertFalse(
-                elastic_db_repo.delete_dump(self.els, args=self.args))
+        self.assertFalse(
+            elastic_db_repo.delete_dump(self.els, args=self.args))
 
     def test_repo_name_is_passed(self):
 
@@ -344,7 +340,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = {"-S": "Test_Dump_Name_1"}
+        self.args.args_array = {"-S": ["Test_Dump_Name_1"]}
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -361,7 +357,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array["-r"] = "Test_Repo_Name_3"
+        self.args.args_array["-r"] = None
 
         with gen_libs.no_std_out():
             self.assertFalse(

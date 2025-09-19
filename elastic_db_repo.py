@@ -372,8 +372,7 @@ def delete_dump(els, repo_name=None, dump_list=None, **kwargs):
                 err_flag, msg = els.delete_dump(repo_name, dump_name)
 
                 if err_flag:
-                    print(f"Error detected for Repository: {repo_name} Dump:"
-                          f" {dump_name}")
+                    print(f"Error: Repository: {repo_name} Dump: {dump_name}")
                     print(f"Message: {msg}")
 
             else:
@@ -381,7 +380,7 @@ def delete_dump(els, repo_name=None, dump_list=None, **kwargs):
                 print(f"Message: {err_msg}")
 
     else:
-        print(f"Warning:  Repository {repo_name} does not exist.")
+        print(f"Warning:  Repository: {repo_name} does not exist.")
 
 
 def rename_repo(els, name_list=None, **kwargs):
@@ -536,7 +535,7 @@ def run_program(args, func_dict):
     try:
         prog_lock = gen_class.ProgramLock(sys.argv, flavor_id=flavorid)
 
-        # Find which functions to call.
+        # Find which functions to call
         for opt in set(args.get_args_keys()) & set(func_dict.keys()):
             els = elastic_class.ElasticSearchRepo(
                 cfg.host, user=user, japd=japd, ca_cert=ca_cert)
