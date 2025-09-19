@@ -101,11 +101,9 @@ class UnitTest(unittest.TestCase):
         self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
         self.ca_cert = self.cfg.ssl_client_ca if hasattr(
             self.cfg, "ssl_client_ca") else None
-        self.scheme = self.cfg.scheme if hasattr(
-            self.cfg, "scheme") else "https"
         self.els = els.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
 
         if self.els.repo_dict:

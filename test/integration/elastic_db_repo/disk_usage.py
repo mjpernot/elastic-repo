@@ -17,13 +17,13 @@
 import sys
 import os
 import shutil
-import time
 import unittest
 
 # Local
 sys.path.append(os.getcwd())
 import elastic_db_repo                          # pylint:disable=E0401,C0413
 import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
 import elastic_lib.elastic_class as els     # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
@@ -63,11 +63,15 @@ class UnitTest(unittest.TestCase):
         self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
         self.ca_cert = self.cfg.ssl_client_ca if hasattr(
             self.cfg, "ssl_client_ca") else None
-        self.scheme = self.cfg.scheme if hasattr(
-            self.cfg, "scheme") else "https"
+        opt_val = ["-c", "-d"]
+        self.args = gen_class.ArgParser(
+            ["-c", "elastic", "-d", self.config_path, "-z"], opt_val=opt_val)
+        self.args.arg_parse2()
+        self.dtg = gen_class.TimeFormat()
+        self.dtg.create_time()
         self.els = els.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
 
         if self.els.repo_dict:
@@ -75,10 +79,8 @@ class UnitTest(unittest.TestCase):
             self.skipTest("Pre-conditions not met.")
 
         else:
-            _, _ = self.els.create_repo(repo_name=self.cfg.log_repo_dir,
-                                        repo_dir=self.phy_repo_dir)
+            _, _ = self.els.create_repo(self.repo_name, self.cfg.log_repo_dir)
 
-    @unittest.skip("Error:  Fails in a docker setup environment.")
     def test_disk_usage(self):
 
         """Function:  test_disk_usage
@@ -89,16 +91,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        # Wait until the repo dir has been created.
-        while True:
-            if not os.path.isdir(self.phy_repo_dir):
-                time.sleep(1)
-
-            else:
-                break
-
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.disk_usage(self.els))
+        self.assertFalse(
+            elastic_db_repo.disk_usage(self.els, dtg=self.dtg, args=self.args))
 
     def tearDown(self):
 

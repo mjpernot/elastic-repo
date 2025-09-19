@@ -161,11 +161,9 @@ class CfgTest():                                        # pylint:disable=R0903
         """
 
         self.host = ["SERVER_NAME"]
-        self.port = 9200
         self.user = None
         self.japd = None
         self.ssl_client_ca = None
-        self.scheme = "https"
 
 
 class ElasticSearchRepo():                              # pylint:disable=R0903
@@ -180,8 +178,8 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
 
     """
 
-    def __init__(                                       # pylint:disable=R0913
-            self, host, port, repo, user, japd, ca_cert, scheme):
+    def __init__(                               # pylint:disable=R0913,R0917
+            self, host, repo, user, japd, ca_cert):
 
         """Method:  __init__
 
@@ -192,12 +190,10 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
         """
 
         self.host = host
-        self.port = port
         self.repo = repo
         self.user = user
         self.japd = japd
         self.ca_cert = ca_cert
-        self.scheme = scheme
         self.is_connected = True
 
     def connect(self):
@@ -246,8 +242,8 @@ class UnitTest(unittest.TestCase):
         self.func_names = {"-U": disk_usage, "-R": list_repos}
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
         self.elr = ElasticSearchRepo(
-            self.cfg.host, self.cfg.port, None, self.cfg.user,
-            self.cfg.japd, self.cfg.ssl_client_ca, self.cfg.scheme)
+            self.cfg.host, None, self.cfg.user, self.cfg.japd,
+            self.cfg.ssl_client_ca)
 
     @mock.patch("elastic_db_repo.gen_libs.load_module")
     @mock.patch("elastic_db_repo.elastic_class.ElasticSearchRepo")
