@@ -65,7 +65,7 @@ class UnitTest(unittest.TestCase):
             self.cfg, "ssl_client_ca") else None
         opt_val = ["-c", "-d"]
         self.args = gen_class.ArgParser(
-            ["-c", "elastic", "-d", self.config_path, "-z"])
+            ["-c", "elastic", "-d", self.config_path, "-z"], opt_val=opt_val)
         self.args.arg_parse2()
         self.dtg = gen_class.TimeFormat()
         self.dtg.create_time()

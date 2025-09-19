@@ -17,7 +17,6 @@
 import sys
 import os
 import shutil
-import time
 import unittest
 
 # Local
