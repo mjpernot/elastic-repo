@@ -23,6 +23,7 @@ import unittest
 sys.path.append(os.getcwd())
 import elastic_db_repo                          # pylint:disable=E0401,C0413
 import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
 import elastic_lib.elastic_class as elcs    # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
@@ -64,11 +65,15 @@ class UnitTest(unittest.TestCase):
         self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
         self.ca_cert = self.cfg.ssl_client_ca if hasattr(
             self.cfg, "ssl_client_ca") else None
-        self.scheme = self.cfg.scheme if hasattr(
-            self.cfg, "scheme") else "https"
+        opt_val = ["-c", "-d"]
+        self.args = gen_class.ArgParser(
+            ["-c", "elastic", "-d", self.config_path, "-z"], opt_val=opt_val)
+        self.args.arg_parse2()
+        self.dtg = gen_class.TimeFormat()
+        self.dtg.create_time()
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
 
         if self.els.repo_dict:
@@ -88,8 +93,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.list_dumps(self.els))
+        self.assertFalse(
+            elastic_db_repo.list_dumps(self.els, dtg=self.dtg, args=self.args))
 
     def test_repo_dict(self):
 
@@ -102,9 +107,8 @@ class UnitTest(unittest.TestCase):
         """
 
         els = elcs.ElasticSearchDump(
-            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-            scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         els.connect()
         err_flag, msg = els.dump_db()
 
@@ -114,8 +118,9 @@ class UnitTest(unittest.TestCase):
             self.skipTest("Dump failed")
 
         else:
-            with gen_libs.no_std_out():
-                self.assertFalse(elastic_db_repo.list_dumps(self.els))
+            self.assertFalse(
+                elastic_db_repo.list_dumps(
+                    self.els, dtg=self.dtg, args=self.args))
 
     def test_repo_class_attr(self):
 
@@ -128,9 +133,8 @@ class UnitTest(unittest.TestCase):
         """
 
         els = elcs.ElasticSearchDump(
-            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-            scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         els.connect()
         err_flag, msg = els.dump_db()
 
@@ -141,9 +145,9 @@ class UnitTest(unittest.TestCase):
 
         else:
             self.els.repo = self.repo_name
-
-            with gen_libs.no_std_out():
-                self.assertFalse(elastic_db_repo.list_dumps(self.els))
+            self.assertFalse(
+                elastic_db_repo.list_dumps(
+                    self.els, dtg=self.dtg, args=self.args))
 
     def tearDown(self):
 

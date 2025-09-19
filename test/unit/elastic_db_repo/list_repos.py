@@ -48,9 +48,13 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
 
         """
 
-        self.repo_dict = {"Test_Repo_Name_1": {
-            "type": "fs", "settings": {"compress": "true",
-                                       "location": "/dir/TEST_REPO1"}}}
+        self.repo_dict = {
+            'es_dump': {
+                'type': 'fs', 'settings': {
+                    'compress': 'true', 'location': '/path/es_dump'}},
+            'es_dump2': {
+                'type': 'fs', 'settings': {
+                    'compress': 'true', 'location': '/path/es_dump2'}}}
 
 
 class UnitTest(unittest.TestCase):
@@ -77,8 +81,10 @@ class UnitTest(unittest.TestCase):
 
         self.els = ElasticSearchRepo()
 
-    @mock.patch("elastic_db_repo.elastic_libs.list_repos2")
-    def test_list_repos(self, mock_list):
+    @mock.patch("elastic_db_repo.data_out", mock.Mock(return_value=True))
+    @mock.patch("elastic_db_repo.create_header",
+                mock.Mock(return_value={"Header": "DTG"}))
+    def test_list_repos(self):
 
         """Function:  test_list_repos
 
@@ -87,8 +93,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        mock_list.return_value = True
 
         self.assertFalse(elastic_db_repo.list_repos(self.els))
 

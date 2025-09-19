@@ -13,7 +13,6 @@
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
 
 # Standard
 import sys
@@ -83,10 +82,9 @@ def create_es_instance(cfg, instance, repo_name=None):
     user = cfg.user if hasattr(cfg, "user") else None
     japd = cfg.japd if hasattr(cfg, "japd") else None
     ca_cert = cfg.ssl_client_ca if hasattr(cfg, "ssl_client_ca") else None
-    scheme = cfg.scheme if hasattr(cfg, "scheme") else "https"
 
-    return instance(cfg.host, port=cfg.port, repo=repo_name, user=user,
-                    japd=japd, ca_cert=ca_cert, scheme=scheme)
+    return instance(
+        cfg.host, repo=repo_name, user=user, japd=japd, ca_cert=ca_cert)
 
 
 def remove_repo(els, repo_name, dump_loc):

@@ -81,11 +81,9 @@ class UnitTest(unittest.TestCase):
         self.japd = self.cfg.japd if hasattr(self.cfg, "japd") else None
         self.ca_cert = self.cfg.ssl_client_ca if hasattr(
             self.cfg, "ssl_client_ca") else None
-        self.scheme = self.cfg.scheme if hasattr(
-            self.cfg, "scheme") else "https"
         els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         els.connect()
 
         if els.repo_dict:
@@ -104,8 +102,8 @@ class UnitTest(unittest.TestCase):
 
         cmdline = gen_libs.get_inst(sys)
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
         status, msg = self.els.create_repo(
             self.repo_name, self.cfg.log_repo_dir)
@@ -116,9 +114,8 @@ class UnitTest(unittest.TestCase):
             self.skipTest("test_delete_dump: Pre-conditions not met.")
 
         els = elcs.ElasticSearchDump(
-            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-            scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         els.connect()
         els.dump_name = self.dump_name
         status, msg = els.dump_db()
@@ -135,9 +132,8 @@ class UnitTest(unittest.TestCase):
         cmdline.argv = self.argv_list
         elastic_db_repo.main()
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-            scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
 
         self.assertNotIn(
@@ -159,8 +155,8 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append(self.repo_name)
         cmdline.argv = self.argv_list
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
         status, msg = self.els.create_repo(
             self.repo_name2, self.cfg.log_repo_dir)
@@ -172,9 +168,8 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.main()
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-            scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
 
         self.assertIn(self.repo_name, self.els.repo_dict)
@@ -194,8 +189,8 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append(self.repo_name)
         cmdline.argv = self.argv_list
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
         status, msg = self.els.create_repo(
             self.repo_name, self.cfg.log_repo_dir)
@@ -207,9 +202,8 @@ class UnitTest(unittest.TestCase):
 
         elastic_db_repo.main()
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-            scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
 
         self.assertNotIn(self.repo_name, self.els.repo_dict)
@@ -229,8 +223,8 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append("-U")
         cmdline.argv = self.argv_list
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
         status, msg = self.els.create_repo(self.repo_name,
                                            self.cfg.log_repo_dir)
@@ -265,8 +259,8 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append("-R")
         cmdline.argv = self.argv_list
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
         status, msg = self.els.create_repo(
             self.repo_name, self.cfg.log_repo_dir)
@@ -294,8 +288,8 @@ class UnitTest(unittest.TestCase):
         self.argv_list.append(self.repo_name)
         cmdline.argv = self.argv_list
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, user=self.user, japd=self.japd,
-            ca_cert=self.ca_cert, scheme=self.scheme)
+            self.cfg.host, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
         status, msg = self.els.create_repo(self.repo_name,
                                            self.cfg.log_repo_dir)
@@ -326,9 +320,8 @@ class UnitTest(unittest.TestCase):
         cmdline.argv = self.argv_list
         elastic_db_repo.main()
         self.els = elcs.ElasticSearchRepo(
-            self.cfg.host, port=self.cfg.port, repo=self.repo_name,
-            user=self.user, japd=self.japd, ca_cert=self.ca_cert,
-            scheme=self.scheme)
+            self.cfg.host, repo=self.repo_name, user=self.user, japd=self.japd,
+            ca_cert=self.ca_cert)
         self.els.connect()
 
         self.assertIn(self.repo_name, self.els.repo_dict)
@@ -434,9 +427,9 @@ class UnitTest(unittest.TestCase):
         """
 
         if self.els and (                               # pylint:disable=R0916
-            "-C" in self.argv_list or "-L" in self.argv_list or
-            "-R" in self.argv_list or "-U" in self.argv_list or
-            "-M" in self.argv_list or "-S" in self.argv_list):
+                "-C" in self.argv_list or "-L" in self.argv_list or
+                "-R" in self.argv_list or "-U" in self.argv_list or
+                "-M" in self.argv_list or "-S" in self.argv_list):
 
             status, msg = self.els.delete_repo(self.repo_name)
 

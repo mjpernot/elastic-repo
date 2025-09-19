@@ -8,21 +8,56 @@
 
     Usage:
         elastic_db_repo.py -c file -d path
-            {-L [repo_name] | -R | -U | -C repo_name -l path | -D repo_name |
-             -M old_repo_name new_repo_name | -S dump_name -r repo_name}
+            {-L [repo_name] [-t email_addr [email_addr ...] -s subject_line]
+                [-o dir_path/file [-a]] [-j] ]-z] |
+             -R [-t email_addr [email_addr ...] -s subject_line]
+                [-o dir_path/file [-a]] [-j] ]-z] |
+             -U [repo_name] [-t email_addr [email_addr ...] -s subject_line]
+                [-o dir_path/file [-a]] [-j] ]-z] |
+             -C repo_name -l path |
+             -D repo_name |
+             -M old_repo_name new_repo_name |
+             -S dump_name [dump_name2 ...] -r repo_name}
             [-v | -h]
 
     Arguments:
-        -c file => Elasticsearch configuration file.  Required argument.
-        -d dir path => Directory path for option '-c'.  Required argument.
+        -c file => Elasticsearch configuration file.
+        -d dir path => Directory path for the configuration file.
 
         -L [repo_name] => List of database dumps for an Elasticsearch
             database.  repo_name is name of repository to dump.  If no repo,
             then all repos and associated dumps will be displayed.
+            -t email_addr [email_addr ...] => Enables emailing out all output.
+                    Sends the output to one or more email addresses.
+                -s Subject Line => Subject line of email.  If none is provided
+                    then a default one will be used.
+                -x => Override the default mail command and use mailx.
+            -o directory_path/file => Directory path and file name for output.
+                -a => Append output to the file.  By default will overwrite.
+            -j => Expand JSON data structure.
+            -z => Suppress standard out.
 
         -R => List of repositories in the Elasticsearch database.
+            -t email_addr [email_addr ...] => Enables emailing out all output.
+                    Sends the output to one or more email addresses.
+                -s Subject Line => Subject line of email.  If none is provided
+                    then a default one will be used.
+                -x => Override the default mail command and use mailx.
+            -o directory_path/file => Directory path and file name for output.
+                -a => Append output to the file.  By default will overwrite.
+            -j => Expand JSON data structure.
+            -z => Suppress standard out.
 
         -U => Display disk usage of any dump partitions.
+            -t email_addr [email_addr ...] => Enables emailing out all output.
+                    Sends the output to one or more email addresses.
+                -s Subject Line => Subject line of email.  If none is provided
+                    then a default one will be used.
+                -x => Override the default mail command and use mailx.
+            -o directory_path/file => Directory path and file name for output.
+                -a => Append output to the file.  By default will overwrite.
+            -j => Expand JSON data structure.
+            -z => Suppress standard out.
 
         -C repo_name => Create new repository name.
             -l path => Directory path name.
@@ -31,7 +66,7 @@
 
         -M old_repo_name new_repo_name => Rename a repository.
 
-        -S dump_name => Delete dump in a repository.
+        -S dump_name [dump_name2 ...] => Name of dump(s) to delete in a repo.
             -r repo_name => Repository name.
 
         -v => Display version of this program.
@@ -49,7 +84,6 @@
 
             # Elasticsearch configuration file
             host = ["https://HOST_NAME1:9200", "https://HOST_NAME2:9200"]
-            port = 9200
 
             # Login credentials
             user = None
@@ -57,7 +91,6 @@
 
             # SSL connection
             ssl_client_ca = None
-            scheme = "https"
 
     Example:
         elastic_db_repo.py -c elastic -d config -L Backup_Repo
@@ -70,20 +103,24 @@
 # Standard
 import sys
 import os
+import pprint
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 # Local
 try:
     from .lib import gen_libs
     from .lib import gen_class
     from .elastic_lib import elastic_class
-    from .elastic_lib import elastic_libs
     from . import version
 
 except (ValueError, ImportError) as err:
     import lib.gen_libs as gen_libs                     # pylint:disable=R0402
     import lib.gen_class as gen_class                   # pylint:disable=R0402
     import elastic_lib.elastic_class as elastic_class   # pylint:disable=R0402
-    import elastic_lib.elastic_libs as elastic_libs     # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -105,7 +142,101 @@ def help_message():
     print(__doc__)
 
 
-def list_dumps(els, **kwargs):                          # pylint:disable=W0613
+def create_header(dtg, name=None):
+
+    """Function:  create_header
+
+    Description:  Create standard dictionary header and add Check entry to
+        header if needed.
+
+    Arguments:
+        (input) dtg -> TimeFormat instance
+        (input) name -> Name of check
+        (output) header -> Dictionary header
+
+    """
+
+    header = {
+        "Application": "Elastic_Repo",
+        "AsOf": dtg.get_time("zulu")}
+
+    if name:
+        header["Option"] = name
+
+    return header
+
+
+def data_out(data, args):
+
+    """Function:  data_out
+
+    Description:  Determine where the data will be sent to such as email, file,
+        standard out and in the type of format it will be displayed.
+
+    Arguments:
+        (input) data -> Data to be sent out
+        (input) args -> ArgParser class instance
+
+    """
+
+    if not isinstance(data, dict):
+        print(f"Error: Is not a dictionary: {data}")
+        return
+
+    data = dict(data)
+    mode = "a" if args.arg_exist("-a") else "w"
+    indent = {"indent": 4} if args.arg_exist("-j") else {}
+
+    if args.arg_exist("-t"):
+        subj = args.get_val("-s", def_val="Elasticsearch_Repo")
+        mail = gen_class.setup_mail(args.get_val("-t"), subj=subj)
+        mail.add_2_msg(json.dumps(data, **indent))
+        mail.send_mail(use_mailx=args.arg_exist("-x"))
+
+    if args.arg_exist("-o") and indent:
+        with open(args.get_val("-o"), mode, encoding="UTF-8") as outfile:
+            pprint.pprint(data, stream=outfile, **indent)
+
+    elif args.arg_exist("-o"):
+        gen_libs.write_file(
+            args.get_val("-o"), mode, json.dumps(data, **indent))
+
+    if not args.arg_exist("-z") and indent:
+        pprint.pprint(data, **indent)
+
+    elif not args.arg_exist("-z"):
+        print(data)
+
+
+def get_dumps(els, repo):
+
+    """Function:  get_dumps
+
+    Description:  Retrieve dumps from the Elasticsearch cluster and return the
+        dumps in a dictionary format.
+
+    Arguments:
+        (input) els -> Elasticsearch class instance
+        (input) repo -> Repository name
+        (output) data -> Dictionary of repository dumps
+
+    """
+
+    data = {repo: []}
+
+    for dump in els.get_dump_list(repo=repo)[0]:
+        tdata = {
+            "Status": dump["state"], "StartTime": dump["start_time"],
+            "ShardSuccess": dump["shards"]["successful"],
+            "ShardFail": dump["shards"]["failed"],
+            "ShardTotal": dump["shards"]["total"],
+            "DumpName": dump["snapshot"]}
+        data[repo].append(tdata)
+
+    return data
+
+
+def list_dumps(els, **kwargs):
 
     """Function:  list_dumps
 
@@ -116,23 +247,27 @@ def list_dumps(els, **kwargs):                          # pylint:disable=W0613
         (input) els -> ElasticSearch class instance
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
-    repo_list = []
+    repo = kwargs.get("args").get_val("-L", def_val=None)
+    data = create_header(kwargs.get("dtg"), name="ListDumps")
 
-    if els.repo and els.repo in els.repo_dict:
-        repo_list.append(els.repo)
+    if repo and repo not in els.repo_dict:
+        data["Repos"] = []
+        print(f"Warning:  Repository {repo} does not exist.")
 
-    elif els.repo and els.repo not in els.repo_dict:
-        print(f"Warning:  Repository {els.repo} does not exist.")
+    elif repo:
+        data["Repos"] = [get_dumps(els, repo)]
 
     else:
-        repo_list = els.repo_dict
+        data["Repos"] = []
 
-    for repo in repo_list:
-        print(f"\nList of Dumps for Reposistory: {str(repo)}")
-        elastic_libs.list_dumps(elastic_class.get_dump_list(els.els, repo)[0])
+        for repo in els.get_repo_list():
+            data["Repos"].append(get_dumps(els, repo))
+
+    data_out(data, kwargs.get("args"))
 
 
 def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
@@ -147,6 +282,7 @@ def create_repo(els, repo_name=None, repo_dir=None, **kwargs):
         (input) repo_dir -> Repository directory path
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
@@ -181,6 +317,7 @@ def delete_repo(els, repo_name=None, **kwargs):
         (input) repo_name -> Name of repository
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
@@ -201,7 +338,7 @@ def delete_repo(els, repo_name=None, **kwargs):
         print(f"Warning:  Repository {repo_name} does not exist.")
 
 
-def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
+def delete_dump(els, repo_name=None, dump_list=None, **kwargs):
 
     """Function:  delete_dump
 
@@ -210,40 +347,38 @@ def delete_dump(els, repo_name=None, dump_name=None, **kwargs):
     Arguments:
         (input) els -> ElasticSearch class instance
         (input) repo_name -> Name of repository
-        (input) dump_name -> Name of dump to delete
+        (input) dump_list -> List of dumps to delete
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
-    args = kwargs.get("args")
-
     if not repo_name:
-        repo_name = args.get_val("-r")
+        repo_name = kwargs.get("args").get_val("-r")
 
-    if not dump_name:
-        dump_name = args.get_val("-S")
+    dump_list = list(dump_list) if dump_list else list(
+        kwargs.get("args").get_val("-S"))
 
     if repo_name in els.repo_dict:
 
-        dump_list, status, err_msg = elastic_class.get_dump_list(
-            els.els, repo_name, snapshot=dump_name)
+        for dump_name in dump_list:
+            _, status, err_msg = els.get_dump_list(
+                repo_name, snapshot=dump_name, ignore=False)
 
-        if status and dump_list:
+            if status:
+                err_flag, msg = els.delete_dump(repo_name, dump_name)
 
-            err_flag, msg = els.delete_dump(repo_name, dump_name)
+                if err_flag:
+                    print(f"Error: Repository: {repo_name} Dump: {dump_name}")
+                    print(f"Message: {msg}")
 
-            if err_flag:
-                print(f"Error detected for Repository: {repo_name} Dump:"
-                      f" {dump_name}")
-                print(f"Reason: {msg}")
-
-        else:
-            print("Warning: Failed to delete snapshot")
-            print(f"Reason: {err_msg}")
+            else:
+                print(f"Warning: Failed to find dump: {dump_name}")
+                print(f"Message: {err_msg}")
 
     else:
-        print(f"Warning:  Repository {repo_name} does not exist.")
+        print(f"Warning:  Repository: {repo_name} does not exist.")
 
 
 def rename_repo(els, name_list=None, **kwargs):
@@ -257,6 +392,7 @@ def rename_repo(els, name_list=None, **kwargs):
         (input) name_list -> List of two repository names for renaming process
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
@@ -323,22 +459,27 @@ def disk_usage(els, **kwargs):                          # pylint:disable=W0613
         (input) els -> ElasticSearch class instance
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
+    data = create_header(kwargs.get("dtg"), name="DiskUsage")
+    data["DiskPartitionUsage"] = []
+
     if els.repo_dict:
-        print(f'{"Total":10} {"Used":10} {"Free":15} {"Percent":10}'
-              f' {"Repository":40} {"Partition":65}')
 
         for repo in els.repo_dict:
             partition = els.repo_dict[repo]["settings"]["location"]
             usage = gen_libs.disk_usage(partition)
+            tdata = {
+                "Partition": partition, "Repository": repo,
+                "Percent": f"{(float(usage.used) / usage.total) * 100:0.2f}%",
+                "Free": gen_libs.bytes_2_readable(usage.free),
+                "Used": gen_libs.bytes_2_readable(usage.used),
+                "Total": gen_libs.bytes_2_readable(usage.total)}
+            data["DiskPartitionUsage"].append(tdata)
 
-            print(f"{gen_libs.bytes_2_readable(usage.total):10}"
-                  f" {gen_libs.bytes_2_readable(usage.used):10}"
-                  f" {gen_libs.bytes_2_readable(usage.free):10}"
-                  f" {(float(usage.used) / usage.total) * 100:10.2f}%"
-                  f"     {repo:40} {partition:65}")
+    data_out(data, kwargs.get("args"))
 
 
 def list_repos(els, **kwargs):                          # pylint:disable=W0613
@@ -351,10 +492,20 @@ def list_repos(els, **kwargs):                          # pylint:disable=W0613
         (input) els -> ElasticSearch class instance
         (input) **kwargs:
             args -> ArgParser class instance
+            dtg -> TimeFormat instance
 
     """
 
-    elastic_libs.list_repos2(els.repo_dict)
+    data = create_header(kwargs.get("dtg"), name="ListRepositories")
+    data["Repositories"] = []
+
+    for repo in els.repo_dict:
+        tdata = {
+            "Repo": repo,
+            "Location": els.repo_dict[repo]["settings"]["location"]}
+        data["Repositories"].append(tdata)
+
+    data_out(data, kwargs.get("args"))
 
 
 def run_program(args, func_dict):
@@ -375,21 +526,21 @@ def run_program(args, func_dict):
     user = cfg.user if hasattr(cfg, "user") else None
     japd = cfg.japd if hasattr(cfg, "japd") else None
     ca_cert = cfg.ssl_client_ca if hasattr(cfg, "ssl_client_ca") else None
-    scheme = cfg.scheme if hasattr(cfg, "scheme") else "https"
     flavorid = "elasticrepo"
+    dtg = gen_class.TimeFormat()
+    dtg.create_time()
 
     try:
         prog_lock = gen_class.ProgramLock(sys.argv, flavor_id=flavorid)
 
-        # Find which functions to call.
+        # Find which functions to call
         for opt in set(args.get_args_keys()) & set(func_dict.keys()):
             els = elastic_class.ElasticSearchRepo(
-                cfg.host, port=cfg.port, repo=args.get_val("-L"),
-                user=user, japd=japd, ca_cert=ca_cert, scheme=scheme)
+                cfg.host, user=user, japd=japd, ca_cert=ca_cert)
             els.connect()
 
             if els.is_connected:
-                func_dict[opt](els, args=args)
+                func_dict[opt](els, args=args, dtg=dtg)
 
             else:
                 print("ERROR:  Failed to connect to Elasticsearch")
@@ -428,11 +579,12 @@ def main():
         "-L": list_dumps, "-R": list_repos, "-C": create_repo,
         "-D": delete_repo, "-S": delete_dump, "-M": rename_repo,
         "-U": disk_usage}
-    opt_con_req_dict = {"-C": ["-l"], "-S": ["-r"]}
-    opt_multi_list = ["-M"]
+    opt_con_req_dict = {"-C": ["-l"], "-S": ["-r"], "-s": ["-t"]}
+    opt_multi_list = ["-M", "-t", "-s", "-S"]
     opt_req_list = ["-c", "-d"]
     opt_val_bin = ["-L"]
-    opt_val = ["-c", "-d", "-C", "-l", "-D", "-S", "-r", "-M"]
+    opt_val = [
+        "-c", "-d", "-C", "-l", "-D", "-S", "-r", "-M", "-o", "-t", "-s"]
     opt_xor_dict = {
         "-C": ["-L", "-R", "-S", "-D", "-M", "-U"],
         "-D": ["-L", "-R", "-S", "-C", "-M", "-U"],

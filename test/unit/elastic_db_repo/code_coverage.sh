@@ -8,6 +8,9 @@ coverage erase
 
 echo ""
 echo "Running unit test modules in conjunction with coverage"
+coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/create_header.py
+coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/data_out.py
+coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/get_dumps.py
 coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/help_message.py
 coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/list_dumps.py
 coverage run -a --source=elastic_db_repo test/unit/elastic_db_repo/create_repo.py

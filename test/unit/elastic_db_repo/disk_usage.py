@@ -23,7 +23,6 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import elastic_db_repo                          # pylint:disable=E0401,C0413
-import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
@@ -53,17 +52,14 @@ class ElasticSearchRepo():                              # pylint:disable=R0903
         self.repo_dict = {
             "Test_Repo_Name_1": {
                 "type": "fs", "settings": {
-                    "compress": "true",
-                    "location": "/dir/TEST_REPO1"}}}
+                    "compress": "true", "location": "/dir/TEST_REPO1"}}}
         self.repo_dict2 = {
             "Test_Repo_Name_1": {
                 "type": "fs", "settings": {
-                    "compress": "true",
-                    "location": "/dir/TEST_REPO1"}},
+                    "compress": "true", "location": "/dir/TEST_REPO1"}},
             "Test_Repo_Name_2": {
                 "type": "fs", "settings": {
-                    "compress": "true",
-                    "location": "/dir/TEST_REPO2"}}}
+                    "compress": "true", "location": "/dir/TEST_REPO2"}}}
 
 
 class UnitTest(unittest.TestCase):
@@ -92,6 +88,9 @@ class UnitTest(unittest.TestCase):
 
         self.els = ElasticSearchRepo()
 
+    @mock.patch("elastic_db_repo.data_out", mock.Mock(return_value=True))
+    @mock.patch("elastic_db_repo.create_header",
+                mock.Mock(return_value={"Header": "DTG"}))
     @mock.patch("elastic_db_repo.gen_libs")
     def test_repodict_multiple_entries(self, mock_lib):
 
@@ -106,22 +105,20 @@ class UnitTest(unittest.TestCase):
         self.els.repo_dict = self.els.repo_dict2
         _ntuple_diskusage = collections.namedtuple("usage", "total used free")
 
-        mock_lib.disk_usage.side_effect = [_ntuple_diskusage(total=1023303680,
-                                                             used=703119360,
-                                                             free=266498048),
-                                           _ntuple_diskusage(total=1023303681,
-                                                             used=703119361,
-                                                             free=266498049)]
-        mock_lib.bytes_2_readable.side_effect = ["975.90MB",
-                                                 "670.55MB",
-                                                 "254.15MB",
-                                                 "975.91MB",
-                                                 "670.56MB",
-                                                 "254.16MB"]
+        mock_lib.disk_usage.side_effect = [
+            _ntuple_diskusage(
+                total=1023303680, used=703119360, free=266498048),
+            _ntuple_diskusage(
+                total=1023303681, used=703119361, free=266498049)]
+        mock_lib.bytes_2_readable.side_effect = [
+            "975.90MB", "670.55MB", "254.15MB", "975.91MB", "670.56MB",
+            "254.16MB"]
 
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.disk_usage(self.els))
+        self.assertFalse(elastic_db_repo.disk_usage(self.els))
 
+    @mock.patch("elastic_db_repo.data_out", mock.Mock(return_value=True))
+    @mock.patch("elastic_db_repo.create_header",
+                mock.Mock(return_value={"Header": "DTG"}))
     @mock.patch("elastic_db_repo.gen_libs")
     def test_repodict_one_entry(self, mock_lib):
 
@@ -135,15 +132,16 @@ class UnitTest(unittest.TestCase):
 
         _ntuple_diskusage = collections.namedtuple("usage", "total used free")
 
-        mock_lib.disk_usage.return_value = _ntuple_diskusage(total=1023303680,
-                                                             used=703119360,
-                                                             free=266498048)
-        mock_lib.bytes_2_readable.side_effect = ["975.90MB", "670.55MB",
-                                                 "254.15MB"]
+        mock_lib.disk_usage.return_value = _ntuple_diskusage(
+            total=1023303680, used=703119360, free=266498048)
+        mock_lib.bytes_2_readable.side_effect = [
+            "975.90MB", "670.55MB", "254.15MB"]
 
-        with gen_libs.no_std_out():
-            self.assertFalse(elastic_db_repo.disk_usage(self.els))
+        self.assertFalse(elastic_db_repo.disk_usage(self.els))
 
+    @mock.patch("elastic_db_repo.data_out", mock.Mock(return_value=True))
+    @mock.patch("elastic_db_repo.create_header",
+                mock.Mock(return_value={"Header": "DTG"}))
     def test_repodict_empty(self):
 
         """Function:  test_repodict_empty
