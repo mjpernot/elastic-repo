@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.0.1] - 2025-09-30
+- Updated simplejson=3.19.2
+- Added support for Python 3.13
+- Updated mock==5.2.0
+- Updated python-lib to v4.1.0
+- Updated elastic-lib to v5.0.0
+- Removed support ElasticSearch v7.4, v7.12, v7.17
+
+
 ## [2.0.0] - 2025-09-12
 Breaking Change
 
