@@ -150,12 +150,11 @@ class UnitTest(unittest.TestCase):
                 elastic_db_repo.list_dumps(self.els, args=self.args))
 
     @mock.patch("elastic_db_repo.data_out", mock.Mock(return_value=True))
-    @mock.patch("elastic_db_repo.elastic_class.get_repo_list")
     @mock.patch("elastic_db_repo.get_dumps",
                 mock.Mock(return_value={"key": "data"}))
     @mock.patch("elastic_db_repo.create_header",
                 mock.Mock(return_value={"Header": "DTG"}))
-    def test_no_repo(self, mock_repo):
+    def test_no_repo(self):
 
         """Function:  test_no_repo
 
@@ -166,8 +165,6 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args.args_array = {"-L": None}
-
-        mock_repo.return_value = {"repo1": True, "repo2": True}
 
         self.assertFalse(
             elastic_db_repo.list_dumps(self.els, args=self.args))
