@@ -51,9 +51,7 @@ setuptools.setup(
         "Operating System :: Linux :: Fedora",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Topic :: Database",
         "Topic :: Database :: Elasticsearch",
-        "Topic :: Database :: Elasticsearch :: 7.4",
-        "Topic :: Database :: Elasticsearch :: 7.12",
-        "Topic :: Database :: Elasticsearch :: 7.17",
         "Topic :: Database :: Elasticsearch :: 8.5"])
